@@ -1,0 +1,30 @@
+{
+  "terramath.worldgen.formula": "Math function for the world generation",
+  "terramath.worldgen.formula.hint": "Leave blank for a default generation",
+
+  "terramath.worldgen.base_height": "Base height",
+  "terramath.worldgen.height_variation": "Height variation",
+  "terramath.worldgen.smoothing": "Smoothing",
+  "terramath.worldgen.density_mode": "Advanced",
+
+  "terramath.formula.error.null": "Formula cannot be null",
+  "terramath.formula.error.invalid_chars": "Formula contains invalid characters",
+  "terramath.formula.error.no_variables": "Formula must use at least one variable (x or z)",
+  "terramath.formula.error.unknown_function": "Unknown function: %s",
+  "terramath.formula.error.function_parentheses": "Invalid function usage: %s must be followed by parentheses",
+  "terramath.formula.error.pow_arguments": "pow function requires exactly two arguments, separated by comma",
+  "terramath.formula.error.arguments": "%s function requires exactly one argument",
+  "terramath.formula.error.unmatched_closing": "Unmatched closing bracket at position %d",
+  "terramath.formula.error.empty_brackets": "Empty brackets at position %d",
+  "terramath.formula.error.unmatched_opening": "Unmatched opening bracket at position %d",
+  "terramath.formula.error.operator_sequence": "Invalid sequence of operators",
+  "terramath.formula.error.operator_start_end": "Formula cannot start with */ or end with an operator",
+  "terramath.formula.error.operator_brackets": "Invalid operator placement near brackets",
+  "terramath.formula.error.unexpected_char": "Unexpected character '%s' at position %d",
+  "terramath.formula.error.division_zero": "Division by zero",
+  "terramath.formula.error.missing_closing": "Missing closing parenthesis",
+  "terramath.formula.error.missing_opening": "Missing opening parenthesis after function %s",
+  "terramath.formula.error.argument_separator": "Expected ',' or ')' in function arguments",
+  "terramath.formula.error.invalid_number": "Invalid number format: %s",
+  "terramath.formula.error.expected_number": "Expected number at position %d"
+}

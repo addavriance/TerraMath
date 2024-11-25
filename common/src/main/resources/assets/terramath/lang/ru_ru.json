@@ -1,0 +1,30 @@
+{
+  "terramath.worldgen.formula": "Математическая функция для генерации мира",
+  "terramath.worldgen.formula.hint": "Оставьте пустым для обычной генерации",
+
+  "terramath.worldgen.base_height": "Базовая высота",
+  "terramath.worldgen.height_variation": "Вариация высоты",
+  "terramath.worldgen.smoothing": "Сглаживание",
+  "terramath.worldgen.density_mode": "Продвинутый",
+
+  "terramath.formula.error.null": "Формула не может быть пустой",
+  "terramath.formula.error.invalid_chars": "Формула содержит недопустимые символы",
+  "terramath.formula.error.no_variables": "Формула должна использовать хотя бы одну переменную (x или z)",
+  "terramath.formula.error.unknown_function": "Неизвестная функция: %s",
+  "terramath.formula.error.function_parentheses": "Неверное использование функции: %s должна быть завершена скобками",
+  "terramath.formula.error.pow_arguments": "Функция pow требует ровно двух аргументов, разделенных запятой",
+  "terramath.formula.error.arguments": "Функция %s требует ровно одного аргумента",
+  "terramath.formula.error.unmatched_closing": "Несоответствующая закрывающая скобка на позиции %d",
+  "terramath.formula.error.empty_brackets": "Пустые скобки на позиции %d",
+  "terramath.formula.error.unmatched_opening": "Несоответствующая открывающая скобка на позиции %d",
+  "terramath.formula.error.operator_sequence": "Неверная последовательность операторов",
+  "terramath.formula.error.operator_start_end": "Формула не может начинаться с */ или заканчиваться оператором",
+  "terramath.formula.error.operator_brackets": "Неверное размещение оператора рядом со скобками",
+  "terramath.formula.error.unexpected_char": "Неожиданный символ '%s' на позиции %d",
+  "terramath.formula.error.division_zero": "Деление на ноль",
+  "terramath.formula.error.missing_closing": "Отсутствует закрывающая скобка",
+  "terramath.formula.error.missing_opening": "Отсутствует открывающая скобка после функции %s",
+  "terramath.formula.error.argument_separator": "Ожидается ',' или ')' в аргументах функции",
+  "terramath.formula.error.invalid_number": "Неверный формат числа: %s",
+  "terramath.formula.error.expected_number": "Ожидается число на позиции %d"
+}
