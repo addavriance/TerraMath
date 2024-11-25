@@ -56,7 +56,9 @@ public abstract class WorldTabMixin extends GridLayoutTab {
         if (this.layout != null) {
             GridLayout.RowHelper rowHelper = this.layout.columnSpacing(10).rowSpacing(8).createRowHelper(2);
 
-            rowHelper.addChild(new GridLayout(), 6);
+            for (int i = 0; i < 5; i++) {
+                rowHelper.addChild(new GridLayout());
+            }
 
             GridLayout formulaLayout = new GridLayout();
             formulaLayout.rowSpacing(4);
