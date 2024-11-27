@@ -9,7 +9,6 @@ import net.minecraft.server.level.ServerLevel;
 public class TerraMathEvents {
     public static void init() {
         LifecycleEvent.SERVER_LEVEL_LOAD.register(TerraMathEvents::onLevelLoad);
-        LifecycleEvent.SERVER_LEVEL_SAVE.register(TerraMathEvents::onLevelSave);
         LifecycleEvent.SERVER_LEVEL_UNLOAD.register(TerraMathEvents::onLevelUnload);
     }
 
@@ -18,24 +17,19 @@ public class TerraMathEvents {
 
         if (data != null) {
             data.applyToManagers();
-        }
-    }
+        } else {
+            TerrainData new_data = new TerrainData();
+            new_data.updateFromManagers();
 
-    private static void onLevelSave(ServerLevel level) {
-        TerrainData data = new TerrainData();
-        data.updateFromManagers();
-
-        if (!data.formula.trim().isEmpty()) {
-            level.getDataStorage().set(TerrainData.IDENTIFIER.toString(), data);
+            level.getDataStorage().set(TerrainData.IDENTIFIER.toString(), new_data);
         }
     }
 
     private static void onLevelUnload(ServerLevel level) {
         TerraFormulaManager.getInstance().setFormula("");
         TerrainSettingsManager manager = TerrainSettingsManager.getInstance();
-        manager.setBaseHeight(64.0);
-        manager.setHeightVariation(32.5);
-        manager.setSmoothingFactor(0.55);
+
+        manager.resetToDefaults();
         manager.setUseDensityMode(false);
     }
 }
