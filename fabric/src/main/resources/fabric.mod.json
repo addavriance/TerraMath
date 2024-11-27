@@ -3,7 +3,7 @@
   "id": "terramath",
   "version": "${version}",
 
-  "name": "Terra Math",
+  "name": "TerraMath",
   "description": "Generate your Minecraft worlds using mathematical formulas! Create unique terrains from waves to spirals with custom equations.",
   "authors": [],
   "contact": {},
