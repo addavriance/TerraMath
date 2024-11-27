@@ -3,6 +3,7 @@ package me.adda.terramath.math;
 import me.adda.terramath.exception.FormulaException;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class FormulaParser {
     public static final String TRANSLATION_PREFIX = "terramath.formula.error.";
@@ -11,7 +12,8 @@ public class FormulaParser {
     public static final String ERROR_NO_VARIABLES = TRANSLATION_PREFIX + "no_variables";
     public static final String ERROR_UNKNOWN_FUNCTION = TRANSLATION_PREFIX + "unknown_function";
     public static final String ERROR_FUNCTION_PARENTHESES = TRANSLATION_PREFIX + "function_parentheses";
-    public static final String ERROR_POW_ARGUMENTS = TRANSLATION_PREFIX + "pow_arguments";
+    public static final String ERROR_THREE_ARGUMENTS = TRANSLATION_PREFIX + "three_arguments";
+    public static final String ERROR_TWO_ARGUMENTS = TRANSLATION_PREFIX + "two_arguments";
     public static final String ERROR_ARGUMENTS = TRANSLATION_PREFIX + "arguments";
     public static final String ERROR_UNMATCHED_CLOSING = TRANSLATION_PREFIX + "unmatched_closing";
     public static final String ERROR_EMPTY_BRACKETS = TRANSLATION_PREFIX + "empty_brackets";
@@ -26,8 +28,32 @@ public class FormulaParser {
     public static final String ERROR_ARGUMENT_SEPARATOR = TRANSLATION_PREFIX + "argument_separator";
     public static final String ERROR_INVALID_NUMBER = TRANSLATION_PREFIX + "invalid_number";
     public static final String ERROR_EXPECTED_NUMBER = TRANSLATION_PREFIX + "expected_number";
+    public static final String ERROR_INVALID_POWER = TRANSLATION_PREFIX + "invalid_power";
 
-    public static final Set<String> FUNCTIONS = Set.of("sin", "cos", "tan", "sqrt", "abs", "pow");
+    public static final Set<String> FUNCTIONS = new HashSet<>(Arrays.asList(
+            "sin", "cos", "tan",
+            "asin", "acos", "atan",
+            "sinh", "cosh", "tanh",
+
+            "sqrt", "cbrt", "pow",
+
+            "ln", "lg",
+
+            "abs", "exp", "floor", "ceil", "round", "sign",
+
+            "gamma", "erf", "beta", "mod",
+            "max", "min", "sigmoid", "clamp"
+    ));
+
+    public static final Map<Character, Integer> OPERATOR_PRECEDENCE = new ConcurrentHashMap<>();
+    static {
+        OPERATOR_PRECEDENCE.put('!', 5);
+        OPERATOR_PRECEDENCE.put('^', 4);
+        OPERATOR_PRECEDENCE.put('*', 3);
+        OPERATOR_PRECEDENCE.put('/', 3);
+        OPERATOR_PRECEDENCE.put('+', 2);
+        OPERATOR_PRECEDENCE.put('-', 2);
+    }
 
     public static class ValidationResult {
         private final boolean isValid;
@@ -69,7 +95,7 @@ public class FormulaParser {
             validateOperators(formula);
 
             ParsedFormula parsed = ParsedFormula.parse(formula);
-            parsed.evaluate(0, 0);
+            parsed.evaluate(0, 0, 0);
 
             return new ValidationResult(true, null);
         } catch (FormulaException e) {
@@ -80,11 +106,11 @@ public class FormulaParser {
     }
 
     private static void validateBasicStructure(String formula) {
-        if (!formula.matches("^[\\sx\\sz\\d+\\-*/(),\\.sincoatqrpwbd]+$")) {
+        if (!formula.matches("^[\\sxyz\\d+\\-*/(),.!^sincoatqrpwbdelhfgum]+$")) {
             throw new IllegalArgumentException(ERROR_INVALID_CHARS);
         }
 
-        if (!formula.contains("x") && !formula.contains("z")) {
+        if (!formula.contains("x") && !formula.contains("y") && !formula.contains("z")) {
             throw new IllegalArgumentException(ERROR_NO_VARIABLES);
         }
     }
@@ -140,14 +166,15 @@ public class FormulaParser {
             throw new IllegalArgumentException(ERROR_OPERATOR_START_END);
         }
 
-        if (formula.matches(".*\\([+\\-*/].*") || formula.matches(".*[+\\-*/]\\).*")) {
+        if (formula.matches(".*\\([+*/].*") || formula.matches(".*[+\\-*/]\\).*")) {
             throw new IllegalArgumentException(ERROR_OPERATOR_BRACKETS);
         }
     }
 
-    public static double evaluateFormula(String formula, double x, double z) {
+    @Deprecated
+    public static double evaluateFormula(String formula, double x, double y, double z) {
         try {
-            return ParsedFormula.parse(formula).evaluate(x, z);
+            return ParsedFormula.parse(formula).evaluate(x, y, z);
         } catch (FormulaException e) {
             throw new FormulaException(e.getMessage(), e.getArgs());
         } catch (Exception e) {

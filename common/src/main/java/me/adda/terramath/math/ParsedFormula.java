@@ -2,7 +2,8 @@ package me.adda.terramath.math;
 
 import me.adda.terramath.exception.FormulaException;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ParsedFormula {
     private final String originalExpression;
@@ -18,8 +19,8 @@ public class ParsedFormula {
         return new ParsedFormula(expression, parser.parse());
     }
 
-    public double evaluate(double x, double z) {
-        return root.evaluate(new Variables(x, z));
+    public double evaluate(double x, double y, double z) {
+        return root.evaluate(new Variables(x, y, z));
     }
 
     public String getOriginalExpression() {
@@ -27,11 +28,11 @@ public class ParsedFormula {
     }
 
     private static class Variables {
-        final double x;
-        final double z;
+        final double x, y, z;
 
-        Variables(double x, double z) {
+        Variables(double x, double y, double z) {
             this.x = x;
+            this.y = y;
             this.z = z;
         }
     }
@@ -42,34 +43,32 @@ public class ParsedFormula {
 
     private static class NumberNode implements ExpressionNode {
         private final double value;
-
-        NumberNode(double value) {
-            this.value = value;
-        }
-
+        NumberNode(double value) { this.value = value; }
         @Override
-        public double evaluate(Variables vars) {
-            return value;
-        }
+        public double evaluate(Variables vars) { return value; }
     }
 
     private static class VariableNode implements ExpressionNode {
-        private final boolean isX;
+        private final char variable;
 
-        VariableNode(boolean isX) {
-            this.isX = isX;
+        VariableNode(char variable) {
+            this.variable = variable;
         }
 
         @Override
         public double evaluate(Variables vars) {
-            return isX ? vars.x : vars.z;
+            return switch (variable) {
+                case 'x' -> vars.x;
+                case 'y' -> vars.y;
+                case 'z' -> vars.z;
+                default -> throw new IllegalStateException("Unknown variable: " + variable);
+            };
         }
     }
 
     private static class BinaryOperationNode implements ExpressionNode {
         private final char operator;
-        private final ExpressionNode left;
-        private final ExpressionNode right;
+        private final ExpressionNode left, right;
 
         BinaryOperationNode(char operator, ExpressionNode left, ExpressionNode right) {
             this.operator = operator;
@@ -92,6 +91,12 @@ public class ParsedFormula {
                     }
                     yield leftValue / rightValue;
                 }
+                case '^' -> {
+                    if (Double.isNaN(leftValue) || Double.isNaN(rightValue)) {
+                        throw new FormulaException(FormulaParser.ERROR_INVALID_POWER);
+                    }
+                    yield Math.pow(leftValue, rightValue);
+                }
                 default -> throw new IllegalStateException("Unknown operator: " + operator);
             };
         }
@@ -108,32 +113,84 @@ public class ParsedFormula {
 
         @Override
         public double evaluate(Variables vars) {
-            List<Double> evaluatedArgs = arguments.stream()
+            List<Double> args = arguments.stream()
                     .map(arg -> arg.evaluate(vars))
                     .toList();
 
             return switch (name) {
-                case "sin" -> Math.sin(evaluatedArgs.get(0));
-                case "cos" -> Math.cos(evaluatedArgs.get(0));
-                case "tan" -> Math.tan(evaluatedArgs.get(0));
-                case "sqrt" -> Math.sqrt(evaluatedArgs.get(0));
-                case "abs" -> Math.abs(evaluatedArgs.get(0));
-                case "pow" -> Math.pow(evaluatedArgs.get(0), evaluatedArgs.get(1));
+                case "sin" -> Math.sin(args.get(0));
+                case "cos" -> Math.cos(args.get(0));
+                case "tan" -> Math.tan(args.get(0));
+                case "asin" -> Math.asin(args.get(0));
+                case "acos" -> Math.acos(args.get(0));
+                case "atan" -> Math.atan(args.get(0));
+
+                case "sinh" -> Math.sinh(args.get(0));
+                case "cosh" -> Math.cosh(args.get(0));
+                case "tanh" -> Math.tanh(args.get(0));
+
+                case "sqrt" -> Math.sqrt(args.get(0));
+                case "cbrt" -> Math.cbrt(args.get(0));
+                case "pow" -> Math.pow(args.get(0), args.get(1));
+
+                case "ln" -> Math.log(args.get(0));
+                case "lg" -> Math.log10(args.get(0));
+
+                case "abs" -> Math.abs(args.get(0));
+                case "exp" -> Math.exp(args.get(0));
+                case "floor" -> Math.floor(args.get(0));
+                case "ceil" -> Math.ceil(args.get(0));
+                case "round" -> Math.round(args.get(0));
+                case "sign" -> Math.signum(args.get(0));
+
+                case "gamma" -> MathExtensions.gamma(args.get(0));
+                case "erf" -> MathExtensions.erf(args.get(0));
+                case "beta" -> MathExtensions.beta(args.get(0), args.get(1));
+
+                case "mod" -> args.get(0) % args.get(1);
+                case "max" -> Math.max(args.get(0), args.get(1));
+                case "min" -> Math.min(args.get(0), args.get(1));
+                case "sigmoid" -> 1.0 / (1.0 + Math.exp(-args.get(0)));
+                case "clamp" -> Math.min(Math.max(args.get(0), args.get(1)), args.get(2));
+
                 default -> throw new FormulaException(FormulaParser.ERROR_UNKNOWN_FUNCTION, name);
             };
         }
     }
 
-    private static class UnaryMinusNode implements ExpressionNode {
+    private record UnaryMinusNode(ExpressionNode operand) implements ExpressionNode {
+
+        @Override
+        public double evaluate(Variables vars) {
+            return -operand.evaluate(vars);
+        }
+    }
+
+    private static class FactorialNode implements ExpressionNode {
         private final ExpressionNode operand;
 
-        UnaryMinusNode(ExpressionNode operand) {
+        FactorialNode(ExpressionNode operand) {
             this.operand = operand;
         }
 
         @Override
         public double evaluate(Variables vars) {
-            return -operand.evaluate(vars);
+            double value = operand.evaluate(vars);
+
+            if (value < 0) {
+                return Double.NaN;
+            }
+
+            if (value == Math.floor(value) && value <= 170) {
+                double result = 1;
+                for (int i = 2; i <= value; i++) {
+                    result *= i;
+                }
+                return result;
+            }
+
+            // Γ(n+1) = n!
+            return MathExtensions.gamma(value + 1);
         }
     }
 
@@ -158,111 +215,130 @@ public class ParsedFormula {
         }
 
         private ExpressionNode parseExpression() {
-            ExpressionNode left = parseTerm();
+            return parseBinaryOperation(0);
+        }
+
+        private ExpressionNode parseBinaryOperation(int minPrecedence) {
+            ExpressionNode left = parsePrimary();
 
             while (position < length) {
                 char op = peek();
-                if (op != '+' && op != '-') {
+                Integer precedence = FormulaParser.OPERATOR_PRECEDENCE.get(op);
+
+                if (precedence == null || precedence < minPrecedence) {
                     break;
                 }
 
                 consume();
-                ExpressionNode right = parseTerm();
+                ExpressionNode right = parseBinaryOperation(precedence + 1);
                 left = new BinaryOperationNode(op, left, right);
             }
 
             return left;
         }
 
-        private ExpressionNode parseTerm() {
-            ExpressionNode left = parseFactor();
-
-            while (position < length) {
-                char op = peek();
-                if (op != '*' && op != '/') {
-                    break;
-                }
-
-                consume();
-                ExpressionNode right = parseFactor();
-                left = new BinaryOperationNode(op, left, right);
-            }
-
-            return left;
-        }
-
-        private ExpressionNode parseFactor() {
+        private ExpressionNode parsePrimary() {
             char ch = peek();
 
             if (ch == '(') {
                 consume();
                 ExpressionNode node = parseExpression();
-                if (position >= length || peek() != ')') {
-                    throw new FormulaException(FormulaParser.ERROR_MISSING_CLOSING);
+                expect(')', FormulaParser.ERROR_MISSING_CLOSING);
+
+                if (position < length && peek() == '!') {
+                    consume();
+                    return new FactorialNode(node);
                 }
-                consume();
+
                 return node;
             }
 
             if (ch == '-') {
                 consume();
-                return new UnaryMinusNode(parseFactor());
+                return new UnaryMinusNode(parsePrimary());
             }
 
             if (ch == '+') {
                 consume();
-                return parseFactor();
+                return parsePrimary();
             }
 
-            if (ch == 'x') {
+            if (ch == 'x' || ch == 'y' || ch == 'z') {
                 consume();
-                return new VariableNode(true);
-            }
+                ExpressionNode node = new VariableNode(ch);
 
-            if (ch == 'z') {
-                consume();
-                return new VariableNode(false);
-            }
-
-            StringBuilder funcName = new StringBuilder();
-            while (position < length && Character.isLetter(peek())) {
-                funcName.append(consume());
-            }
-
-            if (!funcName.isEmpty()) {
-                String name = funcName.toString().toLowerCase();
-                if (!FormulaParser.FUNCTIONS.contains(name)) {
-                    throw new FormulaException(FormulaParser.ERROR_UNKNOWN_FUNCTION, name);
-                }
-
-                if (peek() != '(') {
-                    throw new FormulaException(FormulaParser.ERROR_MISSING_OPENING, name);
-                }
-                consume();
-
-                List<ExpressionNode> args = new ArrayList<>();
-                while (true) {
-                    args.add(parseExpression());
-                    if (peek() == ')') {
-                        break;
-                    }
-                    if (peek() != ',') {
-                        throw new FormulaException(FormulaParser.ERROR_ARGUMENT_SEPARATOR);
-                    }
+                if (position < length && peek() == '!') {
                     consume();
-                }
-                consume();
-
-                if (name.equals("pow") && args.size() != 2) {
-                    throw new FormulaException(FormulaParser.ERROR_POW_ARGUMENTS);
-                } else if (!name.equals("pow") && args.size() != 1) {
-                    throw new FormulaException(FormulaParser.ERROR_ARGUMENTS, name);
+                    return new FactorialNode(node);
                 }
 
-                return new FunctionNode(name, args);
+                return node;
             }
 
-            return parseNumber();
+            if (Character.isLetter(ch)) {
+                return parseFunction();
+            }
+
+            ExpressionNode node = parseNumber();
+
+            if (position < length && peek() == '!') {
+                consume();
+                return new FactorialNode(node);
+            }
+
+            return node;
+        }
+
+
+        private ExpressionNode parseFunction() {
+            String name = parseFunctionName();
+            if (!FormulaParser.FUNCTIONS.contains(name)) {
+                throw new FormulaException(FormulaParser.ERROR_UNKNOWN_FUNCTION, name);
+            }
+
+            expect('(', FormulaParser.ERROR_MISSING_OPENING);
+            List<ExpressionNode> args = parseArguments();
+            expect(')', FormulaParser.ERROR_MISSING_CLOSING);
+
+            validateFunctionArguments(name, args);
+            return new FunctionNode(name, args);
+        }
+
+        private String parseFunctionName() {
+            StringBuilder name = new StringBuilder();
+            while (position < length && Character.isLetter(peek())) {
+                name.append(consume());
+            }
+            return name.toString().toLowerCase();
+        }
+
+        private List<ExpressionNode> parseArguments() {
+            List<ExpressionNode> args = new ArrayList<>();
+            while (true) {
+                args.add(parseExpression());
+                if (peek() == ')') break;
+                expect(',', FormulaParser.ERROR_ARGUMENT_SEPARATOR);
+            }
+            return args;
+        }
+
+        private void validateFunctionArguments(String name, List<ExpressionNode> args) {
+            int expectedArgs = switch (name) {
+                case "pow", "mod", "max", "min", "beta" -> 2;
+                case "clamp" -> 3;
+                default -> 1;
+            };
+
+            if (args.size() != expectedArgs) {
+                switch (expectedArgs) {
+                    case 3:
+                        throw new FormulaException(FormulaParser.ERROR_THREE_ARGUMENTS, name);
+                    case 2:
+                        throw new FormulaException(FormulaParser.ERROR_TWO_ARGUMENTS, name);
+                    case 1:
+                        throw new FormulaException(FormulaParser.ERROR_ARGUMENTS, name);
+                }
+            }
         }
 
         private ExpressionNode parseNumber() {
@@ -288,6 +364,13 @@ public class ParsedFormula {
 
         private char consume() {
             return expression.charAt(position++);
+        }
+
+        private void expect(char expected, String errorKey) {
+            if (peek() != expected) {
+                throw new FormulaException(errorKey);
+            }
+            consume();
         }
     }
 }

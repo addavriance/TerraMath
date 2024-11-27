@@ -30,7 +30,8 @@ public class NoiseRouterMixin {
                     double x = context.blockX() / 10.0;
                     double z = context.blockZ() / 10.0;
 
-                    double formulaValue = formula.evaluate(x, z);
+                    double y = context.blockY() / scale;
+                    double formulaValue = formula.evaluate(x, y, z);
 
                     if (!settings.isUseDensityMode()) {
                         double y = context.blockY();
