@@ -1,6 +1,7 @@
 package me.adda.terramath.mixin;
 
 import me.adda.terramath.api.TerrainSettingsManager;
+import me.adda.terramath.api.TerrainSettingsManager.TerrainSettingType;
 import me.adda.terramath.api.FormulaCacheHolder;
 import me.adda.terramath.api.TerraFormulaManager;
 import me.adda.terramath.gui.ResetButton;
@@ -33,16 +34,21 @@ public abstract class WorldTabMixin extends GridLayoutTab {
 
     private static final Component CHECKBOX_LABEL = Component.translatable("terramath.worldgen.density_mode");
 
-    private static final int SLIDER_WIDTH = 280;
-    private static final int SPACING = 8;
+    private static final int BASE_WIDTH = 308;
+
+    private static final int SPACING = 5;
+
+    private static final int SLIDER_WIDTH = BASE_WIDTH - 20 - SPACING;
 
     private EditBox formulaField;
     private StringWidget errorWidget;
     private Checkbox densityModeCheckbox;
+    private TerrainSettingsSlider coordinateScaleSlider;
     private TerrainSettingsSlider baseHeightSlider;
     private TerrainSettingsSlider heightVarSlider;
     private TerrainSettingsSlider smoothingSlider;
 
+    private ResetButton coordinateScaleReset;
     private ResetButton baseHeightReset;
     private ResetButton heightVarReset;
     private ResetButton smoothingReset;
@@ -69,7 +75,7 @@ public abstract class WorldTabMixin extends GridLayoutTab {
             this.formulaField = new EditBox(
                     minecraft.font,
                     0, 0,
-                    308, 20,
+                    BASE_WIDTH, 20,
                     Component.empty()
             ) {
                 @Override
@@ -89,11 +95,29 @@ public abstract class WorldTabMixin extends GridLayoutTab {
             TerrainSettingsManager settings = TerrainSettingsManager.getInstance();
 
             this.errorWidget = new StringWidget(Component.empty(), minecraft.font).alignLeft();
-            this.errorWidget.setWidth(308);
+            this.errorWidget.setWidth(BASE_WIDTH);
             formulaRowHelper.addChild(this.errorWidget);
 
+            this.coordinateScaleSlider = new TerrainSettingsSlider(
+                    0, 0, SLIDER_WIDTH,
+                    TerrainSettingType.COORDINATE_SCALE,
+                    settings
+            );
+            this.coordinateScaleReset = new ResetButton(
+                    SLIDER_WIDTH + SPACING, 0,
+                    this.coordinateScaleSlider
+            );
+
+            GridLayout coordinateScaleLayout = new GridLayout();
+            coordinateScaleLayout.columnSpacing(SPACING);
+            GridLayout.RowHelper coordinateScaleRowHelper = coordinateScaleLayout.createRowHelper(2);
+            coordinateScaleRowHelper.addChild(this.coordinateScaleSlider);
+            coordinateScaleRowHelper.addChild(this.coordinateScaleReset);
+
+            formulaRowHelper.addChild(coordinateScaleLayout);
+
             this.densityModeCheckbox = new Checkbox(
-                    0, 0, 308, 20,
+                    0, 0, BASE_WIDTH, 20,
                     CHECKBOX_LABEL,
                     settings.isUseDensityMode()
             );
@@ -101,7 +125,7 @@ public abstract class WorldTabMixin extends GridLayoutTab {
 
             this.baseHeightSlider = new TerrainSettingsSlider(
                     0, 0, SLIDER_WIDTH,
-                    TerrainSettingsSlider.TerrainSettingType.BASE_HEIGHT,
+                    TerrainSettingType.BASE_HEIGHT,
                     settings
             );
             this.baseHeightReset = new ResetButton(
@@ -117,7 +141,7 @@ public abstract class WorldTabMixin extends GridLayoutTab {
 
             this.heightVarSlider = new TerrainSettingsSlider(
                     0, 0, SLIDER_WIDTH,
-                    TerrainSettingsSlider.TerrainSettingType.HEIGHT_VARIATION,
+                    TerrainSettingType.HEIGHT_VARIATION,
                     settings
             );
             this.heightVarReset = new ResetButton(
@@ -133,7 +157,7 @@ public abstract class WorldTabMixin extends GridLayoutTab {
 
             this.smoothingSlider = new TerrainSettingsSlider(
                     0, 0, SLIDER_WIDTH,
-                    TerrainSettingsSlider.TerrainSettingType.SMOOTHING_FACTOR,
+                    TerrainSettingType.SMOOTHING_FACTOR,
                     settings
             );
             this.smoothingReset = new ResetButton(
@@ -157,7 +181,10 @@ public abstract class WorldTabMixin extends GridLayoutTab {
                 createWorldScreen.getUiState().addListener((worldCreationUiState -> {
                     List<WorldCreationUiState.WorldTypeEntry> worldTypeList = worldCreationUiState.getNormalPresetList();
                     boolean isFirstWorldType = worldTypeList.indexOf(worldCreationUiState.getWorldType()) == 0;
+
                     this.formulaField.active = isFirstWorldType;
+                    this.coordinateScaleSlider.active = isFirstWorldType;
+                    this.coordinateScaleReset.active = isFirstWorldType;
                     this.densityModeCheckbox.active = isFirstWorldType;
                     this.baseHeightSlider.active = isFirstWorldType;
                     this.heightVarSlider.active = isFirstWorldType;
@@ -209,6 +236,7 @@ public abstract class WorldTabMixin extends GridLayoutTab {
 
     private void updateSlidersVisibility() {
         boolean visible = this.densityModeCheckbox.selected();
+
         this.baseHeightSlider.visible = visible;
         this.heightVarSlider.visible = visible;
         this.smoothingSlider.visible = visible;

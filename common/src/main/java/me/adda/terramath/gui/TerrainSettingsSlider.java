@@ -1,6 +1,7 @@
 package me.adda.terramath.gui;
 
 import me.adda.terramath.api.TerrainSettingsManager;
+import me.adda.terramath.api.TerrainSettingsManager.TerrainSettingType;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
@@ -10,13 +11,7 @@ public class TerrainSettingsSlider extends AbstractSliderButton {
     private final double maxValue;
     private final String translationKey;
     private final TerrainSettingsManager settings;
-    private final TerrainSettingType type;
-
-    public enum TerrainSettingType {
-        BASE_HEIGHT,
-        HEIGHT_VARIATION,
-        SMOOTHING_FACTOR
-    }
+    private final TerrainSettingsManager.TerrainSettingType type;
 
     public TerrainSettingsSlider(int x, int y, int width, TerrainSettingType type, TerrainSettingsManager settings) {
         super(x, y, width, 20, Component.empty(), 0.0);
@@ -42,6 +37,12 @@ public class TerrainSettingsSlider extends AbstractSliderButton {
                 this.translationKey = "terramath.worldgen.smoothing";
                 this.setValue(settings.getSmoothingFactor());
             }
+            case COORDINATE_SCALE -> {
+                this.minValue = 1.0;
+                this.maxValue = 100.0;
+                this.translationKey = "terramath.worldgen.coordinate_scale";
+                this.setValue(settings.getCoordinateScale());
+            }
             default -> throw new IllegalArgumentException("Unknown setting type: " + type);
         }
     }
@@ -61,11 +62,7 @@ public class TerrainSettingsSlider extends AbstractSliderButton {
     }
 
     public double getDefaultValue() {
-        return switch (this.type) {
-            case BASE_HEIGHT -> 64.0;
-            case HEIGHT_VARIATION -> 32.5;
-            case SMOOTHING_FACTOR -> 0.55;
-        };
+        return TerrainSettingsManager.getInstance().getDefaultByType(this.type);
     }
 
     public void setValue(double realValue) {

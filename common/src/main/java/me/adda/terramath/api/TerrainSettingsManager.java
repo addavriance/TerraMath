@@ -1,14 +1,20 @@
 package me.adda.terramath.api;
 
-import me.adda.terramath.gui.TerrainSettingsSlider.TerrainSettingType;
-
 public class TerrainSettingsManager {
     private static final TerrainSettingsManager INSTANCE = new TerrainSettingsManager();
 
-    private double baseHeight = 64.0;
-    private double heightVariation = 32.5;
-    private double smoothingFactor = 0.55;
+    private double baseHeight = this.getDefaultByType(TerrainSettingType.BASE_HEIGHT);
+    private double heightVariation = this.getDefaultByType(TerrainSettingType.HEIGHT_VARIATION);
+    private double smoothingFactor = this.getDefaultByType(TerrainSettingType.SMOOTHING_FACTOR);
+    private double coordinateScale = this.getDefaultByType(TerrainSettingType.COORDINATE_SCALE);
     private boolean useDensityMode = false;
+
+    public enum TerrainSettingType {
+        COORDINATE_SCALE,
+        BASE_HEIGHT,
+        HEIGHT_VARIATION,
+        SMOOTHING_FACTOR
+    }
 
     private TerrainSettingsManager() {}
 
@@ -18,10 +24,19 @@ public class TerrainSettingsManager {
 
     public void setTerrainSetting(TerrainSettingType type, double value) {
         switch (type) {
+            case COORDINATE_SCALE -> setCoordinateScale(value);
             case BASE_HEIGHT -> setBaseHeight(value);
             case HEIGHT_VARIATION -> setHeightVariation(value);
             case SMOOTHING_FACTOR -> setSmoothingFactor(value);
         }
+    }
+
+    public double getCoordinateScale() {
+        return coordinateScale;
+    }
+
+    public void setCoordinateScale(double coordinateScale) {
+        this.coordinateScale = coordinateScale;
     }
 
     public double getBaseHeight() {
@@ -54,5 +69,20 @@ public class TerrainSettingsManager {
 
     public void setUseDensityMode(boolean useDensityMode) {
         this.useDensityMode = useDensityMode;
+    }
+
+    public double getDefaultByType(TerrainSettingType type) {
+        return switch (type) {
+            case COORDINATE_SCALE -> 5.0;
+            case BASE_HEIGHT -> 64.0;
+            case HEIGHT_VARIATION -> 32.5;
+            case SMOOTHING_FACTOR -> 0.55;
+        };
+    }
+
+    public void resetToDefaults() {
+        for (TerrainSettingType type : TerrainSettingType.values()) {
+            setTerrainSetting(type, getDefaultByType(type));
+        }
     }
 }

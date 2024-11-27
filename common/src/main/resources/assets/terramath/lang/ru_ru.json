@@ -2,6 +2,8 @@
   "terramath.worldgen.formula": "Математическая функция для генератора мира",
   "terramath.worldgen.formula.hint": "Оставьте пустым для обычной генерации",
 
+  "terramath.worldgen.coordinate_scale": "Масштаб",
+
   "terramath.worldgen.base_height": "Базовая высота",
   "terramath.worldgen.height_variation": "Вариация высоты",
   "terramath.worldgen.smoothing": "Сглаживание",

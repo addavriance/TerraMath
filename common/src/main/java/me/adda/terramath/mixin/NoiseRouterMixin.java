@@ -27,29 +27,30 @@ public class NoiseRouterMixin {
             @Override
             public double compute(FunctionContext context) {
                 try {
-                    double x = context.blockX() / 10.0;
-                    double z = context.blockZ() / 10.0;
+                    double scale = settings.getCoordinateScale();
 
+                    double x = context.blockX() / scale;
                     double y = context.blockY() / scale;
+                    double z = context.blockZ() / scale;
+
                     double formulaValue = formula.evaluate(x, y, z);
 
                     if (!settings.isUseDensityMode()) {
-                        double y = context.blockY();
-                        double targetHeight = 64 + (formulaValue * 32);
+                        double targetHeight = 64 / scale + (formulaValue * 1.5);
                         return y < targetHeight ? 1.0 : -1.0;
                     } else {
-                        double targetHeight = settings.getBaseHeight() + (formulaValue * settings.getHeightVariation());
-                        double y = context.blockY();
+                        double targetHeight = settings.getBaseHeight() / scale +
+                                (formulaValue * settings.getHeightVariation());
                         double distanceFromTarget = Math.abs(y - targetHeight);
 
                         if (y < targetHeight) {
                             return 1.0 - (distanceFromTarget / targetHeight) * settings.getSmoothingFactor();
                         } else {
-                            return -((distanceFromTarget / settings.getHeightVariation()) * settings.getSmoothingFactor());
+                            return -((distanceFromTarget / (settings.getHeightVariation() * scale))
+                                    * settings.getSmoothingFactor());
                         }
                     }
                 } catch (Exception ex) {
-                    System.err.println("Error computing terrain density: " + ex.getMessage());
                     return 0.0;
                 }
             }

@@ -2,6 +2,8 @@
   "terramath.worldgen.formula": "Math function for the world generator",
   "terramath.worldgen.formula.hint": "Leave blank for a default generation",
 
+  "terramath.worldgen.coordinate_scale": "Scale",
+
   "terramath.worldgen.base_height": "Base height",
   "terramath.worldgen.height_variation": "Height variation",
   "terramath.worldgen.smoothing": "Smoothing",
