@@ -1,5 +1,5 @@
 {
-  "terramath.worldgen.formula": "Математическая функция для генерации мира",
+  "terramath.worldgen.formula": "Математическая функция для генератора мира",
   "terramath.worldgen.formula.hint": "Оставьте пустым для обычной генерации",
 
   "terramath.worldgen.base_height": "Базовая высота",
