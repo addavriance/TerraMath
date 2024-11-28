@@ -3,7 +3,7 @@
 ![TerraMath_preview](https://github.com/user-attachments/assets/cfb099e5-1aa8-4940-9129-b8d0654072d0)
 
 
-[![CurseForge](https://img.shields.io/curseforge/dt/PROJ_ID?style=for-the-badge&logo=curseforge&label=Curseforge&labelColor=black&color=red)](https://www.curseforge.com/minecraft/mc-mods/terra-math)
+[![CurseForge](https://img.shields.io/curseforge/dt/1149108?style=for-the-badge&logo=curseforge&label=Curseforge&labelColor=black&color=red)](https://www.curseforge.com/minecraft/mc-mods/terra-math)
 [![Modrinth](https://img.shields.io/modrinth/dt/terra-math?style=for-the-badge&logo=modrinth&label=Modrinth&labelColor=black&color=green)](https://modrinth.com/mod/terra-math)
 
 [![Architecury API](https://img.shields.io/badge/Architectury%20API-REQUIRED-1?style=for-the-badge&labelColor=black&color=gold)](https://www.curseforge.com/minecraft/mc-mods/architectury-api)
