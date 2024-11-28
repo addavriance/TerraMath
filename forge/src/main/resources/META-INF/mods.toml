@@ -2,7 +2,7 @@ modLoader="javafml"
 
 loaderVersion="[46,)" 
 
-license="All Rights Reserved"
+license="GPL-3.0-only"
 
 issueTrackerURL="https://github.com/addavriance/terramath/issues"
 
@@ -11,7 +11,7 @@ modId="terramath"
 version="${version}"
 
 displayName="TerraMath"
-displayURL="https://www.curseforge.com/minecraft/mc-mods/terra-math/"
+displayURL="https://modrinth.com/mod/terra-math"
 
 logoFile="icon.png"
 authors="addavriance"
