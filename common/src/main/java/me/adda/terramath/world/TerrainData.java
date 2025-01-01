@@ -3,20 +3,27 @@ package me.adda.terramath.world;
 import me.adda.terramath.api.TerraFormulaManager;
 import me.adda.terramath.api.TerrainSettingsManager;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.saveddata.SavedData;
 
 public class TerrainData extends SavedData {
-    private static final String DATA_ID = "terramath_terrain";
-    public static final ResourceLocation IDENTIFIER = new ResourceLocation("terramath", DATA_ID);
+    public static final String DATA_ID = "terramath_terrain";
 
-    public String formula;
+    public static Factory<TerrainData> factory() {
+        return new Factory<>(
+                TerrainData::new,
+                TerrainData::load,
+                DataFixTypes.LEVEL
+        );
+    }
 
+    private String formula;
     private double coordinateScale;
     private double baseHeight;
     private double heightVariation;
     private double smoothingFactor;
     private boolean useDensityMode;
+    private boolean isFirstLoad;
 
     public TerrainData() {
         this.formula = "";
@@ -25,17 +32,18 @@ public class TerrainData extends SavedData {
         this.heightVariation = 32.5;
         this.smoothingFactor = 0.55;
         this.useDensityMode = false;
+        this.isFirstLoad = true;
     }
 
     @Override
     public CompoundTag save(CompoundTag tag) {
         tag.putString("Formula", formula);
-
         tag.putDouble("CoordinateScale", coordinateScale);
         tag.putDouble("BaseHeight", baseHeight);
         tag.putDouble("HeightVariation", heightVariation);
         tag.putDouble("SmoothingFactor", smoothingFactor);
         tag.putBoolean("UseDensityMode", useDensityMode);
+        tag.putBoolean("IsFirstLoad", isFirstLoad);
         return tag;
     }
 
@@ -43,21 +51,28 @@ public class TerrainData extends SavedData {
         TerrainData data = new TerrainData();
         if (tag != null) {
             data.formula = tag.getString("Formula");
-
             data.coordinateScale = tag.getDouble("CoordinateScale");
             data.baseHeight = tag.getDouble("BaseHeight");
             data.heightVariation = tag.getDouble("HeightVariation");
             data.smoothingFactor = tag.getDouble("SmoothingFactor");
             data.useDensityMode = tag.getBoolean("UseDensityMode");
+            data.isFirstLoad = tag.getBoolean("IsFirstLoad");
         }
         return data;
     }
 
+    public boolean isFirstLoad() {
+        return isFirstLoad;
+    }
+
+    public void setFirstLoad(boolean firstLoad) {
+        this.isFirstLoad = firstLoad;
+        this.setDirty();
+    }
+
     public void updateFromManagers() {
         this.formula = TerraFormulaManager.getInstance().getFormula();
-
         TerrainSettingsManager manager = TerrainSettingsManager.getInstance();
-
         this.coordinateScale = manager.getCoordinateScale();
         this.baseHeight = manager.getBaseHeight();
         this.heightVariation = manager.getHeightVariation();

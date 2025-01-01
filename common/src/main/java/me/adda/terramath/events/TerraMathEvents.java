@@ -13,22 +13,36 @@ public class TerraMathEvents {
     }
 
     private static void onLevelLoad(ServerLevel level) {
-        TerrainData data = level.getDataStorage().get(TerrainData::load, TerrainData.IDENTIFIER.toString());
+        TerrainData data = level.getDataStorage().computeIfAbsent(
+                TerrainData.factory(),
+                TerrainData.DATA_ID
+        );
 
-        if (data != null) {
-            data.applyToManagers();
+        if (data.isFirstLoad()) {
+            if (hasActivePlayerSettings()) {
+                data.updateFromManagers();
+                data.setFirstLoad(false);
+            }
         } else {
-            TerrainData new_data = new TerrainData();
-            new_data.updateFromManagers();
-
-            level.getDataStorage().set(TerrainData.IDENTIFIER.toString(), new_data);
+            data.applyToManagers();
         }
+    }
+
+    private static boolean hasActivePlayerSettings() {
+        TerrainSettingsManager manager = TerrainSettingsManager.getInstance();
+        TerraFormulaManager formulaManager = TerraFormulaManager.getInstance();
+
+        return !formulaManager.getFormula().isEmpty() ||
+                manager.getBaseHeight() != 64.0 ||
+                manager.getHeightVariation() != 32.5 ||
+                manager.getSmoothingFactor() != 0.55 ||
+                manager.getCoordinateScale() != 1.0 ||
+                manager.isUseDensityMode();
     }
 
     private static void onLevelUnload(ServerLevel level) {
         TerraFormulaManager.getInstance().setFormula("");
         TerrainSettingsManager manager = TerrainSettingsManager.getInstance();
-
         manager.resetToDefaults();
         manager.setUseDensityMode(false);
     }
