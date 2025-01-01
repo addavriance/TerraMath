@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 
 public class TerrainSettingsSlider extends AbstractSliderButton {
+    private Runnable onValueChangeListener;
     private final double minValue;
     private final double maxValue;
     private final String translationKey;
@@ -15,6 +16,7 @@ public class TerrainSettingsSlider extends AbstractSliderButton {
 
     public TerrainSettingsSlider(int x, int y, int width, TerrainSettingType type, TerrainSettingsManager settings) {
         super(x, y, width, 20, Component.empty(), 0.0);
+
         this.settings = settings;
         this.type = type;
 
@@ -47,6 +49,10 @@ public class TerrainSettingsSlider extends AbstractSliderButton {
         }
     }
 
+    public void setOnValueChangeListener(Runnable listener) {
+        this.onValueChangeListener = listener;
+    }
+
     @Override
     protected void updateMessage() {
         double currentValue = getValue();
@@ -59,8 +65,11 @@ public class TerrainSettingsSlider extends AbstractSliderButton {
         double newValue = getValue();
         this.settings.setTerrainSetting(this.type, newValue);
         this.updateMessage();
-    }
 
+        if (this.onValueChangeListener != null) {
+            this.onValueChangeListener.run();
+        }
+    }
     public double getDefaultValue() {
         return TerrainSettingsManager.getInstance().getDefaultByType(this.type);
     }

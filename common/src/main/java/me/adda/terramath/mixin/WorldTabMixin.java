@@ -102,6 +102,8 @@ public abstract class WorldTabMixin extends GridLayoutTab {
                     TerrainSettingType.COORDINATE_SCALE,
                     settings
             );
+            this.coordinateScaleSlider.setOnValueChangeListener(this::updateSlidersVisibility);
+
             this.coordinateScaleReset = new ResetButton(
                     SLIDER_WIDTH + SPACING, 0,
                     this.coordinateScaleSlider
@@ -146,6 +148,8 @@ public abstract class WorldTabMixin extends GridLayoutTab {
                     TerrainSettingType.BASE_HEIGHT,
                     settings
             );
+            this.baseHeightSlider.setOnValueChangeListener(this::updateSlidersVisibility);
+
             this.baseHeightReset = new ResetButton(
                     SLIDER_WIDTH + SPACING, 0,
                     this.baseHeightSlider
@@ -164,6 +168,8 @@ public abstract class WorldTabMixin extends GridLayoutTab {
                     TerrainSettingType.HEIGHT_VARIATION,
                     settings
             );
+            this.heightVarSlider.setOnValueChangeListener(this::updateSlidersVisibility);
+
             this.heightVarReset = new ResetButton(
                     SLIDER_WIDTH + SPACING, 0,
                     this.heightVarSlider
@@ -180,6 +186,8 @@ public abstract class WorldTabMixin extends GridLayoutTab {
                     TerrainSettingType.SMOOTHING_FACTOR,
                     settings
             );
+            this.smoothingSlider.setOnValueChangeListener(this::updateSlidersVisibility);
+
             this.smoothingReset = new ResetButton(
                     SLIDER_WIDTH + SPACING, 0,
                     this.smoothingSlider
@@ -263,18 +271,5 @@ public abstract class WorldTabMixin extends GridLayoutTab {
         this.baseHeightReset.visible = visible;
         this.heightVarReset.visible = visible;
         this.smoothingReset.visible = visible;
-    }
-
-    @Inject(method = "tick", at = @At("HEAD"))
-    private void onTick(CallbackInfo ci) {
-        if (this.formulaField != null) {
-            this.formulaField.tick();
-        }
-
-        TerrainSettingsManager settings = TerrainSettingsManager.getInstance();
-        if (settings.isUseDensityMode() != this.densityModeCheckbox.selected()) {
-            settings.setUseDensityMode(this.densityModeCheckbox.selected());
-            updateSlidersVisibility();
-        }
     }
 }
