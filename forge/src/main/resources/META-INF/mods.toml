@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[49,)"
+loaderVersion="[48,)"
 license="GPL-3.0-only"
 issueTrackerURL="https://github.com/addavriance/terramath/issues"
 
@@ -20,14 +20,14 @@ Generate your Minecraft worlds using mathematical formulas! Create unique terrai
 [[dependencies.terramath]]
 modId="forge"
 mandatory=true
-versionRange="[49,)"
+versionRange="[48,)"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.terramath]]
 modId="minecraft"
 mandatory=true
-versionRange="[1.20.3,1.20.5)"
+versionRange="[1.20.2,1.20.5)"
 ordering="NONE"
 side="BOTH"
 
