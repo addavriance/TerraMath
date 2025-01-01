@@ -1,4 +1,4 @@
-# TerraMath Mod for [Fabric/Forge] - 1.20/.1
+# TerraMath Mod for [Fabric/Forge] - 1.20.x
 
 ![TerraMath_preview](https://github.com/user-attachments/assets/cfb099e5-1aa8-4940-9129-b8d0654072d0)
 
@@ -8,11 +8,11 @@
 
 [![Architecury API](https://img.shields.io/badge/Architectury%20API-REQUIRED-1?style=for-the-badge&labelColor=black&color=gold)](https://www.curseforge.com/minecraft/mc-mods/architectury-api)
 [![Fabric API](https://img.shields.io/badge/Fabric%20API-REQUIRED%20for%20Fabric-1?style=for-the-badge&labelColor=black&color=gold)](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
-[![Minecraft](https://img.shields.io/badge/Minecraft-1.20.1-blue?style=for-the-badge&labelColor=black)](https://www.minecraft.net)
+[![Minecraft](https://img.shields.io/badge/Minecraft-1.20.4-blue?style=for-the-badge&labelColor=black)](https://www.minecraft.net)
 
 ## Description
 
-TerraMath is a Minecraft 1.20.1 mod that allows you to customize world generation using mathematical functions. Create unique landscapes by defining terrain height through mathematical formulas!
+TerraMath is a Minecraft 1.20.x mod that allows you to customize world generation using mathematical functions. Create unique landscapes by defining terrain height through mathematical formulas!
 
 ## Features
 
