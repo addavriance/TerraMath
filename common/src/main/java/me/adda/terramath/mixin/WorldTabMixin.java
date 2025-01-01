@@ -22,7 +22,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Mixin(targets = "net.minecraft.client.gui.screens.worldselection.CreateWorldScreen$WorldTab")
@@ -34,7 +33,7 @@ public abstract class WorldTabMixin extends GridLayoutTab {
 
     private static final Component CHECKBOX_LABEL = Component.translatable("terramath.worldgen.density_mode");
 
-    private static final int BASE_WIDTH = 308;
+    private static final int BASE_WIDTH = 310;
 
     private static final int SPACING = 5;
 
@@ -42,7 +41,7 @@ public abstract class WorldTabMixin extends GridLayoutTab {
 
     private EditBox formulaField;
     private StringWidget errorWidget;
-    private Checkbox densityModeCheckbox;
+    private CycleButton<Boolean> densityModeCheckbox;
     private TerrainSettingsSlider coordinateScaleSlider;
     private TerrainSettingsSlider baseHeightSlider;
     private TerrainSettingsSlider heightVarSlider;
@@ -116,12 +115,31 @@ public abstract class WorldTabMixin extends GridLayoutTab {
 
             formulaRowHelper.addChild(coordinateScaleLayout);
 
-            this.densityModeCheckbox = new Checkbox(
-                    0, 0, BASE_WIDTH, 20,
-                    CHECKBOX_LABEL,
-                    settings.isUseDensityMode()
-            );
-            formulaRowHelper.addChild(this.densityModeCheckbox);
+            GridLayout densitySwitchLayout = new GridLayout().spacing(196);
+            densitySwitchLayout.defaultCellSetting()
+                    .alignHorizontallyCenter()
+                    .alignVerticallyMiddle();
+
+            GridLayout.RowHelper densitySwitchRowHelper = densitySwitchLayout.createRowHelper(2);
+
+            StringWidget label = new StringWidget(CHECKBOX_LABEL, this.minecraft.font);
+            label.alignLeft();
+            label.setWidth(70);
+
+            densitySwitchRowHelper.addChild(label);
+
+            this.densityModeCheckbox = CycleButton.onOffBuilder(settings.isUseDensityMode())
+                    .displayOnlyValue()
+                    .create(0, 0, 45, 21, Component.empty(), (button, value) -> {
+                        settings.setUseDensityMode(value);
+                        updateSlidersVisibility();
+                    });
+
+            densitySwitchRowHelper.addChild(this.densityModeCheckbox);
+
+            densitySwitchLayout.defaultCellSetting().paddingTop(4);
+
+            formulaRowHelper.addChild(densitySwitchLayout);
 
             this.baseHeightSlider = new TerrainSettingsSlider(
                     0, 0, SLIDER_WIDTH,
@@ -138,6 +156,8 @@ public abstract class WorldTabMixin extends GridLayoutTab {
             GridLayout.RowHelper baseHeightRowHelper = baseHeightLayout.createRowHelper(2);
             baseHeightRowHelper.addChild(this.baseHeightSlider);
             baseHeightRowHelper.addChild(this.baseHeightReset);
+
+            baseHeightLayout.defaultCellSetting().paddingTop(5);
 
             this.heightVarSlider = new TerrainSettingsSlider(
                     0, 0, SLIDER_WIDTH,
@@ -235,7 +255,7 @@ public abstract class WorldTabMixin extends GridLayoutTab {
     }
 
     private void updateSlidersVisibility() {
-        boolean visible = this.densityModeCheckbox.selected();
+        boolean visible = this.densityModeCheckbox.getValue();
 
         this.baseHeightSlider.visible = visible;
         this.heightVarSlider.visible = visible;
