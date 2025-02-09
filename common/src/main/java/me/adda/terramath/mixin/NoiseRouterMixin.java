@@ -36,7 +36,7 @@ public class NoiseRouterMixin {
                     double formulaValue = formula.evaluate(x, y, z);
 
                     if (!settings.isUseDensityMode()) {
-                        double targetHeight = 64 / scale + (formulaValue * 1.5);
+                        double targetHeight = 64 / scale + formulaValue;
                         return y < targetHeight ? 1.0 : -1.0;
                     } else {
                         double targetHeight = settings.getBaseHeight() / scale +
