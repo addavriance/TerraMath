@@ -1,5 +1,7 @@
 package me.adda.terramath.math;
 
+import org.joml.SimplexNoise;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -70,5 +72,9 @@ public class MathExtensions {
                 (c[4] + t * (c[5] + t * (c[6] + t * (c[7] + t * (c[8] + t * c[9])))))))));
 
         return x >= 0 ? 1.0 - tau : tau - 1.0;
+    }
+
+    public static double noise(double x, double y, double z) {
+        return SimplexNoise.noise((float) x, (float) y, (float) z);
     }
 }
