@@ -1,0 +1,33 @@
+{
+  "terramath.worldgen.formula": "Mathematische Funktion für den Weltgenerator",
+  "terramath.worldgen.formula.hint": "Leerlassen, um eine normale Welt zu generieren",
+
+  "terramath.worldgen.coordinate_scale": "Skalierung",
+
+  "terramath.worldgen.base_height": "Basishöhe",
+  "terramath.worldgen.height_variation": "Höhenvariation",
+  "terramath.worldgen.smoothing": "Begradigung",
+  "terramath.worldgen.density_mode": "Erweitert",
+
+  "terramath.formula.error.null": "Die Formel kann nicht leer sein",
+  "terramath.formula.error.invalid_chars": "Die Formel enthält unzulässige Zeichen",
+  "terramath.formula.error.no_variables": "Die Formel muss mindestens eine Variable (x oder z) enthalten",
+  "terramath.formula.error.unknown_function": "Unbekannte Funktion: %s",
+  "terramath.formula.error.function_parentheses": "Funktion falsch angewendet: Nach %s muss eine Klammer folgen",
+  "terramath.formula.error.three_arguments": "%s erfordert genau drei kommagetrennte Argumente",
+  "terramath.formula.error.two_arguments": "%s erfordert genau zwei kommagetrennte Argumente",
+  "terramath.formula.error.arguments": "%s erfordert genau ein Argument",
+  "terramath.formula.error.unmatched_closing": "Keine öffnende Klammer für ) bei Zeichen %d",
+  "terramath.formula.error.empty_brackets": "Leere Klammern bei Zeichen %d",
+  "terramath.formula.error.unmatched_opening": "Keine schließende Klammer für ( bei Zeichen %d",
+  "terramath.formula.error.operator_sequence": "Ungültige Sequenz von Operatoren",
+  "terramath.formula.error.operator_start_end": "Formel kann nicht mit /* starten oder mit einem Operator enden",
+  "terramath.formula.error.operator_brackets": "Ungültige Operatoren nahe von Klammern",
+  "terramath.formula.error.unexpected_char": "'%s' bei Zeichen %d erwartet",
+  "terramath.formula.error.division_zero": "Teilen durch Null",
+  "terramath.formula.error.missing_closing": "Schließende Klammer fehlt",
+  "terramath.formula.error.missing_opening": "Fehlende öffnende Klammer nach %s",
+  "terramath.formula.error.argument_separator": "',' oder ')' in Funktionsargumenten erwartet",
+  "terramath.formula.error.invalid_number": "Ungültiges Zahlenformat: %s",
+  "terramath.formula.error.expected_number": "Zahl bei Zeichen %d erwartet"
+}
