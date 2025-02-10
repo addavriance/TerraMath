@@ -2,26 +2,16 @@ package me.adda.terramath.math;
 
 
 //https://gist.github.com/alksily/7a85a1898e65c936f861ee93516e397d
-import java.util.Random;
+import me.adda.terramath.SeedUtils;
 
 public class NoiseGenerator {
-    private static double seed;
+    private static long seed;
     private static long default_size;
     private static int[] p;
 
-    public NoiseGenerator(double _seed) {
-        seed = _seed;
-        init();
-    }
+    public static void init() {
 
-    public NoiseGenerator() {
-        seed = new Random().nextGaussian() * 255;
-        init();
-    }
-
-    private static void init() {
-
-        seed = new Random().nextGaussian() * 255;
+        seed = SeedUtils.getSeed();
 
         // Initialize the permutation array.
         p = new int[512];
@@ -54,11 +44,7 @@ public class NoiseGenerator {
 
     }
 
-    public void setSeed(double _seed) {
-        seed = _seed;
-    }
-
-    public double getSeed() {
+    public long getSeed() {
         return seed;
     }
 
@@ -78,11 +64,11 @@ public class NoiseGenerator {
 
     public static double noise(double x, double y, double z) {
 
-        if(!setSeed)
+        /*if(!setSeed)
         {
             setSeed = true;
             init();
-        }
+        }*/
 
         double value = 0.0;
         double size = default_size;
