@@ -3,6 +3,7 @@ package me.adda.terramath.events;
 import dev.architectury.event.events.common.LifecycleEvent;
 import me.adda.terramath.api.TerraFormulaManager;
 import me.adda.terramath.api.TerrainSettingsManager;
+import me.adda.terramath.math.NoiseGenerator;
 import me.adda.terramath.world.TerrainData;
 import net.minecraft.server.level.ServerLevel;
 
@@ -14,6 +15,8 @@ public class TerraMathEvents {
 
     private static void onLevelLoad(ServerLevel level) {
         TerrainData data = level.getDataStorage().get(TerrainData::load, TerrainData.IDENTIFIER.toString());
+
+        NoiseGenerator.init();
 
         if (data != null) {
             data.applyToManagers();

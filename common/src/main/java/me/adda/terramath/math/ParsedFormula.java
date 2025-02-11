@@ -4,6 +4,7 @@ import me.adda.terramath.exception.FormulaException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ParsedFormula {
     private final String originalExpression;
@@ -152,6 +153,9 @@ public class ParsedFormula {
                 case "min" -> Math.min(args.get(0), args.get(1));
                 case "sigmoid" -> 1.0 / (1.0 + Math.exp(-args.get(0)));
                 case "clamp" -> Math.min(Math.max(args.get(0), args.get(1)), args.get(2));
+
+                case "noise" -> NoiseGenerator.noise(args.get(0),args.get(1),0);
+                case "rand" -> new Random().nextDouble(args.get(0));
 
                 default -> throw new FormulaException(FormulaParser.ERROR_UNKNOWN_FUNCTION, name);
             };
@@ -324,7 +328,7 @@ public class ParsedFormula {
 
         private void validateFunctionArguments(String name, List<ExpressionNode> args) {
             int expectedArgs = switch (name) {
-                case "pow", "mod", "max", "min", "beta" -> 2;
+                case "pow", "mod", "max", "min", "beta", "noise" -> 2;
                 case "clamp" -> 3;
                 default -> 1;
             };

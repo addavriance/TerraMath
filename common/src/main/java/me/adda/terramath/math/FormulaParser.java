@@ -42,7 +42,9 @@ public class FormulaParser {
             "abs", "exp", "floor", "ceil", "round", "sign",
 
             "gamma", "erf", "beta", "mod",
-            "max", "min", "sigmoid", "clamp"
+            "max", "min", "sigmoid", "clamp",
+
+            "noise", "rand"
     ));
 
     public static final Map<Character, Integer> OPERATOR_PRECEDENCE = new ConcurrentHashMap<>();
