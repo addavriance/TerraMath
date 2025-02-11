@@ -14,6 +14,8 @@
 
 TerraMath is a Minecraft 1.20.x mod that allows you to customize world generation using mathematical functions. Create unique landscapes by defining terrain height through mathematical formulas!
 
+You can also join my [Discord](https://discord.gg/JgKTZEtNkg) to find more formulas or share yours.
+
 ## Features
 
 - Custom world generation through mathematical formulas
