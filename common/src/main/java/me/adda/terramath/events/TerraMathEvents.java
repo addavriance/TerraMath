@@ -13,7 +13,7 @@ public class TerraMathEvents {
     }
 
     private static void onLevelLoad(ServerLevel level) {
-        TerrainData data = level.getDataStorage().get(TerrainData::load, TerrainData.IDENTIFIER.toString());
+        TerrainData data = level.getDataStorage().get(TerrainData::load, TerrainData.IDENTIFIER);
 
         if (data != null) {
             data.applyToManagers();
@@ -21,7 +21,7 @@ public class TerraMathEvents {
             TerrainData new_data = new TerrainData();
             new_data.updateFromManagers();
 
-            level.getDataStorage().set(TerrainData.IDENTIFIER.toString(), new_data);
+            level.getDataStorage().set(TerrainData.IDENTIFIER, new_data);
         }
     }
 

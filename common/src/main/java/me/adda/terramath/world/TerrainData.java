@@ -3,12 +3,14 @@ package me.adda.terramath.world;
 import me.adda.terramath.api.TerraFormulaManager;
 import me.adda.terramath.api.TerrainSettingsManager;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.saveddata.SavedData;
 
 public class TerrainData extends SavedData {
-    private static final String DATA_ID = "terramath_terrain";
-    public static final ResourceLocation IDENTIFIER = new ResourceLocation("terramath", DATA_ID);
+    public static final String IDENTIFIER = "terramath_terrain";
+
+    TerraFormulaManager formula_manager = TerraFormulaManager.getInstance();
+
+    TerrainSettingsManager manager = TerrainSettingsManager.getInstance();
 
     public String formula;
 
@@ -19,12 +21,13 @@ public class TerrainData extends SavedData {
     private boolean useDensityMode;
 
     public TerrainData() {
-        this.formula = "";
-        this.coordinateScale = 1.0;
-        this.baseHeight = 64.0;
-        this.heightVariation = 32.5;
-        this.smoothingFactor = 0.55;
-        this.useDensityMode = false;
+        this.formula = formula_manager.getFormula();
+
+        this.coordinateScale = manager.getCoordinateScale();
+        this.baseHeight = manager.getBaseHeight();
+        this.heightVariation = manager.getHeightVariation();
+        this.smoothingFactor = manager.getSmoothingFactor();
+        this.useDensityMode = manager.isUseDensityMode();
     }
 
     @Override
@@ -54,21 +57,20 @@ public class TerrainData extends SavedData {
     }
 
     public void updateFromManagers() {
-        this.formula = TerraFormulaManager.getInstance().getFormula();
-
-        TerrainSettingsManager manager = TerrainSettingsManager.getInstance();
+        this.formula = formula_manager.getFormula();
 
         this.coordinateScale = manager.getCoordinateScale();
         this.baseHeight = manager.getBaseHeight();
         this.heightVariation = manager.getHeightVariation();
         this.smoothingFactor = manager.getSmoothingFactor();
         this.useDensityMode = manager.isUseDensityMode();
+
         this.setDirty();
     }
 
     public void applyToManagers() {
-        TerraFormulaManager.getInstance().setFormula(this.formula);
-        TerrainSettingsManager manager = TerrainSettingsManager.getInstance();
+        formula_manager.setFormula(this.formula);
+
         manager.setBaseHeight(this.baseHeight);
         manager.setHeightVariation(this.heightVariation);
         manager.setSmoothingFactor(this.smoothingFactor);

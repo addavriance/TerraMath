@@ -83,7 +83,7 @@ public abstract class WorldTabMixin extends GridLayoutTab {
                 }
             };
 
-            this.formulaField.setMaxLength(128);
+            this.formulaField.setMaxLength(1024);
             this.formulaField.setValue("");
             this.formulaField.setTextColor(0xFFFFFF);
             this.formulaField.setTextColorUneditable(0x808080);
