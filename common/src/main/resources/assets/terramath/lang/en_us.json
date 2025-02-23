@@ -23,11 +23,6 @@
   "terramath.formula.error.operator_sequence": "Invalid sequence of operators",
   "terramath.formula.error.operator_start_end": "Formula cannot start with */ or end with an operator",
   "terramath.formula.error.operator_brackets": "Invalid operator placement near brackets",
-  "terramath.formula.error.unexpected_char": "Unexpected character '%s' at position %d",
   "terramath.formula.error.division_zero": "Division by zero",
-  "terramath.formula.error.missing_closing": "Missing closing parenthesis",
-  "terramath.formula.error.missing_opening": "Missing opening parenthesis after function %s",
-  "terramath.formula.error.argument_separator": "Expected ',' or ')' in function arguments",
-  "terramath.formula.error.invalid_number": "Invalid number format: %s",
-  "terramath.formula.error.expected_number": "Expected number at position %d"
+  "terramath.formula.error.invalid_syntax": "Syntax error: %s"
 }

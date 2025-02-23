@@ -23,11 +23,6 @@
   "terramath.formula.error.operator_sequence": "Ungültige Sequenz von Operatoren",
   "terramath.formula.error.operator_start_end": "Formel kann nicht mit /* starten oder mit einem Operator enden",
   "terramath.formula.error.operator_brackets": "Ungültige Operatoren nahe von Klammern",
-  "terramath.formula.error.unexpected_char": "'%s' bei Zeichen %d erwartet",
   "terramath.formula.error.division_zero": "Teilen durch Null",
-  "terramath.formula.error.missing_closing": "Schließende Klammer fehlt",
-  "terramath.formula.error.missing_opening": "Fehlende öffnende Klammer nach %s",
-  "terramath.formula.error.argument_separator": "',' oder ')' in Funktionsargumenten erwartet",
-  "terramath.formula.error.invalid_number": "Ungültiges Zahlenformat: %s",
-  "terramath.formula.error.expected_number": "Zahl bei Zeichen %d erwartet"
+  "terramath.formula.error.invalid_syntax": "Syntaxfehler: %s"
 }

@@ -22,7 +22,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Mixin(targets = "net.minecraft.client.gui.screens.worldselection.CreateWorldScreen$WorldTab")
@@ -216,7 +215,7 @@ public abstract class WorldTabMixin extends GridLayoutTab {
                 if (!result.isValid()) {
                     createButton.active = false;
 
-                    Component errorMessage = Component.translatable(result.getErrorKey(), result.getErrorArgs())
+                    Component errorMessage = Component.translatable(result.errorKey(), result.errorArgs())
                             .withStyle(ChatFormatting.RED);
                     errorWidget.setMessage(errorMessage);
                 } else {

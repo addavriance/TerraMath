@@ -1,184 +1,160 @@
 package me.adda.terramath.math;
 
 import me.adda.terramath.exception.FormulaException;
+import org.codehaus.janino.ExpressionEvaluator;
 
-import java.util.*;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class FormulaParser {
-    public static final String TRANSLATION_PREFIX = "terramath.formula.error.";
-    public static final String ERROR_NULL = TRANSLATION_PREFIX + "null";
-    public static final String ERROR_INVALID_CHARS = TRANSLATION_PREFIX + "invalid_chars";
-    public static final String ERROR_NO_VARIABLES = TRANSLATION_PREFIX + "no_variables";
-    public static final String ERROR_UNKNOWN_FUNCTION = TRANSLATION_PREFIX + "unknown_function";
-    public static final String ERROR_FUNCTION_PARENTHESES = TRANSLATION_PREFIX + "function_parentheses";
-    public static final String ERROR_THREE_ARGUMENTS = TRANSLATION_PREFIX + "three_arguments";
-    public static final String ERROR_TWO_ARGUMENTS = TRANSLATION_PREFIX + "two_arguments";
-    public static final String ERROR_ARGUMENTS = TRANSLATION_PREFIX + "arguments";
-    public static final String ERROR_UNMATCHED_CLOSING = TRANSLATION_PREFIX + "unmatched_closing";
-    public static final String ERROR_EMPTY_BRACKETS = TRANSLATION_PREFIX + "empty_brackets";
-    public static final String ERROR_UNMATCHED_OPENING = TRANSLATION_PREFIX + "unmatched_opening";
-    public static final String ERROR_OPERATOR_SEQUENCE = TRANSLATION_PREFIX + "operator_sequence";
-    public static final String ERROR_OPERATOR_START_END = TRANSLATION_PREFIX + "operator_start_end";
-    public static final String ERROR_OPERATOR_BRACKETS = TRANSLATION_PREFIX + "operator_brackets";
-    public static final String ERROR_UNEXPECTED_CHAR = TRANSLATION_PREFIX + "unexpected_char";
-    public static final String ERROR_MISSING_CLOSING = TRANSLATION_PREFIX + "missing_closing";
-    public static final String ERROR_DIVISION_ZERO = TRANSLATION_PREFIX + "division_zero";
-    public static final String ERROR_MISSING_OPENING = TRANSLATION_PREFIX + "missing_opening";
-    public static final String ERROR_ARGUMENT_SEPARATOR = TRANSLATION_PREFIX + "argument_separator";
-    public static final String ERROR_INVALID_NUMBER = TRANSLATION_PREFIX + "invalid_number";
-    public static final String ERROR_EXPECTED_NUMBER = TRANSLATION_PREFIX + "expected_number";
-    public static final String ERROR_INVALID_POWER = TRANSLATION_PREFIX + "invalid_power";
-
-    public static final Set<String> FUNCTIONS = new HashSet<>(Arrays.asList(
-            "sin", "cos", "tan",
-            "asin", "acos", "atan",
-            "sinh", "cosh", "tanh",
-
-            "sqrt", "cbrt", "pow",
-
-            "ln", "lg",
-
-            "abs", "exp", "floor", "ceil", "round", "sign",
-
-            "gamma", "erf", "beta", "mod",
-            "max", "min", "sigmoid", "clamp"
-    ));
-
-    public static final Map<Character, Integer> OPERATOR_PRECEDENCE = new ConcurrentHashMap<>();
+public class FormulaParser extends FormulaValidator {
+    private static final Map<String, String> FUNCTION_MAPPINGS = new ConcurrentHashMap<>();
     static {
-        OPERATOR_PRECEDENCE.put('!', 5);
-        OPERATOR_PRECEDENCE.put('^', 4);
-        OPERATOR_PRECEDENCE.put('*', 3);
-        OPERATOR_PRECEDENCE.put('/', 3);
-        OPERATOR_PRECEDENCE.put('+', 2);
-        OPERATOR_PRECEDENCE.put('-', 2);
+        FUNCTION_MAPPINGS.put("sin", "Math.sin");
+        FUNCTION_MAPPINGS.put("cos", "Math.cos");
+        FUNCTION_MAPPINGS.put("tan", "Math.tan");
+        FUNCTION_MAPPINGS.put("asin", "Math.asin");
+        FUNCTION_MAPPINGS.put("acos", "Math.acos");
+        FUNCTION_MAPPINGS.put("atan", "Math.atan");
+        FUNCTION_MAPPINGS.put("sinh", "Math.sinh");
+        FUNCTION_MAPPINGS.put("cosh", "Math.cosh");
+        FUNCTION_MAPPINGS.put("tanh", "Math.tanh");
+        FUNCTION_MAPPINGS.put("sqrt", "Math.sqrt");
+        FUNCTION_MAPPINGS.put("cbrt", "Math.cbrt");
+        FUNCTION_MAPPINGS.put("pow", "Math.pow");
+        FUNCTION_MAPPINGS.put("ln", "Math.log");
+        FUNCTION_MAPPINGS.put("lg", "Math.log10");
+        FUNCTION_MAPPINGS.put("abs", "Math.abs");
+        FUNCTION_MAPPINGS.put("exp", "Math.exp");
+        FUNCTION_MAPPINGS.put("floor", "Math.floor");
+        FUNCTION_MAPPINGS.put("ceil", "Math.ceil");
+        FUNCTION_MAPPINGS.put("round", "(double)Math.round");
+        FUNCTION_MAPPINGS.put("sign", "Math.signum");
+        FUNCTION_MAPPINGS.put("max", "Math.max");
+        FUNCTION_MAPPINGS.put("min", "Math.min");
+
+        FUNCTION_MAPPINGS.put("gamma", "MathExtensions.gamma");
+        FUNCTION_MAPPINGS.put("erf", "MathExtensions.erf");
+        FUNCTION_MAPPINGS.put("beta", "MathExtensions.beta");
+        FUNCTION_MAPPINGS.put("mod", "MathExtensions.mod");
+        FUNCTION_MAPPINGS.put("sigmoid", "MathExtensions.sigmoid");
+        FUNCTION_MAPPINGS.put("clamp", "MathExtensions.clamp");
     }
 
-    public static class ValidationResult {
-        private final boolean isValid;
-        private final String errorKey;
-        private final Object[] errorArgs;
+    public static class CompiledFormula {
+        private final String originalExpression;
+        private final ExpressionEvaluator evaluator;
 
-        public ValidationResult(boolean isValid, String errorKey, Object... errorArgs) {
-            this.isValid = isValid;
-            this.errorKey = errorKey;
-            this.errorArgs = errorArgs;
+        private CompiledFormula(String expression, ExpressionEvaluator evaluator) {
+            this.originalExpression = expression;
+            this.evaluator = evaluator;
+
         }
 
-        public boolean isValid() {
-            return isValid;
-        }
-
-        public String getErrorKey() {
-            return errorKey;
-        }
-
-        public Object[] getErrorArgs() {
-            return errorArgs;
-        }
-    }
-
-    public static ValidationResult validateFormula(String formula) {
-        if (formula == null) {
-            return new ValidationResult(false, ERROR_NULL);
-        }
-
-        formula = formula.trim();
-        if (formula.isEmpty()) {
-            return new ValidationResult(true, null);
-        }
-
-        try {
-            validateBasicStructure(formula);
-            validateFunctionsAndBrackets(formula);
-            validateOperators(formula);
-
-            ParsedFormula parsed = ParsedFormula.parse(formula);
-            parsed.evaluate(0, 0, 0);
-
-            return new ValidationResult(true, null);
-        } catch (FormulaException e) {
-            return new ValidationResult(false, e.getMessage(), e.getArgs());
-        } catch (IllegalArgumentException e) {
-            return new ValidationResult(false, e.getMessage());
-        }
-    }
-
-    private static void validateBasicStructure(String formula) {
-        if (!formula.matches("^[\\sxyz\\d+\\-*/(),.!^sincoatqrpwbdelhfgum]+$")) {
-            throw new IllegalArgumentException(ERROR_INVALID_CHARS);
-        }
-
-        if (!formula.contains("x") && !formula.contains("y") && !formula.contains("z")) {
-            throw new IllegalArgumentException(ERROR_NO_VARIABLES);
-        }
-    }
-
-    private static void validateFunctionsAndBrackets(String formula) {
-        Stack<Integer> bracketStack = new Stack<>();
-        StringBuilder currentFunction = new StringBuilder();
-        boolean inFunction = false;
-
-        for (int i = 0; i < formula.length(); i++) {
-            char c = formula.charAt(i);
-
-            if (Character.isLetter(c)) {
-                currentFunction.append(c);
-                inFunction = true;
-            } else if (inFunction) {
-                String func = currentFunction.toString().toLowerCase();
-                if (!FUNCTIONS.contains(func) && c == '(') {
-                    throw new FormulaException(ERROR_UNKNOWN_FUNCTION, func);
-                }
-                currentFunction = new StringBuilder();
-                inFunction = false;
-
-                if (FUNCTIONS.contains(func) && c != '(') {
-                    throw new FormulaException(ERROR_FUNCTION_PARENTHESES, func);
-                }
-            }
-
-            if (c == '(') {
-                bracketStack.push(i);
-            } else if (c == ')') {
-                if (bracketStack.isEmpty()) {
-                    throw new FormulaException(ERROR_UNMATCHED_CLOSING, i);
-                }
-                int openPos = bracketStack.pop();
-                if (i - openPos == 1) {
-                    throw new FormulaException(ERROR_EMPTY_BRACKETS, openPos);
-                }
+        public double evaluate(double x, double y, double z) {
+            try {
+                return (double) evaluator.evaluate(new Object[]{x, y, z});
+            } catch (Exception e) {
+                throw new FormulaException(ERROR_INVALID_CHARS, e.getMessage());
             }
         }
 
-        if (!bracketStack.isEmpty()) {
-            throw new FormulaException(ERROR_UNMATCHED_OPENING, bracketStack.peek());
+        public String getOriginalExpression() {
+            return originalExpression;
         }
     }
 
-    private static void validateOperators(String formula) {
-        if (formula.matches(".*[+\\-*/]{2,}.*")) {
-            throw new IllegalArgumentException(ERROR_OPERATOR_SEQUENCE);
-        }
+    public static CompiledFormula parse(String formula) {
+        String javaExpression = convertToJavaExpression(formula);
 
-        if (formula.matches("^[*/].*") || formula.matches(".*[+\\-*/]$")) {
-            throw new IllegalArgumentException(ERROR_OPERATOR_START_END);
-        }
-
-        if (formula.matches(".*\\([+*/].*") || formula.matches(".*[+\\-*/]\\).*")) {
-            throw new IllegalArgumentException(ERROR_OPERATOR_BRACKETS);
-        }
-    }
-
-    @Deprecated
-    public static double evaluateFormula(String formula, double x, double y, double z) {
         try {
-            return ParsedFormula.parse(formula).evaluate(x, y, z);
-        } catch (FormulaException e) {
-            throw new FormulaException(e.getMessage(), e.getArgs());
+            ExpressionEvaluator evaluator = new ExpressionEvaluator();
+
+            evaluator.setParameters(
+                    new String[]{"x", "y", "z"},
+                    new Class[]{double.class, double.class, double.class}
+            );
+
+            evaluator.setParentClassLoader(FormulaParser.class.getClassLoader());
+            evaluator.setExpressionType(double.class);
+
+            String fullExpression = String.format(
+                    "import me.adda.terramath.math.MathExtensions; " +
+                    "(%s)",
+                    javaExpression
+            );
+
+            evaluator.cook(fullExpression);
+            return new CompiledFormula(formula, evaluator);
         } catch (Exception e) {
-            throw new IllegalArgumentException(e.getMessage());
+            String formatted_exception = e.getMessage().split(":")[1].trim();
+            formatted_exception = formatted_exception.length() > 43 ? formatted_exception.substring(0, 43).trim() + "..." : formatted_exception;
+
+            throw new FormulaException(ERROR_INVALID_SYNTAX, formatted_exception);
         }
+    }
+
+    private static String convertToJavaExpression(String formula) {
+        // Replace function names with their Java equivalents
+        String javaExpr = formula;
+        for (Map.Entry<String, String> entry : FUNCTION_MAPPINGS.entrySet()) {
+            javaExpr = javaExpr.replaceAll(
+                    "\\b" + entry.getKey() + "\\b",
+                    entry.getValue()
+            );
+        }
+
+        if (javaExpr.contains("!")) {
+            javaExpr = handleFactorials(javaExpr);
+        }
+
+        javaExpr = replacePowerOperator(javaExpr);
+
+        return javaExpr;
+    }
+
+    private static String replacePowerOperator(String expr) {
+        Pattern pattern = Pattern.compile("(\\w+)\\s*\\^\\s*(\\d+)");
+        Matcher matcher = pattern.matcher(expr);
+
+        while (matcher.find()) {
+            String base = matcher.group(1);
+            String exponent = matcher.group(2);
+            String replacement = "Math.pow(" + base + ", " + exponent + ")";
+            expr = expr.replace(matcher.group(0), replacement);
+        }
+
+        return expr;
+    }
+
+    private static String handleFactorials(String expr) {
+        StringBuilder result = new StringBuilder();
+        int i = 0;
+        while (i < expr.length()) {
+            if (expr.charAt(i) == '!' && i > 0) {
+                int j = i - 1;
+                int parenthesesCount = 0;
+                while (j >= 0) {
+                    char c = expr.charAt(j);
+                    if (c == ')') parenthesesCount++;
+                    if (c == '(') parenthesesCount--;
+                    if (parenthesesCount == 0 && isOperator(c)) break;
+                    j--;
+                }
+
+                j++;
+
+                String operand = expr.substring(j, i);
+                result.delete(result.length() - operand.length(), result.length());
+                result.append("MathExtensions.gamma(").append(operand).append(" + 1)");
+
+            } else {
+                result.append(expr.charAt(i));
+            }
+
+            i++;
+        }
+        return result.toString();
     }
 }

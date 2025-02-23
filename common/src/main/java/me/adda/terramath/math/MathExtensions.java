@@ -71,4 +71,15 @@ public class MathExtensions {
 
         return x >= 0 ? 1.0 - tau : tau - 1.0;
     }
+
+    public static double mod(double a, double b) {
+        return a % b;
+    }
+
+    public static double sigmoid(double x) {
+        return 1.0 / (1.0 + Math.exp(-x));
+    }
+    public static double clamp(double x, double min, double max) {
+        return Math.min(Math.max(x, min), max);
+    }
 }

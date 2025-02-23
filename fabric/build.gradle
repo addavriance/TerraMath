@@ -23,6 +23,7 @@ dependencies {
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
+    shadowCommon 'org.codehaus.janino:janino:3.1.9'
 }
 
 processResources {

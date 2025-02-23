@@ -23,11 +23,6 @@
   "terramath.formula.error.operator_sequence": "Неверная последовательность операторов",
   "terramath.formula.error.operator_start_end": "Формула не может начинаться с */ или заканчиваться оператором",
   "terramath.formula.error.operator_brackets": "Неверное размещение оператора рядом со скобками",
-  "terramath.formula.error.unexpected_char": "Неожиданный символ '%s' на позиции %d",
   "terramath.formula.error.division_zero": "Деление на ноль",
-  "terramath.formula.error.missing_closing": "Отсутствует закрывающая скобка",
-  "terramath.formula.error.missing_opening": "Отсутствует открывающая скобка после функции %s",
-  "terramath.formula.error.argument_separator": "Ожидается ',' или ')' в аргументах функции",
-  "terramath.formula.error.invalid_number": "Неверный формат числа: %s",
-  "terramath.formula.error.expected_number": "Ожидается число на позиции %d"
+  "terramath.formula.error.invalid_syntax": "Синтаксическая ошибка: %s"
 }
