@@ -8,6 +8,11 @@ import net.minecraft.world.level.saveddata.SavedData;
 
 public class TerrainData extends SavedData {
     public static final String DATA_ID = "terramath_terrain";
+    public static final String IDENTIFIER = "terramath_terrain";
+
+    TerraFormulaManager formula_manager = TerraFormulaManager.getInstance();
+
+    TerrainSettingsManager manager = TerrainSettingsManager.getInstance();
 
     public static Factory<TerrainData> factory() {
         return new Factory<>(
@@ -26,18 +31,20 @@ public class TerrainData extends SavedData {
     private boolean isFirstLoad;
 
     public TerrainData() {
-        this.formula = "";
-        this.coordinateScale = 1.0;
-        this.baseHeight = 64.0;
-        this.heightVariation = 32.5;
-        this.smoothingFactor = 0.55;
-        this.useDensityMode = false;
+        this.formula = formula_manager.getFormula();
+
+        this.coordinateScale = manager.getCoordinateScale();
+        this.baseHeight = manager.getBaseHeight();
+        this.heightVariation = manager.getHeightVariation();
+        this.smoothingFactor = manager.getSmoothingFactor();
+        this.useDensityMode = manager.isUseDensityMode();
         this.isFirstLoad = true;
     }
 
     @Override
     public CompoundTag save(CompoundTag tag) {
         tag.putString("Formula", formula);
+
         tag.putDouble("CoordinateScale", coordinateScale);
         tag.putDouble("BaseHeight", baseHeight);
         tag.putDouble("HeightVariation", heightVariation);
@@ -51,6 +58,7 @@ public class TerrainData extends SavedData {
         TerrainData data = new TerrainData();
         if (tag != null) {
             data.formula = tag.getString("Formula");
+
             data.coordinateScale = tag.getDouble("CoordinateScale");
             data.baseHeight = tag.getDouble("BaseHeight");
             data.heightVariation = tag.getDouble("HeightVariation");
@@ -71,19 +79,20 @@ public class TerrainData extends SavedData {
     }
 
     public void updateFromManagers() {
-        this.formula = TerraFormulaManager.getInstance().getFormula();
-        TerrainSettingsManager manager = TerrainSettingsManager.getInstance();
+        this.formula = formula_manager.getFormula();
+
         this.coordinateScale = manager.getCoordinateScale();
         this.baseHeight = manager.getBaseHeight();
         this.heightVariation = manager.getHeightVariation();
         this.smoothingFactor = manager.getSmoothingFactor();
         this.useDensityMode = manager.isUseDensityMode();
+
         this.setDirty();
     }
 
     public void applyToManagers() {
-        TerraFormulaManager.getInstance().setFormula(this.formula);
-        TerrainSettingsManager manager = TerrainSettingsManager.getInstance();
+        formula_manager.setFormula(this.formula);
+
         manager.setBaseHeight(this.baseHeight);
         manager.setHeightVariation(this.heightVariation);
         manager.setSmoothingFactor(this.smoothingFactor);

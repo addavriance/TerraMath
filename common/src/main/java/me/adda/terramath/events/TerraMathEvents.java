@@ -43,6 +43,7 @@ public class TerraMathEvents {
     private static void onLevelUnload(ServerLevel level) {
         TerraFormulaManager.getInstance().setFormula("");
         TerrainSettingsManager manager = TerrainSettingsManager.getInstance();
+
         manager.resetToDefaults();
         manager.setUseDensityMode(false);
     }

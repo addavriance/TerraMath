@@ -83,7 +83,7 @@ public abstract class WorldTabMixin extends GridLayoutTab {
                 }
             };
 
-            this.formulaField.setMaxLength(128);
+            this.formulaField.setMaxLength(1024);
             this.formulaField.setValue("");
             this.formulaField.setTextColor(0xFFFFFF);
             this.formulaField.setTextColorUneditable(0x808080);
@@ -244,7 +244,7 @@ public abstract class WorldTabMixin extends GridLayoutTab {
                 if (!result.isValid()) {
                     createButton.active = false;
 
-                    Component errorMessage = Component.translatable(result.getErrorKey(), result.getErrorArgs())
+                    Component errorMessage = Component.translatable(result.errorKey(), result.errorArgs())
                             .withStyle(ChatFormatting.RED);
                     errorWidget.setMessage(errorMessage);
                 } else {

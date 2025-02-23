@@ -2,7 +2,7 @@ package me.adda.terramath.mixin;
 
 import me.adda.terramath.api.FormulaCacheHolder;
 import me.adda.terramath.api.TerrainSettingsManager;
-import me.adda.terramath.math.ParsedFormula;
+import me.adda.terramath.math.FormulaParser;
 import net.minecraft.util.KeyDispatchDataCodec;
 import net.minecraft.world.level.levelgen.DensityFunction;
 import net.minecraft.world.level.levelgen.NoiseRouter;
@@ -16,7 +16,7 @@ public class NoiseRouterMixin {
 
     @Inject(method = "finalDensity", at = @At("HEAD"), cancellable = true)
     private void injectCustomTerrainNoise(CallbackInfoReturnable<DensityFunction> cir) {
-        ParsedFormula formula = FormulaCacheHolder.getParsedFormula();
+        FormulaParser.CompiledFormula formula = FormulaCacheHolder.getParsedFormula();
         if (formula == null || formula.getOriginalExpression().trim().isEmpty()) {
             return;
         }
@@ -36,7 +36,7 @@ public class NoiseRouterMixin {
                     double formulaValue = formula.evaluate(x, y, z);
 
                     if (!settings.isUseDensityMode()) {
-                        double targetHeight = 64 / scale + (formulaValue * 1.5);
+                        double targetHeight = 64 / scale + formulaValue;
                         return y < targetHeight ? 1.0 : -1.0;
                     } else {
                         double targetHeight = settings.getBaseHeight() / scale +
