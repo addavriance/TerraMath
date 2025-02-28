@@ -5,8 +5,6 @@ import org.codehaus.janino.ExpressionEvaluator;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class FormulaParser extends FormulaValidator {
     private static final Map<String, String> FUNCTION_MAPPINGS = new ConcurrentHashMap<>();
@@ -56,7 +54,7 @@ public class FormulaParser extends FormulaValidator {
             try {
                 return (double) evaluator.evaluate(new Object[]{x, y, z});
             } catch (Exception e) {
-                throw new FormulaException(ERROR_INVALID_CHARS, e.getMessage());
+                throw new FormulaException(ERROR_INVALID_SYNTAX, e.getMessage());
             }
         }
 
@@ -88,16 +86,16 @@ public class FormulaParser extends FormulaValidator {
             evaluator.cook(fullExpression);
             return new CompiledFormula(formula, evaluator);
         } catch (Exception e) {
+            System.out.println(e);
             String formatted_exception = e.getMessage().split(":")[1].trim();
-            formatted_exception = formatted_exception.length() > 43 ? formatted_exception.substring(0, 43).trim() + "..." : formatted_exception;
 
             throw new FormulaException(ERROR_INVALID_SYNTAX, formatted_exception);
         }
     }
 
     private static String convertToJavaExpression(String formula) {
-        // Replace function names with their Java equivalents
         String javaExpr = formula;
+
         for (Map.Entry<String, String> entry : FUNCTION_MAPPINGS.entrySet()) {
             javaExpr = javaExpr.replaceAll(
                     "\\b" + entry.getKey() + "\\b",
@@ -105,56 +103,24 @@ public class FormulaParser extends FormulaValidator {
             );
         }
 
+        javaExpr = replacePowerOperator(javaExpr);
+
         if (javaExpr.contains("!")) {
             javaExpr = handleFactorials(javaExpr);
         }
 
-        javaExpr = replacePowerOperator(javaExpr);
-
         return javaExpr;
     }
 
-    private static String replacePowerOperator(String expr) {
-        Pattern pattern = Pattern.compile("(\\w+)\\s*\\^\\s*(\\d+)");
-        Matcher matcher = pattern.matcher(expr);
+    public static String replacePowerOperator(String expression) {
+        PowerParser parser = new PowerParser(expression);
 
-        while (matcher.find()) {
-            String base = matcher.group(1);
-            String exponent = matcher.group(2);
-            String replacement = "Math.pow(" + base + ", " + exponent + ")";
-            expr = expr.replace(matcher.group(0), replacement);
-        }
-
-        return expr;
+        return parser.parse();
     }
 
-    private static String handleFactorials(String expr) {
-        StringBuilder result = new StringBuilder();
-        int i = 0;
-        while (i < expr.length()) {
-            if (expr.charAt(i) == '!' && i > 0) {
-                int j = i - 1;
-                int parenthesesCount = 0;
-                while (j >= 0) {
-                    char c = expr.charAt(j);
-                    if (c == ')') parenthesesCount++;
-                    if (c == '(') parenthesesCount--;
-                    if (parenthesesCount == 0 && isOperator(c)) break;
-                    j--;
-                }
+    private static String handleFactorials(String expression) {
+        FactorialParser parser = new FactorialParser(expression);
 
-                j++;
-
-                String operand = expr.substring(j, i);
-                result.delete(result.length() - operand.length(), result.length());
-                result.append("MathExtensions.gamma(").append(operand).append(" + 1)");
-
-            } else {
-                result.append(expr.charAt(i));
-            }
-
-            i++;
-        }
-        return result.toString();
+        return parser.parse();
     }
 }
