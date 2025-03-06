@@ -2,6 +2,7 @@ package me.adda.terramath.world;
 
 import me.adda.terramath.api.TerraFormulaManager;
 import me.adda.terramath.api.TerrainSettingsManager;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.saveddata.SavedData;
@@ -37,7 +38,7 @@ public class TerrainData extends SavedData {
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public CompoundTag save(CompoundTag tag, HolderLookup.Provider provider) {
         tag.putString("Formula", formula);
         tag.putDouble("CoordinateScale", coordinateScale);
         tag.putDouble("BaseHeight", baseHeight);
@@ -47,7 +48,7 @@ public class TerrainData extends SavedData {
         return tag;
     }
 
-    public static TerrainData load(CompoundTag tag) {
+    public static TerrainData load(CompoundTag tag, HolderLookup.Provider provider) {
         TerrainData data = new TerrainData();
         if (tag != null) {
             data.formula = tag.getString("Formula");
