@@ -1,7 +1,5 @@
 package me.adda.terramath.math;
 
-import me.adda.terramath.math.ParserUtils;
-
 public class FactorialParser {
 
     private String expression;

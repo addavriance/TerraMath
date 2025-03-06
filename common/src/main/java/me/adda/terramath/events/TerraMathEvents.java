@@ -1,6 +1,5 @@
 package me.adda.terramath.events;
 
-import dev.architectury.event.events.common.LifecycleEvent;
 import me.adda.terramath.api.FormulaCacheHolder;
 import me.adda.terramath.api.TerraFormulaManager;
 import me.adda.terramath.api.TerrainSettingsManager;
@@ -16,12 +15,7 @@ import java.nio.file.Path;
 public class TerraMathEvents {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static void init() {
-        LifecycleEvent.SERVER_LEVEL_LOAD.register(TerraMathEvents::onLevelLoad);
-        LifecycleEvent.SERVER_LEVEL_UNLOAD.register(TerraMathEvents::onLevelUnload);
-    }
-
-    private static void onLevelLoad(ServerLevel level) {
+    public static void onLevelLoad(ServerLevel level) {
         TerrainData data = level.getDataStorage().computeIfAbsent(
                 TerrainData.factory(),
                 TerrainData.DATA_ID
@@ -44,7 +38,7 @@ public class TerraMathEvents {
         }
     }
 
-    private static void onLevelUnload(ServerLevel level) {
+    public static void onLevelUnload(ServerLevel level) {
         TerraFormulaManager.getInstance().setFormula("");
         TerrainSettingsManager manager = TerrainSettingsManager.getInstance();
         FormulaCacheHolder.resetCache();
