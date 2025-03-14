@@ -1,7 +1,9 @@
 package me.adda.terramath.math;
 
 import me.adda.terramath.exception.FormulaException;
+
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class FormulaValidator {
     public static final String TRANSLATION_PREFIX = "terramath.formula.error.";
@@ -54,7 +56,15 @@ public class FormulaValidator {
     }
 
     private static void validateBasicStructure(String formula) {
-        if (!formula.matches("^[\\sxyz\\d+\\-*/(),.!^sincoatqrpwbdelhfgum]+$")) {
+
+        String function_chars = FUNCTIONS.stream()
+                .flatMap(s -> s.chars().mapToObj(c -> (char) c))
+                .collect(Collectors.toSet())
+                .stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining());
+
+        if (!formula.matches("^[\\sxyz\\d+\\-*/(),.!^" + function_chars + "]+$")) {
             throw new IllegalArgumentException(ERROR_INVALID_CHARS);
         }
 
