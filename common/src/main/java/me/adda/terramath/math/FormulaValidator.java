@@ -37,7 +37,7 @@ public class FormulaValidator {
 
         formula = formula.trim();
         if (formula.isEmpty()) {
-            return new ValidationResult(false, ERROR_NO_VARIABLES);
+            return new ValidationResult(true, null);
         }
 
         try {
