@@ -38,6 +38,9 @@ public class FormulaParser extends FormulaValidator {
         FUNCTION_MAPPINGS.put("mod", "MathExtensions.mod");
         FUNCTION_MAPPINGS.put("sigmoid", "MathExtensions.sigmoid");
         FUNCTION_MAPPINGS.put("clamp", "MathExtensions.clamp");
+        FUNCTION_MAPPINGS.put("rand", "MathExtensions.rand");
+        FUNCTION_MAPPINGS.put("randint", "MathExtensions.randint");
+        FUNCTION_MAPPINGS.put("randnormal", "MathExtensions.randnormal");
     }
 
     public static class CompiledFormula {

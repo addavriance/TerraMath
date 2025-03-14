@@ -82,4 +82,16 @@ public class MathExtensions {
     public static double clamp(double x, double min, double max) {
         return Math.min(Math.max(x, min), max);
     }
+    public static double rand() {
+        return Math.random();
+    }
+    public static int randint(int min, int max) {
+        return min + (int) (Math.random() * ((max - min) + 1));
+    }
+    public static double randnormal(double mean, double stddev) {
+        double u1 = Math.random();
+        double u2 = Math.random();
+        double randStdNormal = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+        return mean + stddev * randStdNormal;
+    }
 }
