@@ -9,7 +9,11 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 public class TerraMathForge {
     public TerraMathForge() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
         registerForgeEvents(modEventBus);
+
+        ForgeConfigRegistration.register();
+
         TerraMath.init();
     }
 

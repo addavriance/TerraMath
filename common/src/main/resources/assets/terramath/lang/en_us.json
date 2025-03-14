@@ -1,4 +1,15 @@
 {
+  "config.terramath.title": "TerraMath Configuration",
+  "config.terramath.formulaLabel": "Terrain Generation Formula:",
+  "config.terramath.useDefault": "Use Default Formula",
+  "config.terramath.generate": "Random",
+  "config.terramath.preview": "Preview",
+  "config.terramath.customWorldHeight": "Custom World Height",
+  "config.terramath.symmetricHeight": "Symmetric Height",
+  "config.terramath.heightRange": "Range: %s",
+  "config.terramath.symmetricHeightInfo": "Equal space above and below Y=0",
+  "config.terramath.asymmetricHeightInfo": "Standard negative Y, custom positive",
+
   "terramath.worldgen.formula": "Math function for the world generator",
   "terramath.worldgen.formula.hint": "Leave blank for a default generation",
 
