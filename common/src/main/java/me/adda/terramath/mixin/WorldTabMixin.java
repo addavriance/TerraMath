@@ -15,6 +15,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationUiState;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -78,7 +79,7 @@ public abstract class WorldTabMixin extends GridLayoutTab {
                     Component.empty()
             ) {
                 @Override
-                protected MutableComponent createNarrationMessage() {
+                protected @NotNull MutableComponent createNarrationMessage() {
                     return super.createNarrationMessage().append(FORMULA_HINT);
                 }
             };
