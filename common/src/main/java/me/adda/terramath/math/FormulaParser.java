@@ -3,45 +3,7 @@ package me.adda.terramath.math;
 import me.adda.terramath.exception.FormulaException;
 import org.codehaus.janino.ExpressionEvaluator;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 public class FormulaParser extends FormulaValidator {
-    private static final Map<String, String> FUNCTION_MAPPINGS = new ConcurrentHashMap<>();
-    static {
-        FUNCTION_MAPPINGS.put("sin", "Math.sin");
-        FUNCTION_MAPPINGS.put("cos", "Math.cos");
-        FUNCTION_MAPPINGS.put("tan", "Math.tan");
-        FUNCTION_MAPPINGS.put("asin", "Math.asin");
-        FUNCTION_MAPPINGS.put("acos", "Math.acos");
-        FUNCTION_MAPPINGS.put("atan", "Math.atan");
-        FUNCTION_MAPPINGS.put("sinh", "Math.sinh");
-        FUNCTION_MAPPINGS.put("cosh", "Math.cosh");
-        FUNCTION_MAPPINGS.put("tanh", "Math.tanh");
-        FUNCTION_MAPPINGS.put("sqrt", "Math.sqrt");
-        FUNCTION_MAPPINGS.put("cbrt", "Math.cbrt");
-        FUNCTION_MAPPINGS.put("pow", "Math.pow");
-        FUNCTION_MAPPINGS.put("ln", "Math.log");
-        FUNCTION_MAPPINGS.put("lg", "Math.log10");
-        FUNCTION_MAPPINGS.put("abs", "Math.abs");
-        FUNCTION_MAPPINGS.put("exp", "Math.exp");
-        FUNCTION_MAPPINGS.put("floor", "Math.floor");
-        FUNCTION_MAPPINGS.put("ceil", "Math.ceil");
-        FUNCTION_MAPPINGS.put("round", "(double)Math.round");
-        FUNCTION_MAPPINGS.put("sign", "Math.signum");
-        FUNCTION_MAPPINGS.put("max", "Math.max");
-        FUNCTION_MAPPINGS.put("min", "Math.min");
-
-        FUNCTION_MAPPINGS.put("gamma", "MathExtensions.gamma");
-        FUNCTION_MAPPINGS.put("erf", "MathExtensions.erf");
-        FUNCTION_MAPPINGS.put("beta", "MathExtensions.beta");
-        FUNCTION_MAPPINGS.put("mod", "MathExtensions.mod");
-        FUNCTION_MAPPINGS.put("sigmoid", "MathExtensions.sigmoid");
-        FUNCTION_MAPPINGS.put("clamp", "MathExtensions.clamp");
-        FUNCTION_MAPPINGS.put("rand", "MathExtensions.rand");
-        FUNCTION_MAPPINGS.put("randint", "MathExtensions.randint");
-        FUNCTION_MAPPINGS.put("randnormal", "MathExtensions.randnormal");
-    }
 
     public static class CompiledFormula {
         private final String originalExpression;
@@ -50,7 +12,6 @@ public class FormulaParser extends FormulaValidator {
         private CompiledFormula(String expression, ExpressionEvaluator evaluator) {
             this.originalExpression = expression;
             this.evaluator = evaluator;
-
         }
 
         public double evaluate(double x, double y, double z) {
@@ -99,10 +60,10 @@ public class FormulaParser extends FormulaValidator {
     private static String convertToJavaExpression(String formula) {
         String javaExpr = formula;
 
-        for (Map.Entry<String, String> entry : FUNCTION_MAPPINGS.entrySet()) {
+        for (String funcName : MathFunctionsRegistry.getFunctionNames()) {
             javaExpr = javaExpr.replaceAll(
-                    "\\b" + entry.getKey() + "\\b",
-                    entry.getValue()
+                    "\\b" + funcName + "\\b",
+                    MathFunctionsRegistry.getFunctionImplementation(funcName)
             );
         }
 

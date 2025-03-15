@@ -21,14 +21,6 @@ public class FormulaValidator {
     public static final String ERROR_DIVISION_ZERO = TRANSLATION_PREFIX + "division_zero";
     public static final String ERROR_INVALID_SYNTAX = TRANSLATION_PREFIX + "invalid_syntax";
 
-    protected static final Set<String> FUNCTIONS = new HashSet<>(Arrays.asList(
-            "sin", "cos", "tan", "asin", "acos", "atan",
-            "sinh", "cosh", "tanh", "sqrt", "cbrt", "pow",
-            "ln", "lg", "abs", "exp", "floor", "ceil",
-            "round", "sign", "gamma", "erf", "beta", "mod",
-            "max", "min", "sigmoid", "clamp", "rand", "randint", "randnormal"
-    ));
-
     public record ValidationResult(boolean isValid, String errorKey, Object... errorArgs) {
     }
 
@@ -56,8 +48,7 @@ public class FormulaValidator {
     }
 
     private static void validateBasicStructure(String formula) {
-
-        String function_chars = FUNCTIONS.stream()
+        String function_chars = MathFunctionsRegistry.getFunctionNames().stream()
                 .flatMap(s -> s.chars().mapToObj(c -> (char) c))
                 .collect(Collectors.toSet())
                 .stream()
@@ -86,13 +77,13 @@ public class FormulaValidator {
                 inFunction = true;
             } else if (inFunction) {
                 String func = currentFunction.toString().toLowerCase();
-                if (!FUNCTIONS.contains(func) && c == '(') {
+                if (!MathFunctionsRegistry.isFunction(func) && c == '(') {
                     throw new FormulaException(ERROR_UNKNOWN_FUNCTION, func);
                 }
                 currentFunction = new StringBuilder();
                 inFunction = false;
 
-                if (FUNCTIONS.contains(func) && c != '(') {
+                if (MathFunctionsRegistry.isFunction(func) && c != '(') {
                     throw new FormulaException(ERROR_FUNCTION_PARENTHESES, func);
                 }
             }
