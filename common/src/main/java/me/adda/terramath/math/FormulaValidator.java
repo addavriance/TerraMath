@@ -21,10 +21,13 @@ public class FormulaValidator {
 
     protected static final Set<String> FUNCTIONS = new HashSet<>(Arrays.asList(
             "sin", "cos", "tan", "asin", "acos", "atan",
-            "sinh", "cosh", "tanh", "sqrt", "cbrt", "pow",
+            "sinh", "cosh", "tanh", "asinh", "acosh", "atanh",
+            "sqrt", "cbrt", "pow",
             "ln", "lg", "abs", "exp", "floor", "ceil",
             "round", "sign", "gamma", "erf", "beta", "mod",
-            "max", "min", "sigmoid", "clamp", "csc", "cot", "sec"
+            "max", "min", "sigmoid", "clamp",
+            "csc", "cot", "sec", "acsc", "acot", "asec",
+            "csch", "coth", "sech", "acsch", "acoth", "asech"
     ));
 
     public record ValidationResult(boolean isValid, String errorKey, Object... errorArgs) {
