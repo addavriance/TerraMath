@@ -3,6 +3,8 @@ package me.adda.terramath.math;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static java.lang.Math.*;
+
 public class MathExtensions {
     private static final double[] LANCZOS_COEFFICIENTS = {
             676.5203681218851,
@@ -28,7 +30,7 @@ public class MathExtensions {
 
     private static double calculateGamma(double x) {
         if (x < 0.5) {
-            return Math.PI / (Math.sin(Math.PI * x) * gamma(1 - x));
+            return Math.PI / (sin(Math.PI * x) * gamma(1 - x));
         }
 
         x -= 1;
@@ -82,4 +84,8 @@ public class MathExtensions {
     public static double clamp(double x, double min, double max) {
         return Math.min(Math.max(x, min), max);
     }
+
+    public static double csc(double x) {return 1.0 / Math.sin(x);}
+    public static double sec(double x) {return 1.0 / Math.cos(x);}
+    public static double cot(double x) {return 1.0 / Math.tan(x);}
 }

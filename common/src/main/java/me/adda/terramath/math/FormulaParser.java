@@ -40,6 +40,10 @@ public class FormulaParser extends FormulaValidator {
         FUNCTION_MAPPINGS.put("mod", "MathExtensions.mod");
         FUNCTION_MAPPINGS.put("sigmoid", "MathExtensions.sigmoid");
         FUNCTION_MAPPINGS.put("clamp", "MathExtensions.clamp");
+
+        FUNCTION_MAPPINGS.put("sec", "MathExtensions.sec");
+        FUNCTION_MAPPINGS.put("csc", "MathExtensions.csc");
+        FUNCTION_MAPPINGS.put("cot", "MathExtensions.cot");
     }
 
     public static class CompiledFormula {
