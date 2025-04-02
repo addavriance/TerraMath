@@ -24,7 +24,7 @@ public class FormulaValidator {
             "sinh", "cosh", "tanh", "sqrt", "cbrt", "pow",
             "ln", "lg", "abs", "exp", "floor", "ceil",
             "round", "sign", "gamma", "erf", "beta", "mod",
-            "max", "min", "sigmoid", "clamp", "csc"
+            "max", "min", "sigmoid", "clamp", "csc", "cot", "sec"
     ));
 
     public record ValidationResult(boolean isValid, String errorKey, Object... errorArgs) {
