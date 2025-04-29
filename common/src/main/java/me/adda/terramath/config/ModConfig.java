@@ -2,6 +2,9 @@ package me.adda.terramath.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import me.adda.terramath.api.FormulaCacheHolder;
+import me.adda.terramath.api.TerrainSettingsManager;
+import me.adda.terramath.api.TerrainFormulaManager;
 
 import java.io.File;
 import java.io.FileReader;
@@ -17,12 +20,16 @@ public class ModConfig {
     private static ModConfig INSTANCE;
     private static File configFile;
 
+    // Formula settings
     public String baseFormula = "";
     public boolean useDefaultFormula = true;
 
-    public boolean customWorldHeight = false;
-    public int worldHeight = 384;
-    public boolean symmetricHeight = true;
+    // Terrain parameters
+    public double coordinateScale = 5.0;
+    public double baseHeight = 64.0;
+    public double heightVariation = 32.5;
+    public double smoothingFactor = 0.55;
+    public boolean useDensityMode = false;
 
     private static Consumer<ModConfig> saveCallback = null;
 
@@ -41,12 +48,55 @@ public class ModConfig {
                 INSTANCE = new ModConfig();
                 save();
             }
+
+            initializeDefaultValues();
+        }
+    }
+
+    private static void initializeDefaultValues() {
+        if (INSTANCE.baseFormula == null || INSTANCE.baseFormula.isEmpty()) {
+            INSTANCE.baseFormula = "";
+        }
+
+        if (INSTANCE.useDefaultFormula) {
+            updateTerrainSettingsFromConfig();
+            FormulaCacheHolder.resetCache();
+        }
+    }
+
+    /**
+     * Updates managers from config values
+     */
+    public static void updateTerrainSettingsFromConfig() {
+        if (INSTANCE != null) {
+            TerrainFormulaManager.getInstance().setFormula(INSTANCE.baseFormula);
+
+            TerrainSettingsManager settings = TerrainSettingsManager.getInstance();
+            settings.setCoordinateScale(INSTANCE.coordinateScale);
+            settings.setBaseHeight(INSTANCE.baseHeight);
+            settings.setHeightVariation(INSTANCE.heightVariation);
+            settings.setSmoothingFactor(INSTANCE.smoothingFactor);
+            settings.setUseDensityMode(INSTANCE.useDensityMode);
+        }
+    }
+
+    public static void updateConfigFromTerrainSettings() {
+        if (INSTANCE != null) {
+            INSTANCE.baseFormula = TerrainFormulaManager.getInstance().getFormula();
+
+            TerrainSettingsManager settings = TerrainSettingsManager.getInstance();
+            INSTANCE.coordinateScale = settings.getCoordinateScale();
+            INSTANCE.baseHeight = settings.getBaseHeight();
+            INSTANCE.heightVariation = settings.getHeightVariation();
+            INSTANCE.smoothingFactor = settings.getSmoothingFactor();
+            INSTANCE.useDensityMode = settings.isUseDensityMode();
         }
     }
 
     public static ModConfig get() {
         if (INSTANCE == null) {
             INSTANCE = new ModConfig();
+            initializeDefaultValues();
             save();
         }
         return INSTANCE;
@@ -66,49 +116,8 @@ public class ModConfig {
                 saveCallback.accept(INSTANCE);
             }
         } catch (IOException e) {
-            // Error, where did you go?
+            System.err.println("Failed to save TerraMath config: " + e.getMessage());
         }
-    }
-
-    public static String generateRandomFormula() {
-        Random random = new Random();
-        String[] operators = {"+", "-", "*", "/"};
-        String[] functions = {"sin", "cos", "abs", "sqrt"};
-        StringBuilder formula = new StringBuilder();
-
-        int terms = random.nextInt(3) + 2;
-        boolean useFunctions = random.nextBoolean();
-
-        for (int i = 0; i < terms; i++) {
-            int coefficient = random.nextInt(10) + 1;
-            int power = random.nextInt(3);
-
-            if (i > 0) {
-                formula.append(" ").append(operators[random.nextInt(operators.length)]).append(" ");
-            }
-
-            if (useFunctions && random.nextInt(3) == 0) {
-                String function = functions[random.nextInt(functions.length)];
-                formula.append(coefficient).append("*").append(function).append("(x");
-
-                if (random.nextBoolean()) {
-                    formula.append("*").append(random.nextInt(5) + 1);
-                }
-
-                formula.append(")");
-            } else {
-                formula.append(coefficient);
-
-                if (power > 0) {
-                    formula.append("*x");
-                    if (power > 1) {
-                        formula.append("^").append(power);
-                    }
-                }
-            }
-        }
-
-        return formula.toString();
     }
 
     public static void setSaveCallback(Consumer<ModConfig> callback) {
