@@ -1,9 +1,12 @@
 package me.adda.terramath.math;
 
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MathExtensions {
+    private static final Random random = new Random();
+
     private static final double[] LANCZOS_COEFFICIENTS = {
             676.5203681218851,
             -1259.1392167224028,
@@ -46,7 +49,7 @@ public class MathExtensions {
     }
 
     private static double logGamma(double x) {
-        if (x <= 0) return Double.NaN;
+        if (x <= 0) return 0;
 
         double tmp = (x - 0.5) * Math.log(x + 4.5) - (x + 4.5);
         double ser = 1.0 + 76.18009173 / (x + 0) - 86.50532033 / (x + 1)
@@ -79,19 +82,76 @@ public class MathExtensions {
     public static double sigmoid(double x) {
         return 1.0 / (1.0 + Math.exp(-x));
     }
+
     public static double clamp(double x, double min, double max) {
         return Math.min(Math.max(x, min), max);
     }
+
     public static double rand() {
-        return Math.random();
+        return random.nextDouble();
     }
-    public static int randint(int min, int max) {
-        return min + (int) (Math.random() * ((max - min) + 1));
+
+    public static double randrange(Number min, Number max) {
+        double minVal = min.doubleValue();
+        double maxVal = max.doubleValue();
+        double randomValue = minVal + (random.nextDouble() * (maxVal - minVal));
+
+        return Math.round(randomValue * 1000.0) / 1000.0;
     }
+
     public static double randnormal(double mean, double stddev) {
-        double u1 = Math.random();
-        double u2 = Math.random();
-        double randStdNormal = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
-        return mean + stddev * randStdNormal;
+        return mean + stddev * random.nextGaussian();
+    }
+
+    public static int gcd(Number a, Number b) {
+        int aVal = a.intValue();
+        int bVal = b.intValue();
+
+        while (bVal != 0) {
+            int temp = bVal;
+            bVal = aVal % bVal;
+            aVal = temp;
+        }
+        return Math.abs(aVal);
+    }
+
+    public static int lcm(Number a, Number b) {
+        int aVal = a.intValue();
+        int bVal = b.intValue();
+
+        if (aVal == 0 || bVal == 0) {
+            return 0;
+        }
+
+        return Math.abs(aVal * bVal) / gcd(a, b);
+    }
+
+    public static int[] extendedGcd(int a, int b) { // utility function
+        if (b == 0) {
+            return new int[]{a, 1, 0};
+        }
+
+        int[] values = extendedGcd(b, a % b);
+        int gcd = values[0];
+        int x1 = values[1];
+        int y1 = values[2];
+
+        int x = y1;
+        int y = x1 - (a / b) * y1;
+
+        return new int[]{gcd, x, y};
+    }
+
+    public static int modInverse(Number a, Number m) {
+        int aVal = a.intValue();
+        int mVal = m.intValue();
+
+        int[] values = extendedGcd(aVal, mVal);
+        if (values[0] != 1) {
+            return 0;
+        } else {
+            int result = values[1] % mVal;
+            return result < 0 ? result + mVal : result;
+        }
     }
 }

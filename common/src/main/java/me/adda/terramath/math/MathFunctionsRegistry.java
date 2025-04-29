@@ -44,7 +44,7 @@ public class MathFunctionsRegistry {
         FUNCTION_MAPPINGS.put("pow", "Math.pow");
 
         // Rounding functions
-        FUNCTION_MAPPINGS.put("floor", "Math.floor");
+        FUNCTION_MAPPINGS.put("floor", "(int)Math.floor");
         FUNCTION_MAPPINGS.put("ceil", "Math.ceil");
         FUNCTION_MAPPINGS.put("round", "Math.round");
 
@@ -63,10 +63,12 @@ public class MathFunctionsRegistry {
         FUNCTION_MAPPINGS.put("min", "Math.min");
         FUNCTION_MAPPINGS.put("sigmoid", "MathExtensions.sigmoid");
         FUNCTION_MAPPINGS.put("clamp", "MathExtensions.clamp");
+        FUNCTION_MAPPINGS.put("gcd", "MathExtensions.gcd");
+        FUNCTION_MAPPINGS.put("lcm", "MathExtensions.lcm");
+        FUNCTION_MAPPINGS.put("modi", "MathExtensions.modInverse");
 
         // Random number generators
         FUNCTION_MAPPINGS.put("rand", "MathExtensions.rand");
-        FUNCTION_MAPPINGS.put("randint", "MathExtensions.randint");
         FUNCTION_MAPPINGS.put("randnormal", "MathExtensions.randnormal");
     }
 
