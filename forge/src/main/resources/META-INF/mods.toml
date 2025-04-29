@@ -27,7 +27,7 @@ side="BOTH"
 [[dependencies.terramath]]
 modId="minecraft"
 mandatory=true
-versionRange="[1.20.5,1.21)"
+versionRange="[1.20.5,1.21.4]"
 ordering="NONE"
 side="BOTH"
 
