@@ -34,7 +34,12 @@ public class FormulaParser extends FormulaValidator {
         }
     }
 
+
     public static CompiledFormula parse(String formula) {
+        if (!validateFormula(formula, true).isValid()) {
+            formula = "0";
+        }
+
         long seed = getSeed();
 
         String javaExpression = convertToJavaExpression(formula);
@@ -61,11 +66,37 @@ public class FormulaParser extends FormulaValidator {
             evaluator.cook(fullExpression);
             return new CompiledFormula(formula, evaluator, noise);
         } catch (Exception e) {
-            System.out.println(e);
-            String formatted_exception = e.getMessage().split(":")[1].trim();
+            Throwable cause = getRootCause(e);
+            String message = cause.getMessage();
 
-            throw new FormulaException(ERROR_INVALID_SYNTAX, formatted_exception);
+            if (cause instanceof IllegalArgumentException ||
+                    cause.getMessage() != null && message.contains("No applicable constructor")) {
+                throw new FormulaException(ERROR_INVALID_ARGUMENTS);
+            } else if (cause.getMessage() != null && (message.contains("Unknown variable") || message.contains("is not an rvalue"))) {
+                throw new FormulaException(ERROR_UNKNOWN_VARIABLE, extractFunctionName(message));
+            } else {
+                System.out.println(message);
+                throw new FormulaException(ERROR_INVALID_SYNTAX, message);
+            }
         }
+    }
+
+    private static String extractFunctionName(String errorMessage) {
+        if (errorMessage != null) {
+            String[] parts = errorMessage.split("\"");
+            if (parts.length >= 2) {
+                return parts[1];
+            }
+        }
+        return "";
+    }
+
+    private static Throwable getRootCause(Throwable throwable) {
+        Throwable cause = throwable;
+        while (cause.getCause() != null && cause.getCause() != cause) {
+            cause = cause.getCause();
+        }
+        return cause;
     }
 
     private static String convertToJavaExpression(String formula) {
