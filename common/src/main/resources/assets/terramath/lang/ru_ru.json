@@ -1,28 +1,46 @@
 {
-  "terramath.worldgen.formula": "Математическая функция для генератора мира",
-  "terramath.worldgen.formula.hint": "Оставьте пустым для обычной генерации",
+  "terramath.config.title": "Конфигурация TerraMath",
+  "terramath.config.terrain_settings": "Настройки ландшафта",
 
-  "terramath.worldgen.coordinate_scale": "Масштаб",
+  "terramath.config.formula": "Математическая функция для генератора мира",
+  "terramath.config.formula.hint": "Оставьте пустым для стандартной генерации",
 
-  "terramath.worldgen.base_height": "Базовая высота",
-  "terramath.worldgen.height_variation": "Вариация высоты",
-  "terramath.worldgen.smoothing": "Сглаживание",
-  "terramath.worldgen.density_mode": "Продвинутый",
+  "terramath.config.coordinate_scale": "Масштаб",
+
+  "terramath.config.density_mode": "Расширенные настройки",
+
+  "terramath.config.base_height": "Базовая высота",
+  "terramath.config.height_variation": "Вариация высоты",
+  "terramath.config.smoothing": "Сглаживание",
+
+  "terramath.config.noise_settings": "Настройки шума",
+
+  "terramath.config.noise_type": "Тип шума",
+
+  "terramath.config.noise_type.perlin": "Перлина",
+  "terramath.config.noise_type.simplex": "Симплекс",
+  "terramath.config.noise_type.blended": "Смешанный",
+  "terramath.config.noise_type.normal": "Нормальный",
+
+  "terramath.config.noise_scale_x": "Масштаб X",
+  "terramath.config.noise_scale_y": "Масштаб Y",
+  "terramath.config.noise_scale_z": "Масштаб Z",
+
+  "terramath.config.noise_height_scale": "Масштаб высоты",
+
+  "terramath.config.use_default_settings": "Использовать эти настройки по умолчанию",
 
   "terramath.formula.error.null": "Формула не может быть пустой",
   "terramath.formula.error.invalid_chars": "Формула содержит недопустимые символы",
   "terramath.formula.error.no_variables": "Формула должна использовать хотя бы одну переменную (x или z)",
   "terramath.formula.error.unknown_function": "Неизвестная функция: %s",
-  "terramath.formula.error.function_parentheses": "Неверное использование функции: %s должна быть завершена скобками",
-  "terramath.formula.error.three_arguments": "Функция %s требует ровно трех аргументов, разделенных запятой",
-  "terramath.formula.error.two_arguments": "Функция %s требует ровно двух аргументов, разделенных запятой",
-  "terramath.formula.error.arguments": "Функция %s требует ровно одного аргумента",
-  "terramath.formula.error.unmatched_closing": "Несоответствующая закрывающая скобка на позиции %d",
-  "terramath.formula.error.empty_brackets": "Пустые скобки на позиции %d",
-  "terramath.formula.error.unmatched_opening": "Несоответствующая открывающая скобка на позиции %d",
-  "terramath.formula.error.operator_sequence": "Неверная последовательность операторов",
+  "terramath.formula.error.unknown_variable": "Неизвестная переменная: %s",
+  "terramath.formula.error.function_parentheses": "Неверное использование функции: после %s должны следовать скобки",
+  "terramath.formula.error.unmatched_closing": "Непарная закрывающая скобка в позиции %d",
+  "terramath.formula.error.unmatched_opening": "Непарная открывающая скобка в позиции %d",
+  "terramath.formula.error.operator_sequence": "Недопустимая последовательность операторов",
   "terramath.formula.error.operator_start_end": "Формула не может начинаться с */ или заканчиваться оператором",
-  "terramath.formula.error.operator_brackets": "Неверное размещение оператора рядом со скобками",
-  "terramath.formula.error.division_zero": "Деление на ноль",
+  "terramath.formula.error.operator_brackets": "Недопустимое размещение оператора рядом со скобками",
+  "terramath.formula.error.invalid_arguments": "Недопустимые аргументы",
   "terramath.formula.error.invalid_syntax": "Синтаксическая ошибка: %s"
 }

@@ -1,0 +1,46 @@
+{
+  "terramath.config.title": "TerraMath 配置",
+  "terramath.config.terrain_settings": "地形设置",
+
+  "terramath.config.formula": "世界生成器的数学函数",
+  "terramath.config.formula.hint": "留空使用默认生成",
+
+  "terramath.config.coordinate_scale": "比例",
+
+  "terramath.config.density_mode": "高级",
+
+  "terramath.config.base_height": "基础高度",
+  "terramath.config.height_variation": "高度变化",
+  "terramath.config.smoothing": "平滑度",
+
+  "terramath.config.noise_settings": "噪声设置",
+
+  "terramath.config.noise_type": "噪声类型",
+
+  "terramath.config.noise_type.perlin": "柏林",
+  "terramath.config.noise_type.simplex": "单纯形",
+  "terramath.config.noise_type.blended": "混合",
+  "terramath.config.noise_type.normal": "正常",
+
+  "terramath.config.noise_scale_x": "X轴比例",
+  "terramath.config.noise_scale_y": "Y轴比例",
+  "terramath.config.noise_scale_z": "Z轴比例",
+
+  "terramath.config.noise_height_scale": "高度比例",
+
+  "terramath.config.use_default_settings": "默认使用这些设置",
+
+  "terramath.formula.error.null": "公式不能为空",
+  "terramath.formula.error.invalid_chars": "公式包含无效字符",
+  "terramath.formula.error.no_variables": "公式必须使用至少一个变量（x或z）",
+  "terramath.formula.error.unknown_function": "未知函数：%s",
+  "terramath.formula.error.unknown_variable": "未知变量：%s",
+  "terramath.formula.error.function_parentheses": "函数使用无效：%s后必须跟括号",
+  "terramath.formula.error.unmatched_closing": "在位置%d处有不匹配的右括号",
+  "terramath.formula.error.unmatched_opening": "在位置%d处有不匹配的左括号",
+  "terramath.formula.error.operator_sequence": "运算符序列无效",
+  "terramath.formula.error.operator_start_end": "公式不能以*/开头或以运算符结尾",
+  "terramath.formula.error.operator_brackets": "括号附近的运算符放置无效",
+  "terramath.formula.error.invalid_arguments": "无效参数",
+  "terramath.formula.error.invalid_syntax": "语法错误：%s"
+}

@@ -1,0 +1,46 @@
+{
+  "terramath.config.title": "Konfiguracja TerraMath",
+  "terramath.config.terrain_settings": "Ustawienia terenu",
+
+  "terramath.config.formula": "Funkcja matematyczna dla generatora świata",
+  "terramath.config.formula.hint": "Pozostaw puste dla domyślnej generacji",
+
+  "terramath.config.coordinate_scale": "Skala",
+
+  "terramath.config.density_mode": "Zaawansowane",
+
+  "terramath.config.base_height": "Wysokość podstawowa",
+  "terramath.config.height_variation": "Zmienność wysokości",
+  "terramath.config.smoothing": "Wygładzanie",
+
+  "terramath.config.noise_settings": "Ustawienia szumu",
+
+  "terramath.config.noise_type": "Typ szumu",
+
+  "terramath.config.noise_type.perlin": "Perlin",
+  "terramath.config.noise_type.simplex": "Simplex",
+  "terramath.config.noise_type.blended": "Mieszany",
+  "terramath.config.noise_type.normal": "Normalny",
+
+  "terramath.config.noise_scale_x": "Skala X",
+  "terramath.config.noise_scale_y": "Skala Y",
+  "terramath.config.noise_scale_z": "Skala Z",
+
+  "terramath.config.noise_height_scale": "Skala wysokości",
+
+  "terramath.config.use_default_settings": "Użyj tych ustawień domyślnie",
+
+  "terramath.formula.error.null": "Formuła nie może być pusta",
+  "terramath.formula.error.invalid_chars": "Formuła zawiera nieprawidłowe znaki",
+  "terramath.formula.error.no_variables": "Formuła musi używać co najmniej jednej zmiennej (x lub z)",
+  "terramath.formula.error.unknown_function": "Nieznana funkcja: %s",
+  "terramath.formula.error.unknown_variable": "Nieznana zmienna: %s",
+  "terramath.formula.error.function_parentheses": "Nieprawidłowe użycie funkcji: po %s muszą następować nawiasy",
+  "terramath.formula.error.unmatched_closing": "Niesparowany nawias zamykający na pozycji %d",
+  "terramath.formula.error.unmatched_opening": "Niesparowany nawias otwierający na pozycji %d",
+  "terramath.formula.error.operator_sequence": "Nieprawidłowa sekwencja operatorów",
+  "terramath.formula.error.operator_start_end": "Formuła nie może zaczynać się od */ ani kończyć operatorem",
+  "terramath.formula.error.operator_brackets": "Nieprawidłowe umieszczenie operatora w pobliżu nawiasów",
+  "terramath.formula.error.invalid_arguments": "Nieprawidłowe argumenty",
+  "terramath.formula.error.invalid_syntax": "Błąd składni: %s"
+}

@@ -1,0 +1,46 @@
+{
+  "terramath.config.title": "Configuración de TerraMath",
+  "terramath.config.terrain_settings": "Ajustes del terreno",
+
+  "terramath.config.formula": "Función matemática para el generador de mundos",
+  "terramath.config.formula.hint": "Dejar en blanco para generación predeterminada",
+
+  "terramath.config.coordinate_scale": "Escala",
+
+  "terramath.config.density_mode": "Avanzado",
+
+  "terramath.config.base_height": "Altura base",
+  "terramath.config.height_variation": "Variación de altura",
+  "terramath.config.smoothing": "Suavizado",
+
+  "terramath.config.noise_settings": "Ajustes de ruido",
+
+  "terramath.config.noise_type": "Tipo de ruido",
+
+  "terramath.config.noise_type.perlin": "Perlin",
+  "terramath.config.noise_type.simplex": "Simplex",
+  "terramath.config.noise_type.blended": "Mezclado",
+  "terramath.config.noise_type.normal": "Normal",
+
+  "terramath.config.noise_scale_x": "Escala X",
+  "terramath.config.noise_scale_y": "Escala Y",
+  "terramath.config.noise_scale_z": "Escala Z",
+
+  "terramath.config.noise_height_scale": "Escala de altura",
+
+  "terramath.config.use_default_settings": "Usar estos ajustes por defecto",
+
+  "terramath.formula.error.null": "La fórmula no puede estar vacía",
+  "terramath.formula.error.invalid_chars": "La fórmula contiene caracteres no válidos",
+  "terramath.formula.error.no_variables": "La fórmula debe usar al menos una variable (x o z)",
+  "terramath.formula.error.unknown_function": "Función desconocida: %s",
+  "terramath.formula.error.unknown_variable": "Variable desconocida: %s",
+  "terramath.formula.error.function_parentheses": "Uso inválido de función: %s debe ir seguido de paréntesis",
+  "terramath.formula.error.unmatched_closing": "Paréntesis de cierre sin coincidencia en la posición %d",
+  "terramath.formula.error.unmatched_opening": "Paréntesis de apertura sin coincidencia en la posición %d",
+  "terramath.formula.error.operator_sequence": "Secuencia de operadores no válida",
+  "terramath.formula.error.operator_start_end": "La fórmula no puede comenzar con */ o terminar con un operador",
+  "terramath.formula.error.operator_brackets": "Colocación de operador no válida cerca de paréntesis",
+  "terramath.formula.error.invalid_arguments": "Argumentos no válidos",
+  "terramath.formula.error.invalid_syntax": "Error de sintaxis: %s"
+}

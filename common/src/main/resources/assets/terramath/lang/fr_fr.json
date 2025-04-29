@@ -1,0 +1,46 @@
+{
+  "terramath.config.title": "Configuration de TerraMath",
+  "terramath.config.terrain_settings": "Paramètres du terrain",
+
+  "terramath.config.formula": "Fonction mathématique pour le générateur de monde",
+  "terramath.config.formula.hint": "Laisser vide pour une génération par défaut",
+
+  "terramath.config.coordinate_scale": "Échelle",
+
+  "terramath.config.density_mode": "Avancé",
+
+  "terramath.config.base_height": "Hauteur de base",
+  "terramath.config.height_variation": "Variation de hauteur",
+  "terramath.config.smoothing": "Lissage",
+
+  "terramath.config.noise_settings": "Paramètres de bruit",
+
+  "terramath.config.noise_type": "Type de bruit",
+
+  "terramath.config.noise_type.perlin": "Perlin",
+  "terramath.config.noise_type.simplex": "Simplex",
+  "terramath.config.noise_type.blended": "Mélangé",
+  "terramath.config.noise_type.normal": "Normal",
+
+  "terramath.config.noise_scale_x": "Échelle X",
+  "terramath.config.noise_scale_y": "Échelle Y",
+  "terramath.config.noise_scale_z": "Échelle Z",
+
+  "terramath.config.noise_height_scale": "Échelle de hauteur",
+
+  "terramath.config.use_default_settings": "Utiliser ces paramètres par défaut",
+
+  "terramath.formula.error.null": "La formule ne peut pas être nulle",
+  "terramath.formula.error.invalid_chars": "La formule contient des caractères non valides",
+  "terramath.formula.error.no_variables": "La formule doit utiliser au moins une variable (x ou z)",
+  "terramath.formula.error.unknown_function": "Fonction inconnue : %s",
+  "terramath.formula.error.unknown_variable": "Variable inconnue : %s",
+  "terramath.formula.error.function_parentheses": "Utilisation invalide de fonction : %s doit être suivi de parenthèses",
+  "terramath.formula.error.unmatched_closing": "Parenthèse fermante non appariée à la position %d",
+  "terramath.formula.error.unmatched_opening": "Parenthèse ouvrante non appariée à la position %d",
+  "terramath.formula.error.operator_sequence": "Séquence d'opérateurs non valide",
+  "terramath.formula.error.operator_start_end": "La formule ne peut pas commencer par */ ou se terminer par un opérateur",
+  "terramath.formula.error.operator_brackets": "Placement d'opérateur non valide près des parenthèses",
+  "terramath.formula.error.invalid_arguments": "Arguments non valides",
+  "terramath.formula.error.invalid_syntax": "Erreur de syntaxe : %s"
+}
