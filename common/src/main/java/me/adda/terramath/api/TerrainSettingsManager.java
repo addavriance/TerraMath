@@ -84,5 +84,7 @@ public class TerrainSettingsManager {
         for (TerrainSettingType type : TerrainSettingType.values()) {
             setTerrainSetting(type, getDefaultByType(type));
         }
+
+        this.useDensityMode = false;
     }
 }
