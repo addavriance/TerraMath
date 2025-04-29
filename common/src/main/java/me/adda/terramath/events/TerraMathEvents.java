@@ -1,7 +1,7 @@
 package me.adda.terramath.events;
 
 import me.adda.terramath.api.FormulaCacheHolder;
-import me.adda.terramath.api.TerraFormulaManager;
+import me.adda.terramath.api.TerrainFormulaManager;
 import me.adda.terramath.api.TerrainSettingsManager;
 import me.adda.terramath.world.TerrainData;
 import net.minecraft.server.level.ServerLevel;
