@@ -13,10 +13,12 @@ public class TerrainSettingsManager {
         COORDINATE_SCALE,
         BASE_HEIGHT,
         HEIGHT_VARIATION,
-        SMOOTHING_FACTOR
+        SMOOTHING_FACTOR,
+        NOISE_SCALE_X,
+        NOISE_SCALE_Y,
+        NOISE_SCALE_Z,
+        NOISE_HEIGHT_SCALE
     }
-
-    private TerrainSettingsManager() {}
 
     public static TerrainSettingsManager getInstance() {
         return INSTANCE;
@@ -77,6 +79,8 @@ public class TerrainSettingsManager {
             case BASE_HEIGHT -> 64.0;
             case HEIGHT_VARIATION -> 32.5;
             case SMOOTHING_FACTOR -> 0.55;
+            case NOISE_SCALE_X, NOISE_SCALE_Y, NOISE_SCALE_Z -> 30.0;
+            case NOISE_HEIGHT_SCALE -> 15.0;
         };
     }
 

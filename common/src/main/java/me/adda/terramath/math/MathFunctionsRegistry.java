@@ -70,6 +70,14 @@ public class MathFunctionsRegistry {
         // Random number generators
         FUNCTION_MAPPINGS.put("rand", "MathExtensions.rand");
         FUNCTION_MAPPINGS.put("randnormal", "MathExtensions.randnormal");
+        FUNCTION_MAPPINGS.put("randrange", "MathExtensions.randrange");
+
+        // Noises
+        FUNCTION_MAPPINGS.put("perlin", "noise.getPerlinNoise");
+        FUNCTION_MAPPINGS.put("simplex", "noise.getSimplexNoise");
+        FUNCTION_MAPPINGS.put("normal", "noise.getNormalNoise");
+        FUNCTION_MAPPINGS.put("blended", "noise.getBlendedNoise");
+        FUNCTION_MAPPINGS.put("octaved", "noise.getOctavedNoise");
     }
 
     /**
