@@ -4,11 +4,11 @@
   "package": "me.adda.terramath.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "WorldTabMixin",
-    "NoiseRouterMixin",
-    "WorldHeightMixin"
+    "NoiseRouterMixin"
   ],
   "client": [
+    "CreateWorldScreenMixin",
+    "WorldTabMixin"
   ],
   "injectors": {
     "defaultRequire": 1
