@@ -178,9 +178,6 @@ public class ConfigScreen extends Screen {
             settings.setNoiseScaleZ(noiseScaleZ);
             settings.setNoiseHeightScale(noiseHeightScale);
 
-            // Save noise settings
-            // TODO: Save noise type and scales to appropriate manager
-
             FormulaCacheHolder.resetCache();
         } else {
             ModConfig config = ModConfig.get();
@@ -197,9 +194,6 @@ public class ConfigScreen extends Screen {
             config.noiseScaleY = noiseScaleY;
             config.noiseScaleZ = noiseScaleZ;
             config.noiseHeightScale = noiseHeightScale;
-
-            // Save noise settings
-            // TODO: Save noise type and scales to config
 
             if (configList.useDefaultSelected()) {
                 config.useDefaultFormula = true;
