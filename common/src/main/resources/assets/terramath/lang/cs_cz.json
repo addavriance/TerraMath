@@ -1,0 +1,48 @@
+{
+  "terramath.config.title": "Konfigurace TerraMath",
+  "terramath.config.terrain_settings": "Nastavení terénu",
+  "terramath.config.terrain_settings_label": "Nastavení terénu aktuálního světa",
+
+  "terramath.config.formula": "Matematická funkce pro generátor světa",
+  "terramath.config.formula.hint": "Nechte prázdné pro výchozí generování",
+
+  "terramath.config.coordinate_scale": "Měřítko",
+
+  "terramath.config.density_mode": "Pokročilé",
+
+  "terramath.config.base_height": "Základní výška",
+  "terramath.config.height_variation": "Variace výšky",
+  "terramath.config.smoothing": "Vyhlazování",
+
+  "terramath.config.noise_settings": "Nastavení šumu",
+
+  "terramath.config.noise_type": "Typ šumu",
+
+  "terramath.config.noise_type.none": "Žádný",
+  "terramath.config.noise_type.perlin": "Perlin",
+  "terramath.config.noise_type.simplex": "Simplex",
+  "terramath.config.noise_type.blended": "Smíšený",
+  "terramath.config.noise_type.normal": "Normální",
+
+  "terramath.config.noise_scale_x": "Měřítko X",
+  "terramath.config.noise_scale_y": "Měřítko Y",
+  "terramath.config.noise_scale_z": "Měřítko Z",
+
+  "terramath.config.noise_height_scale": "Měřítko výšky",
+
+  "terramath.config.use_default_settings": "Použít tato nastavení jako výchozí",
+
+  "terramath.formula.error.null": "Vzorec nemůže být prázdný",
+  "terramath.formula.error.invalid_chars": "Vzorec obsahuje neplatné znaky",
+  "terramath.formula.error.no_variables": "Vzorec musí používat alespoň jednu proměnnou (x nebo z)",
+  "terramath.formula.error.unknown_function": "Neznámá funkce: %s",
+  "terramath.formula.error.unknown_variable": "Neznámá proměnná: %s",
+  "terramath.formula.error.function_parentheses": "Neplatné použití funkce: po %s musí následovat závorky",
+  "terramath.formula.error.unmatched_closing": "Nespárovaná uzavírací závorka na pozici %d",
+  "terramath.formula.error.unmatched_opening": "Nespárovaná otevírací závorka na pozici %d",
+  "terramath.formula.error.operator_sequence": "Neplatná sekvence operátorů",
+  "terramath.formula.error.operator_start_end": "Vzorec nemůže začínat na */ nebo končit operátorem",
+  "terramath.formula.error.operator_brackets": "Neplatné umístění operátoru u závorek",
+  "terramath.formula.error.invalid_arguments": "Neplatné argumenty",
+  "terramath.formula.error.invalid_syntax": "Syntaktická chyba: %s"
+}

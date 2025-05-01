@@ -1,0 +1,48 @@
+{
+  "terramath.config.title": "TerraMath конфигурација",
+  "terramath.config.terrain_settings": "Подешавања терена",
+  "terramath.config.terrain_settings_label": "Подешавања терена тренутног света",
+
+  "terramath.config.formula": "Математичка функција за генератор света",
+  "terramath.config.formula.hint": "Оставите празно за подразумевано генерисање",
+
+  "terramath.config.coordinate_scale": "Размера",
+
+  "terramath.config.density_mode": "Напредно",
+
+  "terramath.config.base_height": "Основна висина",
+  "terramath.config.height_variation": "Варијација висине",
+  "terramath.config.smoothing": "Глачање",
+
+  "terramath.config.noise_settings": "Подешавања шума",
+
+  "terramath.config.noise_type": "Тип шума",
+
+  "terramath.config.noise_type.none": "Ништа",
+  "terramath.config.noise_type.perlin": "Перлин",
+  "terramath.config.noise_type.simplex": "Симплекс",
+  "terramath.config.noise_type.blended": "Мешовити",
+  "terramath.config.noise_type.normal": "Нормални",
+
+  "terramath.config.noise_scale_x": "Размера X",
+  "terramath.config.noise_scale_y": "Размера Y",
+  "terramath.config.noise_scale_z": "Размера Z",
+
+  "terramath.config.noise_height_scale": "Размера висине",
+
+  "terramath.config.use_default_settings": "Користи ова подешавања као подразумевана",
+
+  "terramath.formula.error.null": "Формула не може бити празна",
+  "terramath.formula.error.invalid_chars": "Формула садржи неважеће знакове",
+  "terramath.formula.error.no_variables": "Формула мора користити бар једну променљиву (x или z)",
+  "terramath.formula.error.unknown_function": "Непозната функција: %s",
+  "terramath.formula.error.unknown_variable": "Непозната променљива: %s",
+  "terramath.formula.error.function_parentheses": "Неважећа употреба функције: након %s морају следити заграде",
+  "terramath.formula.error.unmatched_closing": "Неупарена затворена заграда на позицији %d",
+  "terramath.formula.error.unmatched_opening": "Неупарена отворена заграда на позицији %d",
+  "terramath.formula.error.operator_sequence": "Неважећи редослед оператора",
+  "terramath.formula.error.operator_start_end": "Формула не може почети са */ или завршити са оператором",
+  "terramath.formula.error.operator_brackets": "Неважећи положај оператора близу заграда",
+  "terramath.formula.error.invalid_arguments": "Неважећи аргументи",
+  "terramath.formula.error.invalid_syntax": "Синтаксна грешка: %s"
+}
