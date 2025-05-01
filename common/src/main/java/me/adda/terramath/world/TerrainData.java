@@ -1,6 +1,6 @@
 package me.adda.terramath.world;
 
-import me.adda.terramath.api.TerraFormulaManager;
+import me.adda.terramath.api.TerrainFormulaManager;
 import me.adda.terramath.api.TerrainSettingsManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.datafix.DataFixTypes;
