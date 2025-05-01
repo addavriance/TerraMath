@@ -1,0 +1,48 @@
+{
+  "terramath.config.title": "Configuração do TerraMath",
+  "terramath.config.terrain_settings": "Configurações de Terreno",
+  "terramath.config.terrain_settings_label": "Configurações de terreno do mundo atual",
+
+  "terramath.config.formula": "Função matemática para o gerador de mundo",
+  "terramath.config.formula.hint": "Deixe em branco para uma geração padrão",
+
+  "terramath.config.coordinate_scale": "Escala",
+
+  "terramath.config.density_mode": "Avançado",
+
+  "terramath.config.base_height": "Altura base",
+  "terramath.config.height_variation": "Variação de altura",
+  "terramath.config.smoothing": "Suavização",
+
+  "terramath.config.noise_settings": "Configurações de ruído",
+
+  "terramath.config.noise_type": "Tipo de ruído",
+
+  "terramath.config.noise_type.none": "Nenhum",
+  "terramath.config.noise_type.perlin": "Perlin",
+  "terramath.config.noise_type.simplex": "Simplex",
+  "terramath.config.noise_type.blended": "Misturado",
+  "terramath.config.noise_type.normal": "Normal",
+
+  "terramath.config.noise_scale_x": "Escala X",
+  "terramath.config.noise_scale_y": "Escala Y",
+  "terramath.config.noise_scale_z": "Escala Z",
+
+  "terramath.config.noise_height_scale": "Escala de altura",
+
+  "terramath.config.use_default_settings": "Usar estas configurações por padrão",
+
+  "terramath.formula.error.null": "A fórmula não pode ser nula",
+  "terramath.formula.error.invalid_chars": "A fórmula contém caracteres inválidos",
+  "terramath.formula.error.no_variables": "A fórmula deve usar pelo menos uma variável (x ou z)",
+  "terramath.formula.error.unknown_function": "Função desconhecida: %s",
+  "terramath.formula.error.unknown_variable": "Variável desconhecida: %s",
+  "terramath.formula.error.function_parentheses": "Uso inválido de função: %s deve ser seguido por parênteses",
+  "terramath.formula.error.unmatched_closing": "Parêntese de fechamento sem correspondência na posição %d",
+  "terramath.formula.error.unmatched_opening": "Parêntese de abertura sem correspondência na posição %d",
+  "terramath.formula.error.operator_sequence": "Sequência inválida de operadores",
+  "terramath.formula.error.operator_start_end": "A fórmula não pode começar com */ ou terminar com um operador",
+  "terramath.formula.error.operator_brackets": "Posicionamento inválido de operador perto de parênteses",
+  "terramath.formula.error.invalid_arguments": "Argumentos inválidos",
+  "terramath.formula.error.invalid_syntax": "Erro de sintaxe: %s"
+}

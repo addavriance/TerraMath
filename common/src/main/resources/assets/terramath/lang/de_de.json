@@ -1,28 +1,48 @@
 {
-  "terramath.worldgen.formula": "Mathematische Funktion für den Weltgenerator",
-  "terramath.worldgen.formula.hint": "Leerlassen, um eine normale Welt zu generieren",
+  "terramath.config.title": "TerraMath-Konfiguration",
+  "terramath.config.terrain_settings": "Geländeeinstellungen",
+  "terramath.config.terrain_settings_label": "Geländeeinstellungen der aktuellen Welt",
 
-  "terramath.worldgen.coordinate_scale": "Skalierung",
+  "terramath.config.formula": "Mathematische Funktion für den Weltgenerator",
+  "terramath.config.formula.hint": "Leerlassen, um eine normale Welt zu generieren",
 
-  "terramath.worldgen.base_height": "Basishöhe",
-  "terramath.worldgen.height_variation": "Höhenvariation",
-  "terramath.worldgen.smoothing": "Begradigung",
-  "terramath.worldgen.density_mode": "Erweitert",
+  "terramath.config.coordinate_scale": "Skalierung",
+
+  "terramath.config.density_mode": "Erweitert",
+
+  "terramath.config.base_height": "Basishöhe",
+  "terramath.config.height_variation": "Höhenvariation",
+  "terramath.config.smoothing": "Begradigung",
+
+  "terramath.config.noise_settings": "Rauscheinstellungen",
+
+  "terramath.config.noise_type": "Rauschtyp",
+
+  "terramath.config.noise_type.none": "Keiner",
+  "terramath.config.noise_type.perlin": "Perlin",
+  "terramath.config.noise_type.simplex": "Simplex",
+  "terramath.config.noise_type.blended": "Gemischt",
+  "terramath.config.noise_type.normal": "Normal",
+
+  "terramath.config.noise_scale_x": "Maßstab X",
+  "terramath.config.noise_scale_y": "Maßstab Y",
+  "terramath.config.noise_scale_z": "Maßstab Z",
+
+  "terramath.config.noise_height_scale": "Höhenmaßstab",
+
+  "terramath.config.use_default_settings": "Diese Einstellungen standardmäßig verwenden",
 
   "terramath.formula.error.null": "Die Formel kann nicht leer sein",
   "terramath.formula.error.invalid_chars": "Die Formel enthält unzulässige Zeichen",
   "terramath.formula.error.no_variables": "Die Formel muss mindestens eine Variable (x oder z) enthalten",
   "terramath.formula.error.unknown_function": "Unbekannte Funktion: %s",
+  "terramath.formula.error.unknown_variable": "Unbekannte Variable: %s",
   "terramath.formula.error.function_parentheses": "Funktion falsch angewendet: Nach %s muss eine Klammer folgen",
-  "terramath.formula.error.three_arguments": "%s erfordert genau drei kommagetrennte Argumente",
-  "terramath.formula.error.two_arguments": "%s erfordert genau zwei kommagetrennte Argumente",
-  "terramath.formula.error.arguments": "%s erfordert genau ein Argument",
   "terramath.formula.error.unmatched_closing": "Keine öffnende Klammer für ) bei Zeichen %d",
-  "terramath.formula.error.empty_brackets": "Leere Klammern bei Zeichen %d",
   "terramath.formula.error.unmatched_opening": "Keine schließende Klammer für ( bei Zeichen %d",
   "terramath.formula.error.operator_sequence": "Ungültige Sequenz von Operatoren",
   "terramath.formula.error.operator_start_end": "Formel kann nicht mit /* starten oder mit einem Operator enden",
   "terramath.formula.error.operator_brackets": "Ungültige Operatoren nahe von Klammern",
-  "terramath.formula.error.division_zero": "Teilen durch Null",
+  "terramath.formula.error.invalid_arguments": "Ungültige Argumente",
   "terramath.formula.error.invalid_syntax": "Syntaxfehler: %s"
 }

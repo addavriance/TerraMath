@@ -1,0 +1,48 @@
+{
+  "terramath.config.title": "Конфігурація TerraMath",
+  "terramath.config.terrain_settings": "Налаштування ландшафту",
+  "terramath.config.terrain_settings_label": "Налаштування ландшафту поточного світу",
+
+  "terramath.config.formula": "Математична функція для генератора світу",
+  "terramath.config.formula.hint": "Залиште порожнім для стандартної генерації",
+
+  "terramath.config.coordinate_scale": "Масштаб",
+
+  "terramath.config.density_mode": "Розширені налаштування",
+
+  "terramath.config.base_height": "Базова висота",
+  "terramath.config.height_variation": "Варіація висоти",
+  "terramath.config.smoothing": "Згладжування",
+
+  "terramath.config.noise_settings": "Налаштування шуму",
+
+  "terramath.config.noise_type": "Тип шуму",
+
+  "terramath.config.noise_type.none": "Відсутній",
+  "terramath.config.noise_type.perlin": "Перліна",
+  "terramath.config.noise_type.simplex": "Сімплекс",
+  "terramath.config.noise_type.blended": "Змішаний",
+  "terramath.config.noise_type.normal": "Нормальний",
+
+  "terramath.config.noise_scale_x": "Масштаб X",
+  "terramath.config.noise_scale_y": "Масштаб Y",
+  "terramath.config.noise_scale_z": "Масштаб Z",
+
+  "terramath.config.noise_height_scale": "Масштаб висоти",
+
+  "terramath.config.use_default_settings": "Використовувати ці налаштування за замовчуванням",
+
+  "terramath.formula.error.null": "Формула не може бути порожньою",
+  "terramath.formula.error.invalid_chars": "Формула містить недопустимі символи",
+  "terramath.formula.error.no_variables": "Формула повинна використовувати хоча б одну змінну (x або z)",
+  "terramath.formula.error.unknown_function": "Невідома функція: %s",
+  "terramath.formula.error.unknown_variable": "Невідома змінна: %s",
+  "terramath.formula.error.function_parentheses": "Неправильне використання функції: після %s мають бути дужки",
+  "terramath.formula.error.unmatched_closing": "Непарна закриваюча дужка в позиції %d",
+  "terramath.formula.error.unmatched_opening": "Непарна відкриваюча дужка в позиції %d",
+  "terramath.formula.error.operator_sequence": "Недопустима послідовність операторів",
+  "terramath.formula.error.operator_start_end": "Формула не може починатися з */ або закінчуватися оператором",
+  "terramath.formula.error.operator_brackets": "Недопустиме розміщення оператора біля дужок",
+  "terramath.formula.error.invalid_arguments": "Недопустимі аргументи",
+  "terramath.formula.error.invalid_syntax": "Синтаксична помилка: %s"
+}
