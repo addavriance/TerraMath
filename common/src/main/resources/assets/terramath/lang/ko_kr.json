@@ -1,6 +1,7 @@
 {
   "terramath.config.title": "TerraMath 구성",
   "terramath.config.terrain_settings": "지형 설정",
+  "terramath.config.terrain_settings_label": "현재 세계 지형 설정",
 
   "terramath.config.formula": "월드 생성기용 수학 함수",
   "terramath.config.formula.hint": "기본 생성을 위해 비워 두세요",
@@ -17,6 +18,7 @@
 
   "terramath.config.noise_type": "노이즈 유형",
 
+  "terramath.config.noise_type.none": "없음",
   "terramath.config.noise_type.perlin": "펄린",
   "terramath.config.noise_type.simplex": "심플렉스",
   "terramath.config.noise_type.blended": "혼합",

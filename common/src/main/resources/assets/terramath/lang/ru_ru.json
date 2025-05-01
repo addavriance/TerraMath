@@ -1,6 +1,7 @@
 {
   "terramath.config.title": "Конфигурация TerraMath",
   "terramath.config.terrain_settings": "Настройки ландшафта",
+  "terramath.config.terrain_settings_label": "Настройки ландшафта текущего мира",
 
   "terramath.config.formula": "Математическая функция для генератора мира",
   "terramath.config.formula.hint": "Оставьте пустым для стандартной генерации",
@@ -17,6 +18,7 @@
 
   "terramath.config.noise_type": "Тип шума",
 
+  "terramath.config.noise_type.none": "Отсутствует",
   "terramath.config.noise_type.perlin": "Перлина",
   "terramath.config.noise_type.simplex": "Симплекс",
   "terramath.config.noise_type.blended": "Смешанный",

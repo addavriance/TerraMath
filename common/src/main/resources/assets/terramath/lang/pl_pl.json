@@ -1,6 +1,7 @@
 {
   "terramath.config.title": "Konfiguracja TerraMath",
   "terramath.config.terrain_settings": "Ustawienia terenu",
+  "terramath.config.terrain_settings_label": "Ustawienia terenu bieżącego świata",
 
   "terramath.config.formula": "Funkcja matematyczna dla generatora świata",
   "terramath.config.formula.hint": "Pozostaw puste dla domyślnej generacji",
@@ -17,6 +18,7 @@
 
   "terramath.config.noise_type": "Typ szumu",
 
+  "terramath.config.noise_type.none": "Brak",
   "terramath.config.noise_type.perlin": "Perlin",
   "terramath.config.noise_type.simplex": "Simplex",
   "terramath.config.noise_type.blended": "Mieszany",
