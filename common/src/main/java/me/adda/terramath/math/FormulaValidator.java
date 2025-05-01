@@ -1,7 +1,9 @@
 package me.adda.terramath.math;
 
 import me.adda.terramath.exception.FormulaException;
+
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class FormulaValidator {
     public static final String TRANSLATION_PREFIX = "terramath.formula.error.";
@@ -9,42 +11,36 @@ public class FormulaValidator {
     public static final String ERROR_INVALID_CHARS = TRANSLATION_PREFIX + "invalid_chars";
     public static final String ERROR_NO_VARIABLES = TRANSLATION_PREFIX + "no_variables";
     public static final String ERROR_UNKNOWN_FUNCTION = TRANSLATION_PREFIX + "unknown_function";
+    public static final String ERROR_UNKNOWN_VARIABLE = TRANSLATION_PREFIX + "unknown_variable";
     public static final String ERROR_FUNCTION_PARENTHESES = TRANSLATION_PREFIX + "function_parentheses";
     public static final String ERROR_UNMATCHED_CLOSING = TRANSLATION_PREFIX + "unmatched_closing";
-    public static final String ERROR_EMPTY_BRACKETS = TRANSLATION_PREFIX + "empty_brackets";
     public static final String ERROR_UNMATCHED_OPENING = TRANSLATION_PREFIX + "unmatched_opening";
     public static final String ERROR_OPERATOR_SEQUENCE = TRANSLATION_PREFIX + "operator_sequence";
     public static final String ERROR_OPERATOR_START_END = TRANSLATION_PREFIX + "operator_start_end";
     public static final String ERROR_OPERATOR_BRACKETS = TRANSLATION_PREFIX + "operator_brackets";
-    public static final String ERROR_DIVISION_ZERO = TRANSLATION_PREFIX + "division_zero";
     public static final String ERROR_INVALID_SYNTAX = TRANSLATION_PREFIX + "invalid_syntax";
+    public static final String ERROR_INVALID_ARGUMENTS = TRANSLATION_PREFIX + "invalid_arguments";
+    public static final String ERROR_OVERFLOW = TRANSLATION_PREFIX + "overflow";
 
-    protected static final Set<String> FUNCTIONS = new HashSet<>(Arrays.asList(
-            "sin", "cos", "tan", "asin", "acos", "atan",
-            "sinh", "cosh", "tanh", "sqrt", "cbrt", "pow",
-            "ln", "lg", "abs", "exp", "floor", "ceil",
-            "round", "sign", "gamma", "erf", "beta", "mod",
-            "max", "min", "sigmoid", "clamp"
-    ));
 
     public record ValidationResult(boolean isValid, String errorKey, Object... errorArgs) {
     }
 
-    public static ValidationResult validateFormula(String formula) {
+    public static ValidationResult validateFormula(String formula, boolean syntax_only) {
         if (formula == null) {
             return new ValidationResult(false, ERROR_NULL);
         }
 
         formula = formula.trim();
         if (formula.isEmpty()) {
-            return new ValidationResult(false, ERROR_NO_VARIABLES);
+            return new ValidationResult(true, null);
         }
 
         try {
             validateBasicStructure(formula);
             validateFunctionsAndBrackets(formula);
             validateOperators(formula);
-            testFormula(formula);
+            if (!syntax_only) testFormula(formula);
             return new ValidationResult(true, null);
         } catch (FormulaException e) {
             return new ValidationResult(false, e.getMessage(), e.getArgs());
@@ -54,7 +50,14 @@ public class FormulaValidator {
     }
 
     private static void validateBasicStructure(String formula) {
-        if (!formula.matches("^[\\sxyz\\d+\\-*/(),.!^sincoatqrpwbdelhfgum]+$")) {
+        String function_chars = MathFunctionsRegistry.getFunctionNames().stream()
+                .flatMap(s -> s.chars().mapToObj(c -> (char) c))
+                .collect(Collectors.toSet())
+                .stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining());
+
+        if (!formula.matches("^[\\sxyz\\d+\\-*/(),.!^" + function_chars + "]+$")) {
             throw new IllegalArgumentException(ERROR_INVALID_CHARS);
         }
 
@@ -76,13 +79,13 @@ public class FormulaValidator {
                 inFunction = true;
             } else if (inFunction) {
                 String func = currentFunction.toString().toLowerCase();
-                if (!FUNCTIONS.contains(func) && c == '(') {
+                if (!MathFunctionsRegistry.isFunction(func) && c == '(') {
                     throw new FormulaException(ERROR_UNKNOWN_FUNCTION, func);
                 }
                 currentFunction = new StringBuilder();
                 inFunction = false;
 
-                if (FUNCTIONS.contains(func) && c != '(') {
+                if (MathFunctionsRegistry.isFunction(func) && c != '(') {
                     throw new FormulaException(ERROR_FUNCTION_PARENTHESES, func);
                 }
             }
@@ -93,10 +96,8 @@ public class FormulaValidator {
                 if (bracketStack.isEmpty()) {
                     throw new FormulaException(ERROR_UNMATCHED_CLOSING, i);
                 }
-                int openPos = bracketStack.pop();
-                if (i - openPos == 1) {
-                    throw new FormulaException(ERROR_EMPTY_BRACKETS, openPos);
-                }
+
+                bracketStack.pop();
             }
         }
 

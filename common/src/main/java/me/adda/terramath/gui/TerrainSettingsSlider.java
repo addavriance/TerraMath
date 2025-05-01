@@ -24,26 +24,50 @@ public class TerrainSettingsSlider extends AbstractSliderButton {
             case BASE_HEIGHT -> {
                 this.minValue = 32.0;
                 this.maxValue = 96.0;
-                this.translationKey = "terramath.worldgen.base_height";
+                this.translationKey = "terramath.config.base_height";
                 this.setValue(settings.getBaseHeight());
             }
             case HEIGHT_VARIATION -> {
                 this.minValue = 1.0;
                 this.maxValue = 64.0;
-                this.translationKey = "terramath.worldgen.height_variation";
+                this.translationKey = "terramath.config.height_variation";
                 this.setValue(settings.getHeightVariation());
             }
             case SMOOTHING_FACTOR -> {
                 this.minValue = 0.1;
                 this.maxValue = 1.0;
-                this.translationKey = "terramath.worldgen.smoothing";
+                this.translationKey = "terramath.config.smoothing";
                 this.setValue(settings.getSmoothingFactor());
             }
             case COORDINATE_SCALE -> {
                 this.minValue = 1.0;
                 this.maxValue = 100.0;
-                this.translationKey = "terramath.worldgen.coordinate_scale";
+                this.translationKey = "terramath.config.coordinate_scale";
                 this.setValue(settings.getCoordinateScale());
+            }
+            case NOISE_SCALE_X -> {
+                this.minValue = 0;
+                this.maxValue = 60.0;
+                this.translationKey = "terramath.config.noise_scale_x";
+                this.setValue(settings.getNoiseScaleX());
+            }
+            case NOISE_SCALE_Y -> {
+                this.minValue = 0;
+                this.maxValue = 60.0;
+                this.translationKey = "terramath.config.noise_scale_y";
+                this.setValue(settings.getNoiseScaleY());
+            }
+            case NOISE_SCALE_Z -> {
+                this.minValue = 0;
+                this.maxValue = 60.0;
+                this.translationKey = "terramath.config.noise_scale_z";
+                this.setValue(settings.getNoiseScaleZ());
+            }
+            case NOISE_HEIGHT_SCALE -> {
+                this.minValue = 0;
+                this.maxValue = 30.0;
+                this.translationKey = "terramath.config.noise_height_scale";
+                this.setValue(settings.getNoiseHeightScale());
             }
             default -> throw new IllegalArgumentException("Unknown setting type: " + type);
         }
