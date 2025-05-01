@@ -1,9 +1,12 @@
 package me.adda.terramath.math;
 
+import me.adda.terramath.api.TerrainSettingsManager;
 import me.adda.terramath.exception.FormulaException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.server.IntegratedServer;
 import org.codehaus.janino.ExpressionEvaluator;
+
+import java.util.Locale;
 
 
 public class FormulaParser extends FormulaValidator {
@@ -75,7 +78,6 @@ public class FormulaParser extends FormulaValidator {
             } else if (cause.getMessage() != null && (message.contains("Unknown variable") || message.contains("is not an rvalue"))) {
                 throw new FormulaException(ERROR_UNKNOWN_VARIABLE, extractFunctionName(message));
             } else {
-                System.out.println(message);
                 throw new FormulaException(ERROR_INVALID_SYNTAX, message);
             }
         }
@@ -102,6 +104,8 @@ public class FormulaParser extends FormulaValidator {
     private static String convertToJavaExpression(String formula) {
         String javaExpr = formula;
 
+        javaExpr = wrapWithNoise(javaExpr);
+
         for (String funcName : MathFunctionsRegistry.getFunctionNames()) {
             javaExpr = javaExpr.replaceAll(
                     "\\b" + funcName + "\\b",
@@ -114,6 +118,7 @@ public class FormulaParser extends FormulaValidator {
         if (javaExpr.contains("!")) {
             javaExpr = handleFactorials(javaExpr);
         }
+
 
         return javaExpr;
     }
@@ -128,6 +133,33 @@ public class FormulaParser extends FormulaValidator {
         FactorialParser parser = new FactorialParser(expression);
 
         return parser.parse();
+    }
+
+    public static String wrapWithNoise(String expression) {
+        TerrainSettingsManager settingsManager = TerrainSettingsManager.getInstance();
+
+        String noiseType = settingsManager.getNoiseType().name().toLowerCase();
+
+        double scaleX = settingsManager.getNoiseScaleX();
+        double scaleY = settingsManager.getNoiseScaleY();
+        double scaleZ = settingsManager.getNoiseScaleZ();
+        double heightScale = settingsManager.getNoiseHeightScale();
+
+        if ("none".equals(noiseType)) {
+            return expression;
+        }
+
+        String noiseCall;
+
+        if (noiseType.equals("simplex")) {
+            noiseCall = String.format(Locale.US, "%s(x/%.3f, z/%.3f)", noiseType, scaleX, scaleZ);
+        } else {
+            noiseCall = String.format(Locale.US, "%s(x/%.3f, y/%.3f, z/%.3f)", noiseType, scaleX, scaleY, scaleZ);
+        }
+
+        String result = String.format(Locale.US, "(%s) + %s*%.3f", expression, noiseCall, heightScale);
+
+        return result;
     }
 
     private static long getSeed() {

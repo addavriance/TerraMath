@@ -3,6 +3,7 @@ package me.adda.terramath.world;
 import me.adda.terramath.api.TerrainFormulaManager;
 import me.adda.terramath.api.TerrainSettingsManager;
 import me.adda.terramath.config.ModConfig;
+import me.adda.terramath.config.NoiseType;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.datafix.DataFixTypes;
@@ -27,6 +28,12 @@ public class TerrainData extends SavedData {
     private double smoothingFactor;
     private boolean useDensityMode;
 
+    private NoiseType noiseType;
+    private double noiseScaleX;
+    private double noiseScaleY;
+    private double noiseScaleZ;
+    private double noiseHeightScale;
+
     public TerrainData() {
         updateFromManagers();
     }
@@ -40,6 +47,13 @@ public class TerrainData extends SavedData {
         tag.putDouble("SmoothingFactor", smoothingFactor);
         tag.putBoolean("UseDensityMode", useDensityMode);
 
+        tag.putString("NoiseType", noiseType.name());
+
+        tag.putDouble("NoiseScaleX", noiseScaleX);
+        tag.putDouble("NoiseScaleY", noiseScaleY);
+        tag.putDouble("NoiseScaleZ", noiseScaleZ);
+        tag.putDouble("NoiseHeightScale", noiseHeightScale);
+
         return tag;
     }
 
@@ -52,6 +66,19 @@ public class TerrainData extends SavedData {
             data.heightVariation = tag.getDouble("HeightVariation");
             data.smoothingFactor = tag.getDouble("SmoothingFactor");
             data.useDensityMode = tag.getBoolean("UseDensityMode");
+
+            if (tag.contains("NoiseType")) {
+                try {
+                    data.noiseType = NoiseType.valueOf(tag.getString("NoiseType"));
+                } catch (IllegalArgumentException e) {
+                    data.noiseType = NoiseType.NONE;
+                }
+
+                data.noiseScaleX = tag.getDouble("NoiseScaleX");
+                data.noiseScaleY = tag.getDouble( "NoiseScaleY");
+                data.noiseScaleZ = tag.getDouble("NoiseScaleZ");
+                data.noiseHeightScale = tag.getDouble("NoiseHeightScale");
+            }
         }
         return data;
     }
@@ -66,6 +93,12 @@ public class TerrainData extends SavedData {
         this.heightVariation = manager.getHeightVariation();
         this.smoothingFactor = manager.getSmoothingFactor();
         this.useDensityMode = manager.isUseDensityMode();
+
+        this.noiseType = manager.getNoiseType();
+        this.noiseScaleX = manager.getNoiseScaleX();
+        this.noiseScaleY = manager.getNoiseScaleY();
+        this.noiseScaleZ = manager.getNoiseScaleZ();
+        this.noiseHeightScale = manager.getNoiseHeightScale();
 
         if ((this.formula == null || this.formula.isEmpty()) && ModConfig.get().useDefaultFormula) {
             this.formula = ModConfig.get().baseFormula;

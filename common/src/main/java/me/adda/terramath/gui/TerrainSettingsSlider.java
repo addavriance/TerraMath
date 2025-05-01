@@ -49,21 +49,25 @@ public class TerrainSettingsSlider extends AbstractSliderButton {
                 this.minValue = 0;
                 this.maxValue = 60.0;
                 this.translationKey = "terramath.config.noise_scale_x";
+                this.setValue(settings.getNoiseScaleX());
             }
             case NOISE_SCALE_Y -> {
                 this.minValue = 0;
                 this.maxValue = 60.0;
                 this.translationKey = "terramath.config.noise_scale_y";
+                this.setValue(settings.getNoiseScaleY());
             }
             case NOISE_SCALE_Z -> {
                 this.minValue = 0;
                 this.maxValue = 60.0;
                 this.translationKey = "terramath.config.noise_scale_z";
+                this.setValue(settings.getNoiseScaleZ());
             }
             case NOISE_HEIGHT_SCALE -> {
                 this.minValue = 0;
                 this.maxValue = 30.0;
                 this.translationKey = "terramath.config.noise_height_scale";
+                this.setValue(settings.getNoiseHeightScale());
             }
             default -> throw new IllegalArgumentException("Unknown setting type: " + type);
         }

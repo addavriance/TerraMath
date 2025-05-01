@@ -2,7 +2,8 @@ package me.adda.terramath.config;
 
 import net.minecraft.network.chat.Component;
 
-enum NoiseType {
+public enum NoiseType {
+    NONE("None"),
     PERLIN("Perlin"),
     SIMPLEX("Simplex"),
     BLENDED("Blended"),

@@ -144,6 +144,7 @@ public class ConfigScreen extends Screen {
         double baseHeight = configList.getBaseHeight();
         double heightVariation = configList.getHeightVariation();
         double smoothingFactor = configList.getSmoothingFactor();
+
         NoiseType noiseType = configList.getNoiseType();
         double noiseScaleX = configList.getNoiseScaleX();
         double noiseScaleY = configList.getNoiseScaleY();
@@ -161,6 +162,12 @@ public class ConfigScreen extends Screen {
             settings.setHeightVariation(heightVariation);
             settings.setSmoothingFactor(smoothingFactor);
 
+            settings.setNoiseType(noiseType);
+            settings.setNoiseScaleX(noiseScaleX);
+            settings.setNoiseScaleY(noiseScaleY);
+            settings.setNoiseScaleZ(noiseScaleZ);
+            settings.setNoiseHeightScale(noiseHeightScale);
+
             // Save noise settings
             // TODO: Save noise type and scales to appropriate manager
 
@@ -174,6 +181,12 @@ public class ConfigScreen extends Screen {
             config.baseHeight = baseHeight;
             config.heightVariation = heightVariation;
             config.smoothingFactor = smoothingFactor;
+
+            config.noiseType = noiseType;
+            config.noiseScaleX = noiseScaleX;
+            config.noiseScaleY = noiseScaleY;
+            config.noiseScaleZ = noiseScaleZ;
+            config.noiseHeightScale = noiseHeightScale;
 
             // Save noise settings
             // TODO: Save noise type and scales to config
@@ -294,6 +307,13 @@ public class ConfigScreen extends Screen {
                 heightVarEntry.setValue(settings.getHeightVariation());
                 smoothingEntry.setValue(settings.getSmoothingFactor());
 
+                noiseTypeEntry.setValue(settings.getNoiseType());
+
+                noiseScaleXEntry.setValue(settings.getNoiseScaleX());
+                noiseScaleYEntry.setValue(settings.getNoiseScaleY());
+                noiseScaleZEntry.setValue(settings.getNoiseScaleZ());
+                noiseHeightScaleEntry.setValue(settings.getNoiseHeightScale());
+
                 if (densityModeEntry != null) {
                     densityModeEntry.setValue(settings.isUseDensityMode());
                 }
@@ -307,6 +327,13 @@ public class ConfigScreen extends Screen {
                 baseHeightEntry.setValue(config.baseHeight);
                 heightVarEntry.setValue(config.heightVariation);
                 smoothingEntry.setValue(config.smoothingFactor);
+
+                noiseTypeEntry.setValue(config.noiseType);
+
+                noiseScaleXEntry.setValue(config.noiseScaleX);
+                noiseScaleYEntry.setValue(config.noiseScaleY);
+                noiseScaleZEntry.setValue(config.noiseScaleZ);
+                noiseHeightScaleEntry.setValue(config.noiseHeightScale);
 
                 if (densityModeEntry != null) {
                     densityModeEntry.setValue(config.useDensityMode);
@@ -326,7 +353,13 @@ public class ConfigScreen extends Screen {
 
         public void updateNoiseVisibility(NoiseType noiseType) {
             boolean isSimplex = noiseType == NoiseType.SIMPLEX;
-            noiseScaleYEntry.setVisible(!isSimplex);
+            boolean isNone = noiseType == NoiseType.NONE;
+
+            noiseScaleXEntry.setVisible(!isNone);
+            noiseScaleYEntry.setVisible(!isNone && !isSimplex);
+            noiseScaleZEntry.setVisible(!isNone);
+            noiseHeightScaleEntry.setVisible(!isNone);
+
         }
 
         // Getters for all settings when saving
@@ -681,7 +714,7 @@ public class ConfigScreen extends Screen {
 
             cycleButton = CycleButton.<NoiseType>builder(NoiseType::getDisplayName)
                     .withValues(NoiseType.values())
-                    .withInitialValue(NoiseType.PERLIN)
+                    .withInitialValue(NoiseType.NONE)
                     .create(
                             centerX - FIELD_WIDTH / 2, 5,
                             FIELD_WIDTH, 20,
@@ -702,6 +735,10 @@ public class ConfigScreen extends Screen {
 
         public NoiseType getValue() {
             return cycleButton.getValue();
+        }
+
+        public void setValue(NoiseType value) {
+            cycleButton.setValue(value);
         }
     }
 }
