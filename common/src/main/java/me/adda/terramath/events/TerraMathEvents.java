@@ -1,9 +1,9 @@
 package me.adda.terramath.events;
 
-import dev.architectury.event.events.common.LifecycleEvent;
 import me.adda.terramath.api.FormulaCacheHolder;
-import me.adda.terramath.api.TerraFormulaManager;
+import me.adda.terramath.api.TerrainFormulaManager;
 import me.adda.terramath.api.TerrainSettingsManager;
+import me.adda.terramath.config.ModConfig;
 import me.adda.terramath.world.TerrainData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.storage.LevelResource;
@@ -16,12 +16,7 @@ import java.nio.file.Path;
 public class TerraMathEvents {
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public static void init() {
-        LifecycleEvent.SERVER_LEVEL_LOAD.register(TerraMathEvents::onLevelLoad);
-        LifecycleEvent.SERVER_LEVEL_UNLOAD.register(TerraMathEvents::onLevelUnload);
-    }
-
-    private static void onLevelLoad(ServerLevel level) {
+    public static void onLevelLoad(ServerLevel level) {
         TerrainData data = level.getDataStorage().computeIfAbsent(
                 TerrainData.factory(),
                 TerrainData.DATA_ID
@@ -41,15 +36,21 @@ public class TerraMathEvents {
             data.setDirty();
         } else {
             data.applyToManagers();
+
+            FormulaCacheHolder.resetCache();
         }
     }
 
-    private static void onLevelUnload(ServerLevel level) {
-        TerraFormulaManager.getInstance().setFormula("");
+    public static void onLevelUnload(ServerLevel level) {
+        TerrainFormulaManager.getInstance().setFormula("");
         TerrainSettingsManager manager = TerrainSettingsManager.getInstance();
         FormulaCacheHolder.resetCache();
 
         manager.resetToDefaults();
         manager.setUseDensityMode(false);
+
+        if (ModConfig.get().useDefaultFormula) {
+            ModConfig.updateTerrainSettingsFromConfig();
+        }
     }
 }
