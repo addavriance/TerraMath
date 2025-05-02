@@ -2,19 +2,18 @@
   "schemaVersion": 1,
   "id": "terramath",
   "version": "${version}",
-
   "name": "TerraMath",
   "description": "Generate your Minecraft worlds using mathematical formulas! Create unique terrains from waves to spirals with custom equations.",
-  "authors": ["addavriance"],
+  "authors": [
+    "addavriance"
+  ],
   "contact": {
     "homepage": "https://modrinth.com/mod/terra-math",
     "sources": "https://github.com/addavriance/TerraMath",
     "issues": "https://github.com/addavriance/TerraMath/issues"
   },
-
   "license": "GPL-3.0-only",
   "icon": "icon.png",
-
   "environment": "*",
   "entrypoints": {
     "main": [
