@@ -95,7 +95,7 @@ public class TerrainSettingsSlider extends AbstractSliderButton {
         }
     }
     public double getDefaultValue() {
-        return TerrainSettingsManager.getInstance().getDefaultByType(this.type);
+        return TerrainSettingsManager.getDefaultByType(this.type);
     }
 
     public void setValue(double realValue) {
