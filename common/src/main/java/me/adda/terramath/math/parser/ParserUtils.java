@@ -1,4 +1,4 @@
-package me.adda.terramath.math;
+package me.adda.terramath.math.parser;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

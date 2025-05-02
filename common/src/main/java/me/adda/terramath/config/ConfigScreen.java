@@ -6,7 +6,7 @@ import me.adda.terramath.api.TerrainSettingsManager;
 import me.adda.terramath.api.TerrainSettingsManager.TerrainSettingType;
 import me.adda.terramath.gui.ResetButton;
 import me.adda.terramath.gui.TerrainSettingsSlider;
-import me.adda.terramath.math.FormulaParser;
+import me.adda.terramath.math.parser.FormulaParser;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -27,7 +27,7 @@ import net.minecraft.network.chat.MutableComponent;
 import java.util.ArrayList;
 import java.util.List;
 
-import static me.adda.terramath.math.FormulaGenerator.generateRandomFormula;
+import static me.adda.terramath.math.formula.FormulaGenerator.generateRandomFormula;
 
 public class ConfigScreen extends Screen {
     private final Screen parent;

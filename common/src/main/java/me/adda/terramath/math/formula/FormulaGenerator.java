@@ -1,4 +1,6 @@
-package me.adda.terramath.math;
+package me.adda.terramath.math.formula;
+
+import me.adda.terramath.math.functions.MathFunctionsRegistry;
 
 import java.util.*;
 
