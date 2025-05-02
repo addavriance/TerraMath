@@ -1,35 +1,57 @@
 package me.adda.terramath.events;
 
-import dev.architectury.event.events.common.LifecycleEvent;
-import me.adda.terramath.api.TerraFormulaManager;
+import me.adda.terramath.api.FormulaCacheHolder;
+import me.adda.terramath.api.TerrainFormulaManager;
 import me.adda.terramath.api.TerrainSettingsManager;
+import me.adda.terramath.config.ModConfig;
 import me.adda.terramath.world.TerrainData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.storage.LevelResource;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class TerraMathEvents {
-    public static void init() {
-        LifecycleEvent.SERVER_LEVEL_LOAD.register(TerraMathEvents::onLevelLoad);
-        LifecycleEvent.SERVER_LEVEL_UNLOAD.register(TerraMathEvents::onLevelUnload);
-    }
+    private static final Logger LOGGER = LogManager.getLogger();
 
-    private static void onLevelLoad(ServerLevel level) {
-        TerrainData data = level.getDataStorage().get(TerrainData::load, TerrainData.IDENTIFIER);
+    public static void onLevelLoad(ServerLevel level) {
+        TerrainData data = level.getDataStorage().computeIfAbsent(
+                TerrainData::load,
+                TerrainData::create,
+                TerrainData.DATA_ID
+        );
 
-        if (data != null) {
-            data.applyToManagers();
+        boolean isNewWorld = false;
+
+        try {
+            Path worldPath = level.getServer().getWorldPath(LevelResource.ROOT);
+            isNewWorld = !Files.exists(worldPath.resolve("level.dat_old"));
+        } catch (Exception e) {
+            LOGGER.error("Error checking world files: ", e);
+        }
+
+        if (isNewWorld) {
+            data.updateFromManagers();
+            data.setDirty();
         } else {
-            TerrainData new_data = new TerrainData();
-            new_data.updateFromManagers();
+            data.applyToManagers();
 
-            level.getDataStorage().set(TerrainData.IDENTIFIER, new_data);
+            FormulaCacheHolder.resetCache();
         }
     }
 
-    private static void onLevelUnload(ServerLevel level) {
-        TerraFormulaManager.getInstance().setFormula("");
+    public static void onLevelUnload(ServerLevel level) {
+        TerrainFormulaManager.getInstance().setFormula("");
         TerrainSettingsManager manager = TerrainSettingsManager.getInstance();
+        FormulaCacheHolder.resetCache();
 
         manager.resetToDefaults();
         manager.setUseDensityMode(false);
+
+        if (ModConfig.get().useDefaultFormula) {
+            ModConfig.updateTerrainSettingsFromConfig();
+        }
     }
 }

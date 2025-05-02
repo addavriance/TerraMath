@@ -7,7 +7,7 @@ public class FormulaCacheHolder {
     private static String lastFormula = null;
 
     public static FormulaParser.CompiledFormula getParsedFormula() {
-        String currentFormula = TerraFormulaManager.getInstance().getFormula();
+        String currentFormula = TerrainFormulaManager.getInstance().getFormula();
         if ((parsedFormula == null || !currentFormula.equals(lastFormula)) && !currentFormula.trim().isEmpty()) {
             parsedFormula = FormulaParser.parse(currentFormula);
             lastFormula = currentFormula;

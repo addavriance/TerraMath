@@ -19,6 +19,9 @@
   "entrypoints": {
     "main": [
       "me.adda.terramath.fabric.TerraMathFabric"
+    ],
+    "modmenu": [
+      "me.adda.terramath.fabric.ModMenuIntegration"
     ]
   },
   "mixins": [

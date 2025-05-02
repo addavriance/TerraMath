@@ -1,62 +1,34 @@
 package me.adda.terramath.math;
 
+import me.adda.terramath.api.TerrainSettingsManager;
 import me.adda.terramath.exception.FormulaException;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.server.IntegratedServer;
 import org.codehaus.janino.ExpressionEvaluator;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Locale;
+
 
 public class FormulaParser extends FormulaValidator {
-    private static final Map<String, String> FUNCTION_MAPPINGS = new ConcurrentHashMap<>();
-    static {
-        FUNCTION_MAPPINGS.put("sin", "Math.sin");
-        FUNCTION_MAPPINGS.put("cos", "Math.cos");
-        FUNCTION_MAPPINGS.put("tan", "Math.tan");
-        FUNCTION_MAPPINGS.put("asin", "Math.asin");
-        FUNCTION_MAPPINGS.put("acos", "Math.acos");
-        FUNCTION_MAPPINGS.put("atan", "Math.atan");
-        FUNCTION_MAPPINGS.put("sinh", "Math.sinh");
-        FUNCTION_MAPPINGS.put("cosh", "Math.cosh");
-        FUNCTION_MAPPINGS.put("tanh", "Math.tanh");
-        FUNCTION_MAPPINGS.put("sqrt", "Math.sqrt");
-        FUNCTION_MAPPINGS.put("cbrt", "Math.cbrt");
-        FUNCTION_MAPPINGS.put("pow", "Math.pow");
-        FUNCTION_MAPPINGS.put("ln", "Math.log");
-        FUNCTION_MAPPINGS.put("lg", "Math.log10");
-        FUNCTION_MAPPINGS.put("abs", "Math.abs");
-        FUNCTION_MAPPINGS.put("exp", "Math.exp");
-        FUNCTION_MAPPINGS.put("floor", "Math.floor");
-        FUNCTION_MAPPINGS.put("ceil", "Math.ceil");
-        FUNCTION_MAPPINGS.put("round", "(double)Math.round");
-        FUNCTION_MAPPINGS.put("sign", "Math.signum");
-        FUNCTION_MAPPINGS.put("max", "Math.max");
-        FUNCTION_MAPPINGS.put("min", "Math.min");
-
-        FUNCTION_MAPPINGS.put("gamma", "MathExtensions.gamma");
-        FUNCTION_MAPPINGS.put("erf", "MathExtensions.erf");
-        FUNCTION_MAPPINGS.put("beta", "MathExtensions.beta");
-        FUNCTION_MAPPINGS.put("mod", "MathExtensions.mod");
-        FUNCTION_MAPPINGS.put("sigmoid", "MathExtensions.sigmoid");
-        FUNCTION_MAPPINGS.put("clamp", "MathExtensions.clamp");
-    }
+    static Minecraft minecraft = Minecraft.getInstance();
+    static IntegratedServer integratedServer;
 
     public static class CompiledFormula {
         private final String originalExpression;
         private final ExpressionEvaluator evaluator;
+        private final CompositeNoise noise;
 
-        private CompiledFormula(String expression, ExpressionEvaluator evaluator) {
+        private CompiledFormula(String expression, ExpressionEvaluator evaluator, CompositeNoise noise) {
             this.originalExpression = expression;
             this.evaluator = evaluator;
-
+            this.noise = noise;
         }
 
         public double evaluate(double x, double y, double z) {
             try {
-                return (double) evaluator.evaluate(new Object[]{x, y, z});
+                return (double) evaluator.evaluate(new Object[]{x, y, z, this.noise});
             } catch (Exception e) {
-                throw new FormulaException(ERROR_INVALID_CHARS, e.getMessage());
+                throw new FormulaException(ERROR_INVALID_SYNTAX, e.getMessage());
             }
         }
 
@@ -65,15 +37,22 @@ public class FormulaParser extends FormulaValidator {
         }
     }
 
+
     public static CompiledFormula parse(String formula) {
+        if (!validateFormula(formula, true).isValid()) {
+            formula = "0";
+        }
+
+        long seed = getSeed();
+
         String javaExpression = convertToJavaExpression(formula);
 
         try {
             ExpressionEvaluator evaluator = new ExpressionEvaluator();
 
             evaluator.setParameters(
-                    new String[]{"x", "y", "z"},
-                    new Class[]{double.class, double.class, double.class}
+                    new String[]{"x", "y", "z", "noise"},
+                    new Class[]{double.class, double.class, double.class, CompositeNoise.class}
             );
 
             evaluator.setParentClassLoader(FormulaParser.class.getClassLoader());
@@ -85,76 +64,112 @@ public class FormulaParser extends FormulaValidator {
                     javaExpression
             );
 
-            evaluator.cook(fullExpression);
-            return new CompiledFormula(formula, evaluator);
-        } catch (Exception e) {
-            String formatted_exception = e.getMessage().split(":")[1].trim();
-            formatted_exception = formatted_exception.length() > 43 ? formatted_exception.substring(0, 43).trim() + "..." : formatted_exception;
+            CompositeNoise noise = new CompositeNoise(seed);
 
-            throw new FormulaException(ERROR_INVALID_SYNTAX, formatted_exception);
+            evaluator.cook(fullExpression);
+            return new CompiledFormula(formula, evaluator, noise);
+        } catch (Exception e) {
+            Throwable cause = getRootCause(e);
+            String message = cause.getMessage();
+
+            if (cause instanceof IllegalArgumentException ||
+                    cause.getMessage() != null && message.contains("No applicable constructor")) {
+                throw new FormulaException(ERROR_INVALID_ARGUMENTS);
+            } else if (cause.getMessage() != null && (message.contains("Unknown variable") || message.contains("is not an rvalue"))) {
+                throw new FormulaException(ERROR_UNKNOWN_VARIABLE, extractFunctionName(message));
+            } else {
+                throw new FormulaException(ERROR_INVALID_SYNTAX, message);
+            }
         }
     }
 
+    private static String extractFunctionName(String errorMessage) {
+        if (errorMessage != null) {
+            String[] parts = errorMessage.split("\"");
+            if (parts.length >= 2) {
+                return parts[1];
+            }
+        }
+        return "";
+    }
+
+    private static Throwable getRootCause(Throwable throwable) {
+        Throwable cause = throwable;
+        while (cause.getCause() != null && cause.getCause() != cause) {
+            cause = cause.getCause();
+        }
+        return cause;
+    }
+
     private static String convertToJavaExpression(String formula) {
-        // Replace function names with their Java equivalents
         String javaExpr = formula;
-        for (Map.Entry<String, String> entry : FUNCTION_MAPPINGS.entrySet()) {
+
+        javaExpr = wrapWithNoise(javaExpr);
+
+        for (String funcName : MathFunctionsRegistry.getFunctionNames()) {
             javaExpr = javaExpr.replaceAll(
-                    "\\b" + entry.getKey() + "\\b",
-                    entry.getValue()
+                    "\\b" + funcName + "\\b",
+                    MathFunctionsRegistry.getFunctionImplementation(funcName)
             );
         }
+
+        javaExpr = replacePowerOperator(javaExpr);
 
         if (javaExpr.contains("!")) {
             javaExpr = handleFactorials(javaExpr);
         }
 
-        javaExpr = replacePowerOperator(javaExpr);
 
         return javaExpr;
     }
 
-    private static String replacePowerOperator(String expr) {
-        Pattern pattern = Pattern.compile("(\\w+)\\s*\\^\\s*(\\d+)");
-        Matcher matcher = pattern.matcher(expr);
+    public static String replacePowerOperator(String expression) {
+        PowerParser parser = new PowerParser(expression);
 
-        while (matcher.find()) {
-            String base = matcher.group(1);
-            String exponent = matcher.group(2);
-            String replacement = "Math.pow(" + base + ", " + exponent + ")";
-            expr = expr.replace(matcher.group(0), replacement);
-        }
-
-        return expr;
+        return parser.parse();
     }
 
-    private static String handleFactorials(String expr) {
-        StringBuilder result = new StringBuilder();
-        int i = 0;
-        while (i < expr.length()) {
-            if (expr.charAt(i) == '!' && i > 0) {
-                int j = i - 1;
-                int parenthesesCount = 0;
-                while (j >= 0) {
-                    char c = expr.charAt(j);
-                    if (c == ')') parenthesesCount++;
-                    if (c == '(') parenthesesCount--;
-                    if (parenthesesCount == 0 && isOperator(c)) break;
-                    j--;
-                }
+    private static String handleFactorials(String expression) {
+        FactorialParser parser = new FactorialParser(expression);
 
-                j++;
+        return parser.parse();
+    }
 
-                String operand = expr.substring(j, i);
-                result.delete(result.length() - operand.length(), result.length());
-                result.append("MathExtensions.gamma(").append(operand).append(" + 1)");
+    public static String wrapWithNoise(String expression) {
+        TerrainSettingsManager settingsManager = TerrainSettingsManager.getInstance();
 
-            } else {
-                result.append(expr.charAt(i));
-            }
+        String noiseType = settingsManager.getNoiseType().name().toLowerCase();
 
-            i++;
+        double scaleX = settingsManager.getNoiseScaleX();
+        double scaleY = settingsManager.getNoiseScaleY();
+        double scaleZ = settingsManager.getNoiseScaleZ();
+        double heightScale = settingsManager.getNoiseHeightScale();
+
+        if ("none".equals(noiseType)) {
+            return expression;
         }
-        return result.toString();
+
+        String noiseCall;
+
+        if (noiseType.equals("simplex")) {
+            noiseCall = String.format(Locale.US, "%s(x/%.3f, z/%.3f)", noiseType, scaleX, scaleZ);
+        } else {
+            noiseCall = String.format(Locale.US, "%s(x/%.3f, y/%.3f, z/%.3f)", noiseType, scaleX, scaleY, scaleZ);
+        }
+
+        String result = String.format(Locale.US, "(%s) + %s*%.3f", expression, noiseCall, heightScale);
+
+        return result;
+    }
+
+    private static long getSeed() {
+        if (integratedServer == null) {
+            integratedServer = minecraft.getSingleplayerServer();
+            if (integratedServer == null) {
+                return 0;
+            }
+        }
+
+        return integratedServer.overworld().getSeed();
     }
 }

@@ -1,12 +1,12 @@
 package me.adda.terramath.api;
 
-public class TerraFormulaManager {
-    private static final TerraFormulaManager INSTANCE = new TerraFormulaManager();
+public class TerrainFormulaManager {
+    private static final TerrainFormulaManager INSTANCE = new TerrainFormulaManager();
     private String currentFormula = "";
 
-    private TerraFormulaManager() {}
+    private TerrainFormulaManager() {}
 
-    public static TerraFormulaManager getInstance() {
+    public static TerrainFormulaManager getInstance() {
         return INSTANCE;
     }
 
