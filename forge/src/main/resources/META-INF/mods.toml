@@ -34,12 +34,5 @@ Generate your Minecraft worlds using mathematical formulas! Create unique terrai
    ordering="NONE"
    side="BOTH"
 
-[[dependencies.terramath]]
-   modId="architectury"
-   mandatory=true
-   versionRange="[9.1.12,)"
-   ordering="NONE"
-   side="BOTH"
-
 [modproperties.terramath]
    catalogueItemIcon="minecraft:repeating_command_block"
