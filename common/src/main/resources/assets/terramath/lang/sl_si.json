@@ -1,0 +1,48 @@
+{
+  "terramath.config.title": "Konfiguracija TerraMath",
+  "terramath.config.terrain_settings": "Nastavitve terena",
+  "terramath.config.terrain_settings_label": "Nastavitve terena trenutnega sveta",
+
+  "terramath.config.formula": "Matematična funkcija za generator sveta",
+  "terramath.config.formula.hint": "Pustite prazno za privzeto generiranje",
+
+  "terramath.config.coordinate_scale": "Merilo",
+
+  "terramath.config.density_mode": "Napredno",
+
+  "terramath.config.base_height": "Osnovna višina",
+  "terramath.config.height_variation": "Variacija višine",
+  "terramath.config.smoothing": "Glajenje",
+
+  "terramath.config.noise_settings": "Nastavitve šuma",
+
+  "terramath.config.noise_type": "Vrsta šuma",
+
+  "terramath.config.noise_type.none": "Brez",
+  "terramath.config.noise_type.perlin": "Perlin",
+  "terramath.config.noise_type.simplex": "Simplex",
+  "terramath.config.noise_type.blended": "Mešano",
+  "terramath.config.noise_type.normal": "Normalno",
+
+  "terramath.config.noise_scale_x": "Merilo X",
+  "terramath.config.noise_scale_y": "Merilo Y",
+  "terramath.config.noise_scale_z": "Merilo Z",
+
+  "terramath.config.noise_height_scale": "Merilo višine",
+
+  "terramath.config.use_default_settings": "Uporabi te nastavitve kot privzete",
+
+  "terramath.formula.error.null": "Formula ne sme biti prazna",
+  "terramath.formula.error.invalid_chars": "Formula vsebuje neveljavne znake",
+  "terramath.formula.error.no_variables": "Formula mora uporabiti vsaj eno spremenljivko (x ali z)",
+  "terramath.formula.error.unknown_function": "Neznana funkcija: %s",
+  "terramath.formula.error.unknown_variable": "Neznana spremenljivka: %s",
+  "terramath.formula.error.function_parentheses": "Neveljavna uporaba funkcije: %s morajo slediti oklepaji",
+  "terramath.formula.error.unmatched_closing": "Nezloženj zapiralni oklepaj na položaju %d",
+  "terramath.formula.error.unmatched_opening": "Nezloženj odpiralni oklepaj na položaju %d",
+  "terramath.formula.error.operator_sequence": "Neveljavno zaporedje operaterjev",
+  "terramath.formula.error.operator_start_end": "Formula se ne more začeti z */ ali končati z operaterjem",
+  "terramath.formula.error.operator_brackets": "Neveljavna postavitev operaterja blizu oklepajev",
+  "terramath.formula.error.invalid_arguments": "Neveljavni argumenti",
+  "terramath.formula.error.invalid_syntax": "Sintaksna napaka: %s"
+}

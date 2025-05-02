@@ -1,0 +1,48 @@
+{
+  "terramath.config.title": "Конфигурация на TerraMath",
+  "terramath.config.terrain_settings": "Настройки на терена",
+  "terramath.config.terrain_settings_label": "Настройки на терена на текущия свят",
+
+  "terramath.config.formula": "Математическа функция за генератора на свят",
+  "terramath.config.formula.hint": "Оставете празно за стандартно генериране",
+
+  "terramath.config.coordinate_scale": "Мащаб",
+
+  "terramath.config.density_mode": "Разширени",
+
+  "terramath.config.base_height": "Базова височина",
+  "terramath.config.height_variation": "Вариация на височината",
+  "terramath.config.smoothing": "Изглаждане",
+
+  "terramath.config.noise_settings": "Настройки на шума",
+
+  "terramath.config.noise_type": "Тип шум",
+
+  "terramath.config.noise_type.none": "Няма",
+  "terramath.config.noise_type.perlin": "Перлин",
+  "terramath.config.noise_type.simplex": "Симплекс",
+  "terramath.config.noise_type.blended": "Смесен",
+  "terramath.config.noise_type.normal": "Нормален",
+
+  "terramath.config.noise_scale_x": "Мащаб X",
+  "terramath.config.noise_scale_y": "Мащаб Y",
+  "terramath.config.noise_scale_z": "Мащаб Z",
+
+  "terramath.config.noise_height_scale": "Мащаб на височината",
+
+  "terramath.config.use_default_settings": "Използвай тези настройки по подразбиране",
+
+  "terramath.formula.error.null": "Формулата не може да бъде празна",
+  "terramath.formula.error.invalid_chars": "Формулата съдържа невалидни символи",
+  "terramath.formula.error.no_variables": "Формулата трябва да използва поне една променлива (x или z)",
+  "terramath.formula.error.unknown_function": "Непозната функция: %s",
+  "terramath.formula.error.unknown_variable": "Непозната променлива: %s",
+  "terramath.formula.error.function_parentheses": "Невалидно използване на функция: след %s трябва да следват скоби",
+  "terramath.formula.error.unmatched_closing": "Несъответстваща затваряща скоба на позиция %d",
+  "terramath.formula.error.unmatched_opening": "Несъответстваща отваряща скоба на позиция %d",
+  "terramath.formula.error.operator_sequence": "Невалидна последователност от оператори",
+  "terramath.formula.error.operator_start_end": "Формулата не може да започва с */ или да завършва с оператор",
+  "terramath.formula.error.operator_brackets": "Невалидно поставяне на оператор близо до скоби",
+  "terramath.formula.error.invalid_arguments": "Невалидни аргументи",
+  "terramath.formula.error.invalid_syntax": "Синтактична грешка: %s"
+}

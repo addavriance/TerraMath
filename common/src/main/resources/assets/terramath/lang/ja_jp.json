@@ -1,0 +1,48 @@
+{
+  "terramath.config.title": "TerraMath 設定",
+  "terramath.config.terrain_settings": "地形設定",
+  "terramath.config.terrain_settings_label": "現在のワールドの地形設定",
+
+  "terramath.config.formula": "ワールドジェネレーター用の数学関数",
+  "terramath.config.formula.hint": "デフォルト生成の場合は空欄にしてください",
+
+  "terramath.config.coordinate_scale": "スケール",
+
+  "terramath.config.density_mode": "詳細設定",
+
+  "terramath.config.base_height": "基本高度",
+  "terramath.config.height_variation": "高度変動",
+  "terramath.config.smoothing": "スムージング",
+
+  "terramath.config.noise_settings": "ノイズ設定",
+
+  "terramath.config.noise_type": "ノイズタイプ",
+
+  "terramath.config.noise_type.none": "なし",
+  "terramath.config.noise_type.perlin": "パーリン",
+  "terramath.config.noise_type.simplex": "シンプレックス",
+  "terramath.config.noise_type.blended": "ブレンド",
+  "terramath.config.noise_type.normal": "ノーマル",
+
+  "terramath.config.noise_scale_x": "X軸スケール",
+  "terramath.config.noise_scale_y": "Y軸スケール",
+  "terramath.config.noise_scale_z": "Z軸スケール",
+
+  "terramath.config.noise_height_scale": "高度スケール",
+
+  "terramath.config.use_default_settings": "これらの設定をデフォルトとして使用",
+
+  "terramath.formula.error.null": "数式は空にできません",
+  "terramath.formula.error.invalid_chars": "数式に無効な文字が含まれています",
+  "terramath.formula.error.no_variables": "数式には少なくとも一つの変数（xまたはz）を使用する必要があります",
+  "terramath.formula.error.unknown_function": "不明な関数：%s",
+  "terramath.formula.error.unknown_variable": "不明な変数：%s",
+  "terramath.formula.error.function_parentheses": "関数の使用方法が無効：%sの後には括弧が必要です",
+  "terramath.formula.error.unmatched_closing": "位置%dで閉じ括弧が対応していません",
+  "terramath.formula.error.unmatched_opening": "位置%dで開き括弧が対応していません",
+  "terramath.formula.error.operator_sequence": "演算子の順序が無効です",
+  "terramath.formula.error.operator_start_end": "数式は*/で始まるか、演算子で終わることはできません",
+  "terramath.formula.error.operator_brackets": "括弧付近の演算子の配置が無効です",
+  "terramath.formula.error.invalid_arguments": "引数が無効です",
+  "terramath.formula.error.invalid_syntax": "構文エラー：%s"
+}
