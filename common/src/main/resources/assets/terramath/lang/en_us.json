@@ -1,28 +1,48 @@
 {
-  "terramath.worldgen.formula": "Math function for the world generator",
-  "terramath.worldgen.formula.hint": "Leave blank for a default generation",
+  "terramath.config.title": "TerraMath Configuration",
+  "terramath.config.terrain_settings": "Terrain Settings",
+  "terramath.config.terrain_settings_label": "Current World Terrain Settings",
 
-  "terramath.worldgen.coordinate_scale": "Scale",
+  "terramath.config.formula": "Math function for the world generator",
+  "terramath.config.formula.hint": "Leave blank for a default generation",
 
-  "terramath.worldgen.base_height": "Base height",
-  "terramath.worldgen.height_variation": "Height variation",
-  "terramath.worldgen.smoothing": "Smoothing",
-  "terramath.worldgen.density_mode": "Advanced",
+  "terramath.config.coordinate_scale": "Scale",
+
+  "terramath.config.density_mode": "Advanced",
+
+  "terramath.config.base_height": "Base height",
+  "terramath.config.height_variation": "Height variation",
+  "terramath.config.smoothing": "Smoothing",
+
+  "terramath.config.noise_settings": "Noise settings",
+
+  "terramath.config.noise_type": "Noise type",
+
+  "terramath.config.noise_type.none": "None",
+  "terramath.config.noise_type.perlin": "Perlin",
+  "terramath.config.noise_type.simplex": "Simplex",
+  "terramath.config.noise_type.blended": "Blended",
+  "terramath.config.noise_type.normal": "Normal",
+
+  "terramath.config.noise_scale_x": "Scale X",
+  "terramath.config.noise_scale_y": "Scale Y",
+  "terramath.config.noise_scale_z": "Scale Z",
+
+  "terramath.config.noise_height_scale": "Height scale",
+
+  "terramath.config.use_default_settings": "Use these settings by default",
 
   "terramath.formula.error.null": "Formula cannot be null",
   "terramath.formula.error.invalid_chars": "Formula contains invalid characters",
   "terramath.formula.error.no_variables": "Formula must use at least one variable (x or z)",
   "terramath.formula.error.unknown_function": "Unknown function: %s",
+  "terramath.formula.error.unknown_variable": "Unknown variable: %s",
   "terramath.formula.error.function_parentheses": "Invalid function usage: %s must be followed by parentheses",
-  "terramath.formula.error.three_arguments": "%s function requires exactly three arguments, separated by comma",
-  "terramath.formula.error.two_arguments": "%s function requires exactly two arguments, separated by comma",
-  "terramath.formula.error.arguments": "%s function requires exactly one argument",
   "terramath.formula.error.unmatched_closing": "Unmatched closing bracket at position %d",
-  "terramath.formula.error.empty_brackets": "Empty brackets at position %d",
   "terramath.formula.error.unmatched_opening": "Unmatched opening bracket at position %d",
   "terramath.formula.error.operator_sequence": "Invalid sequence of operators",
   "terramath.formula.error.operator_start_end": "Formula cannot start with */ or end with an operator",
   "terramath.formula.error.operator_brackets": "Invalid operator placement near brackets",
-  "terramath.formula.error.division_zero": "Division by zero",
+  "terramath.formula.error.invalid_arguments": "Invalid arguments",
   "terramath.formula.error.invalid_syntax": "Syntax error: %s"
 }
