@@ -1,6 +1,6 @@
 package me.adda.terramath.api;
 
-import me.adda.terramath.math.FormulaParser;
+import me.adda.terramath.math.parser.FormulaParser;
 
 public class FormulaCacheHolder {
     private static FormulaParser.CompiledFormula parsedFormula = null;

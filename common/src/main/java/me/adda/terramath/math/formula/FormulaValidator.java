@@ -1,6 +1,8 @@
-package me.adda.terramath.math;
+package me.adda.terramath.math.formula;
 
 import me.adda.terramath.exception.FormulaException;
+import me.adda.terramath.math.functions.MathFunctionsRegistry;
+import me.adda.terramath.math.parser.FormulaParser;
 
 import java.util.*;
 import java.util.stream.Collectors;
