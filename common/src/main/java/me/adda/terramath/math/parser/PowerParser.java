@@ -1,10 +1,10 @@
-package me.adda.terramath.math;
+package me.adda.terramath.math.parser;
 
-public class FactorialParser {
+public class PowerParser {
 
     private String expression;
 
-    public FactorialParser(String expression) {
+    public PowerParser(String expression) {
         this.expression = expression;
     }
 
@@ -12,7 +12,7 @@ public class FactorialParser {
         int i = 0;
 
         while (i < expression.length()) {
-            if (expression.charAt(i) == '!') {
+            if (expression.charAt(i) == '^') {
                 int operandEnd = i;
                 int operandStart = i - 1;
 
@@ -26,7 +26,7 @@ public class FactorialParser {
                 }
 
                 if (Character.isLetterOrDigit(expression.charAt(operandStart)) || expression.charAt(operandStart) == ')') {
-                    String operand;
+                    String operand1;
 
                     if (expression.charAt(operandStart) == ')') {
                         int bracketCount = 1;
@@ -46,9 +46,9 @@ public class FactorialParser {
 
                             if (ParserUtils.isFunction(expression, openBracketPos)) {
                                 int funcStart = ParserUtils.findFunctionStart(expression, openBracketPos);
-                                operand = expression.substring(funcStart, operandEnd);
+                                operand1 = expression.substring(funcStart, operandEnd);
                             } else {
-                                operand = expression.substring(openBracketPos, operandEnd);
+                                operand1 = expression.substring(openBracketPos, operandEnd);
                             }
                         } else {
                             i++;
@@ -59,10 +59,38 @@ public class FactorialParser {
                         while (j >= 0 && (Character.isLetterOrDigit(expression.charAt(j)) || expression.charAt(j) == '.')) {
                             j--;
                         }
-                        operand = expression.substring(j + 1, operandEnd);
+                        operand1 = expression.substring(j + 1, operandEnd);
                     }
 
-                    expression = expression.replace(operand + "!", "MathExtensions.gamma(" + operand + "+1)");
+                    // Find the second operand
+                    int operand2Start = i + 1;
+                    int operand2End = operand2Start;
+
+                    while (operand2End < expression.length() && (Character.isLetterOrDigit(expression.charAt(operand2End)) || expression.charAt(operand2End) == '.' || expression.charAt(operand2End) == '(')) {
+                        if (expression.charAt(operand2End) == '(') {
+                            int bracketCount = 1;
+                            int k = operand2End + 1;
+
+                            while (k < expression.length() && bracketCount > 0) {
+                                if (expression.charAt(k) == '(') {
+                                    bracketCount++;
+                                } else if (expression.charAt(k) == ')') {
+                                    bracketCount--;
+                                }
+                                k++;
+                            }
+
+                            if (bracketCount == 0) {
+                                operand2End = k;
+                            }
+                        } else {
+                            operand2End++;
+                        }
+                    }
+
+                    String operand2 = expression.substring(operand2Start, operand2End);
+
+                    expression = expression.replace(operand1 + "^" + operand2, "Math.pow(" + operand1 + "," + operand2 + ")");
                 } else {
                     i++;
                     continue;

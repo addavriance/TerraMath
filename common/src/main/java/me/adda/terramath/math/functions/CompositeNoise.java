@@ -1,4 +1,4 @@
-package me.adda.terramath.math;
+package me.adda.terramath.math.functions;
 
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.DensityFunction;

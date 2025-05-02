@@ -2,7 +2,7 @@ package me.adda.terramath.mixin;
 
 import me.adda.terramath.api.FormulaCacheHolder;
 import me.adda.terramath.api.TerrainSettingsManager;
-import me.adda.terramath.math.FormulaParser;
+import me.adda.terramath.math.parser.FormulaParser;
 import net.minecraft.util.KeyDispatchDataCodec;
 import net.minecraft.world.level.levelgen.DensityFunction;
 import net.minecraft.world.level.levelgen.NoiseRouter;

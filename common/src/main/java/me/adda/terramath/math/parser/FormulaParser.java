@@ -1,7 +1,10 @@
-package me.adda.terramath.math;
+package me.adda.terramath.math.parser;
 
 import me.adda.terramath.api.TerrainSettingsManager;
 import me.adda.terramath.exception.FormulaException;
+import me.adda.terramath.math.functions.CompositeNoise;
+import me.adda.terramath.math.formula.FormulaValidator;
+import me.adda.terramath.math.functions.MathFunctionsRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.server.IntegratedServer;
 import org.codehaus.janino.ExpressionEvaluator;
@@ -59,7 +62,7 @@ public class FormulaParser extends FormulaValidator {
             evaluator.setExpressionType(double.class);
 
             String fullExpression = String.format(
-                    "import me.adda.terramath.math.MathExtensions; " +
+                    "import me.adda.terramath.math.functions.MathExtensions; " +
                     "(%s)",
                     javaExpression
             );

@@ -1,4 +1,4 @@
-package me.adda.terramath.math;
+package me.adda.terramath.math.functions;
 
 import java.util.Map;
 import java.util.Random;
