@@ -81,3 +81,7 @@ publishing {
         // Add repositories to publish to here.
     }
 }
+
+tasks.named('sourcesJar', Jar) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
