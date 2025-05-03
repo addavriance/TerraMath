@@ -30,7 +30,7 @@ public class CreateWorldScreenMixin extends Screen {
                     target = "Lnet/minecraft/client/gui/layouts/LinearLayout;addChild(Lnet/minecraft/client/gui/layouts/LayoutElement;)Lnet/minecraft/client/gui/layouts/LayoutElement;"
             )
     )
-    private <T extends LayoutElement> T terramath$redirectAddCancelButton(LinearLayout instance, T layoutElement) {
+    private LayoutElement terramath$redirectAddCancelButton(LinearLayout instance, LayoutElement layoutElement) {
         if (layoutElement instanceof Button button &&
                 button.getMessage().equals(CommonComponents.GUI_CANCEL)) {
 
@@ -43,7 +43,7 @@ public class CreateWorldScreenMixin extends Screen {
                     }
             ).build();
 
-            return instance.addChild((T)customCancelButton);
+            return instance.addChild(customCancelButton);
         }
 
         return instance.addChild(layoutElement);
