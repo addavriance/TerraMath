@@ -1,0 +1,94 @@
+tasks.register('sendToTelegram') {
+    description = 'Sends built JAR files to Telegram'
+    group = 'distribution'
+
+    doLast {
+        def botToken = System.getenv('TELEGRAM_BOT_TOKEN')
+        def chatId = System.getenv('TELEGRAM_CHAT_ID')
+
+        if (!botToken || !chatId) {
+            throw new GradleException('Telegram credentials not found')
+        }
+
+        def date = new Date()
+        def dateFormat = new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm")
+        def formattedDate = dateFormat.format(date)
+
+        def gitInfo = getGitInfo()
+
+        println "Sending artifacts to Telegram..."
+
+        ['fabric', 'forge'].each { modType ->
+            def jarName = "${archivesBaseName}-${version}+${modType}.jar"
+            def jarFile = file("${modType}/build/libs/${jarName}")
+
+            if (jarFile.exists()) {
+                println "📦 Sending ${jarName}..."
+
+                def caption = "🚀 TerraMath Release\n" +
+                        "• Version: ${version}\n" +
+                        "• Platform: ${modType.capitalize()}\n" +
+                        "• Minecraft: ${minecraft_version}\n" +
+                        "• Build time: ${formattedDate}\n" +
+                        "• Size: ${formatFileSize(jarFile.length())}\n" +
+                        "${gitInfo}"
+
+                def tempFile = File.createTempFile("caption", ".txt")
+                tempFile.deleteOnExit()
+                tempFile.text = caption
+
+                exec {
+                    commandLine 'curl', '-sS', '-o', '/dev/null', '-X', 'POST',
+                            '-F', "chat_id=${chatId}",
+                            '-F', "document=@${jarFile.absolutePath}",
+                            '-F', "caption=<${tempFile.absolutePath}",
+                            "https://api.telegram.org/bot${botToken}/sendDocument"
+                    ignoreExitValue true
+                }
+
+                println "✅ ${jarName} sent successfully"
+            } else {
+                println "⚠️ File not found: ${jarFile.absolutePath}"
+            }
+        }
+
+        println "✨ Done!"
+    }
+}
+
+def getGitInfo() {
+    try {
+        def hash = "git rev-parse --short HEAD".execute().text.trim()
+        def message = "git log -1 --pretty=%B".execute().text.trim()
+        def branch = "git rev-parse --abbrev-ref HEAD".execute().text.trim()
+
+        return "• Git Branch: ${branch}\n" +
+                "• Last commit: ${hash}\n" +
+                "• Message: ${message}"
+    } catch (Exception e) {
+        return "• Git info not available"
+    }
+}
+
+def formatFileSize(long bytes) {
+    if (bytes < 1024) return "${bytes} B"
+    def kb = bytes / 1024.0
+    if (kb < 1024) return String.format("%.1f KB", kb)
+    def mb = kb / 1024.0
+    return String.format("%.1f MB", mb)
+}
+
+tasks.register('buildAndSend') {
+    description = 'Builds all projects and sends artifacts to Telegram'
+    group = 'distribution'
+
+    dependsOn 'build'
+    finalizedBy 'sendToTelegram'
+}
+
+tasks.register('printEnvironment') {
+    doLast {
+        println "TELEGRAM_BOT_TOKEN: ${System.getenv('TELEGRAM_BOT_TOKEN')}"
+        println "TELEGRAM_CHAT_ID: ${System.getenv('TELEGRAM_CHAT_ID')}"
+    }
+}
