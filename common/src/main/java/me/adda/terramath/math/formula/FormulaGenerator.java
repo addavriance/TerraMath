@@ -72,7 +72,7 @@ public class FormulaGenerator {
 
         complexity = Math.max(1, Math.min(5, complexity));
 
-        List<String> availableFunctions = new ArrayList<>(MathFunctionsRegistry.getFunctionNames());
+        List<String> availableFunctions = new ArrayList<>(MathFunctionsRegistry.getSortedFunctionNames());
         Map<Integer, List<String>> functionsByArgCount = categorizeByArgCount(availableFunctions);
 
         StringBuilder formula = new StringBuilder();
