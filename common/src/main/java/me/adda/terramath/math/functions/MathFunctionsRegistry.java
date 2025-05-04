@@ -25,6 +25,7 @@ public class MathFunctionsRegistry {
         FUNCTION_MAPPINGS.put("asin", "Math.asin");
         FUNCTION_MAPPINGS.put("acos", "Math.acos");
         FUNCTION_MAPPINGS.put("atan", "Math.atan");
+        FUNCTION_MAPPINGS.put("atan2", "Math.atan2");
 
         // Hyperbolic functions
         FUNCTION_MAPPINGS.put("sinh", "Math.sinh");
