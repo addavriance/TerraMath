@@ -103,7 +103,7 @@ public class MathExtensions {
         return mean + stddev * random.nextGaussian();
     }
 
-    public static int gcd(Number a, Number b) {
+    public static double gcd(Number a, Number b) {
         int aVal = a.intValue();
         int bVal = b.intValue();
 
@@ -115,7 +115,7 @@ public class MathExtensions {
         return Math.abs(aVal);
     }
 
-    public static int lcm(Number a, Number b) {
+    public static double lcm(Number a, Number b) {
         int aVal = a.intValue();
         int bVal = b.intValue();
 
