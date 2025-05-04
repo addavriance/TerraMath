@@ -161,6 +161,8 @@ public class ConfigScreen extends Screen {
         double noiseScaleZ = configList.getNoiseScaleZ();
         double noiseHeightScale = configList.getNoiseHeightScale();
 
+        boolean useByDefault = configList.useDefaultSelected();
+
         if (isWorldCreation) {
             TerrainSettingsManager settings = TerrainSettingsManager.getInstance();
 
@@ -195,9 +197,7 @@ public class ConfigScreen extends Screen {
             config.noiseScaleZ = noiseScaleZ;
             config.noiseHeightScale = noiseHeightScale;
 
-            if (configList.useDefaultSelected()) {
-                config.useDefaultFormula = true;
-            }
+            config.useDefaultFormula = useByDefault;
 
             ModConfig.save();
 
