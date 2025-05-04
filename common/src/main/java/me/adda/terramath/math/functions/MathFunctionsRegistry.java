@@ -90,6 +90,22 @@ public class MathFunctionsRegistry {
     }
 
     /**
+     * Get the sorted set of all supported function names.
+     *
+     * @return An unmodifiable set of function names
+     */
+    public static Set<String> getSortedFunctionNames() {
+        List<String> sortedFunctionNames = new ArrayList<>(MathFunctionsRegistry.getFunctionNames());
+        sortedFunctionNames.sort((f1, f2) -> {
+            String impl1 = MathFunctionsRegistry.getFunctionImplementation(f1);
+            String impl2 = MathFunctionsRegistry.getFunctionImplementation(f2);
+            return Integer.compare(impl2.length(), impl1.length());
+        });
+
+        return new LinkedHashSet<>(sortedFunctionNames);
+    }
+
+    /**
      * Check if a function name is supported.
      *
      * @param functionName The function name to check

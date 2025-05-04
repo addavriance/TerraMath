@@ -75,8 +75,9 @@ public class FormulaValidator {
 
         for (int i = 0; i < formula.length(); i++) {
             char c = formula.charAt(i);
+            char prev_c = i > 0 ? formula.charAt(i-1) : ' ';
 
-            if (Character.isLetter(c)) {
+            if (Character.isLetter(c) || (Character.isLetter(prev_c) && Character.isDigit(c))) {
                 currentFunction.append(c);
                 inFunction = true;
             } else if (inFunction) {
