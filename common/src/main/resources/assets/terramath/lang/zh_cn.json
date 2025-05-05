@@ -43,6 +43,8 @@
   "terramath.formula.error.operator_sequence": "运算符序列无效",
   "terramath.formula.error.operator_start_end": "公式不能以*/开头或以运算符结尾",
   "terramath.formula.error.operator_brackets": "括号附近的运算符放置无效",
-  "terramath.formula.error.invalid_arguments": "无效参数",
-  "terramath.formula.error.invalid_syntax": "语法错误：%s"
+  "terramath.formula.error.invalid_arguments": "函数参数无效: %s",
+  "terramath.formula.error.invalid_syntax": "语法错误：%s",
+
+  "terramath.command.formula": "公式: "
 }

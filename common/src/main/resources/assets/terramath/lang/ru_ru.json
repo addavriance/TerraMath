@@ -43,6 +43,8 @@
   "terramath.formula.error.operator_sequence": "Недопустимая последовательность операторов",
   "terramath.formula.error.operator_start_end": "Формула не может начинаться с */ или заканчиваться оператором",
   "terramath.formula.error.operator_brackets": "Недопустимое размещение оператора рядом со скобками",
-  "terramath.formula.error.invalid_arguments": "Недопустимые аргументы",
-  "terramath.formula.error.invalid_syntax": "Синтаксическая ошибка: %s"
+  "terramath.formula.error.invalid_arguments": "Недопустимые аргументы функции: %s",
+  "terramath.formula.error.invalid_syntax": "Синтаксическая ошибка: %s",
+
+  "terramath.command.formula": "Формула: "
 }

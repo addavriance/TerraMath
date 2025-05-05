@@ -43,6 +43,8 @@
   "terramath.formula.error.operator_sequence": "Неважећи редослед оператора",
   "terramath.formula.error.operator_start_end": "Формула не може почети са */ или завршити са оператором",
   "terramath.formula.error.operator_brackets": "Неважећи положај оператора близу заграда",
-  "terramath.formula.error.invalid_arguments": "Неважећи аргументи",
-  "terramath.formula.error.invalid_syntax": "Синтаксна грешка: %s"
+  "terramath.formula.error.invalid_arguments": "Неважећи аргументи за функцију: %s",
+  "terramath.formula.error.invalid_syntax": "Синтаксна грешка: %s",
+
+  "terramath.command.formula": "Формула: "
 }
