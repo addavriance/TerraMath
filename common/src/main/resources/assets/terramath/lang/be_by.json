@@ -43,6 +43,8 @@
   "terramath.formula.error.operator_sequence": "Недапушчальная паслядоўнасць аператараў",
   "terramath.formula.error.operator_start_end": "Формула не можа пачынацца з */ ці заканчвацца аператарам",
   "terramath.formula.error.operator_brackets": "Недапушчальнае размяшчэнне аператара каля дужак",
-  "terramath.formula.error.invalid_arguments": "Недапушчальныя аргументы",
-  "terramath.formula.error.invalid_syntax": "Сінтаксічная памылка: %s"
+  "terramath.formula.error.invalid_arguments": "Несапраўдныя аргументы для функцыі: %s",
+  "terramath.formula.error.invalid_syntax": "Сінтаксічная памылка: %s",
+
+  "terramath.command.formula": "Формула: "
 }

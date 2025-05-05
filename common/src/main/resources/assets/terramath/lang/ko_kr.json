@@ -43,6 +43,8 @@
   "terramath.formula.error.operator_sequence": "유효하지 않은 연산자 순서",
   "terramath.formula.error.operator_start_end": "수식은 */로 시작하거나 연산자로 끝날 수 없습니다",
   "terramath.formula.error.operator_brackets": "괄호 근처의 연산자 배치가 유효하지 않습니다",
-  "terramath.formula.error.invalid_arguments": "유효하지 않은 인수",
-  "terramath.formula.error.invalid_syntax": "구문 오류: %s"
+  "terramath.formula.error.invalid_arguments": "함수에 대한 잘못된 인수: %s",
+  "terramath.formula.error.invalid_syntax": "구문 오류: %s",
+
+  "terramath.command.formula": "수식: "
 }
