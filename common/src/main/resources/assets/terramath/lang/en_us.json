@@ -43,6 +43,8 @@
   "terramath.formula.error.operator_sequence": "Invalid sequence of operators",
   "terramath.formula.error.operator_start_end": "Formula cannot start with */ or end with an operator",
   "terramath.formula.error.operator_brackets": "Invalid operator placement near brackets",
-  "terramath.formula.error.invalid_arguments": "Invalid arguments",
-  "terramath.formula.error.invalid_syntax": "Syntax error: %s"
+  "terramath.formula.error.invalid_arguments": "Invalid arguments for function: %s",
+  "terramath.formula.error.invalid_syntax": "Syntax error: %s",
+
+  "terramath.command.formula": "Formula: "
 }

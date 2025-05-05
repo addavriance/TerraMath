@@ -43,6 +43,8 @@
   "terramath.formula.error.operator_sequence": "演算子の順序が無効です",
   "terramath.formula.error.operator_start_end": "数式は*/で始まるか、演算子で終わることはできません",
   "terramath.formula.error.operator_brackets": "括弧付近の演算子の配置が無効です",
-  "terramath.formula.error.invalid_arguments": "引数が無効です",
-  "terramath.formula.error.invalid_syntax": "構文エラー：%s"
+  "terramath.formula.error.invalid_arguments": "関数の引数が無効です: %s",
+  "terramath.formula.error.invalid_syntax": "構文エラー：%s",
+
+  "terramath.command.formula": "数式: "
 }

@@ -43,6 +43,8 @@
   "terramath.formula.error.operator_sequence": "Neplatná sekvence operátorů",
   "terramath.formula.error.operator_start_end": "Vzorec nemůže začínat na */ nebo končit operátorem",
   "terramath.formula.error.operator_brackets": "Neplatné umístění operátoru u závorek",
-  "terramath.formula.error.invalid_arguments": "Neplatné argumenty",
-  "terramath.formula.error.invalid_syntax": "Syntaktická chyba: %s"
+  "terramath.formula.error.invalid_arguments": "Neplatné argumenty pro funkci: %s",
+  "terramath.formula.error.invalid_syntax": "Syntaktická chyba: %s",
+
+  "terramath.command.formula": "Vzorec: "
 }
