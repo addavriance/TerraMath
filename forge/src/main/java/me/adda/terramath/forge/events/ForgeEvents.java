@@ -1,9 +1,11 @@
 package me.adda.terramath.forge.events;
 
+import me.adda.terramath.command.TerraMathCommand;
 import me.adda.terramath.events.PlatformEvents;
 import me.adda.terramath.events.TerraMathEvents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -26,5 +28,10 @@ public class ForgeEvents implements PlatformEvents {
         if (event.getLevel() instanceof ServerLevel serverLevel) {
             TerraMathEvents.onLevelUnload(serverLevel);
         }
+    }
+
+    @SubscribeEvent
+    public static void onCommandsRegister(RegisterCommandsEvent event) {
+        TerraMathCommand.register(event.getDispatcher());
     }
 }
