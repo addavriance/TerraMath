@@ -132,7 +132,7 @@ public class TerraMathCommand {
 
             context.getSource().sendSuccess(() -> Component.literal(""), false);
             context.getSource().sendSuccess(() -> noiseScaleX, false);
-            
+
             if (settings.getNoiseType() == NoiseType.SIMPLEX) {
                 context.getSource().sendSuccess(() -> Component.literal(""), false);
             } else {
