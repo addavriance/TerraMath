@@ -5,6 +5,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import me.adda.terramath.api.TerrainFormulaManager;
 import me.adda.terramath.api.TerrainSettingsManager;
+import me.adda.terramath.config.NoiseType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -71,11 +72,6 @@ public class TerraMathCommand {
                 .append(Component.literal(String.format("%.2f", settings.getCoordinateScale()))
                         .withStyle(ChatFormatting.GREEN));
 
-        MutableComponent densityMode = Component.translatable("terramath.config.density_mode")
-                .append(": ")
-                .append(Component.literal(String.valueOf(settings.isUseDensityMode()))
-                        .withStyle(settings.isUseDensityMode() ? ChatFormatting.GREEN : ChatFormatting.RED));
-
         MutableComponent baseHeight = Component.translatable("terramath.config.base_height")
                 .append(": ")
                 .append(Component.literal(String.format("%.2f", settings.getBaseHeight()))
@@ -121,9 +117,8 @@ public class TerraMathCommand {
 
         context.getSource().sendSuccess(() -> coordinateScale, false);
 
-        context.getSource().sendSuccess(() -> densityMode, false);
-
         if (settings.isUseDensityMode()) {
+            context.getSource().sendSuccess(() -> Component.literal(""), false);
             context.getSource().sendSuccess(() -> baseHeight, false);
             context.getSource().sendSuccess(() -> heightVariation, false);
             context.getSource().sendSuccess(() -> smoothing, false);
@@ -132,10 +127,21 @@ public class TerraMathCommand {
         context.getSource().sendSuccess(() -> Component.literal(""), false);
 
         context.getSource().sendSuccess(() -> noiseType, false);
-        context.getSource().sendSuccess(() -> noiseScaleX, false);
-        context.getSource().sendSuccess(() -> noiseScaleY, false);
-        context.getSource().sendSuccess(() -> noiseScaleZ, false);
-        context.getSource().sendSuccess(() -> noiseHeightScale, false);
+
+        if (settings.getNoiseType() != NoiseType.NONE) {
+
+            context.getSource().sendSuccess(() -> Component.literal(""), false);
+            context.getSource().sendSuccess(() -> noiseScaleX, false);
+            
+            if (settings.getNoiseType() == NoiseType.SIMPLEX) {
+                context.getSource().sendSuccess(() -> Component.literal(""), false);
+            } else {
+                context.getSource().sendSuccess(() -> noiseScaleY, false);
+            }
+
+            context.getSource().sendSuccess(() -> noiseScaleZ, false);
+            context.getSource().sendSuccess(() -> noiseHeightScale, false);
+        }
 
         return 1;
     }
