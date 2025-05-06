@@ -46,5 +46,8 @@
   "terramath.formula.error.invalid_arguments": "Arguments invalides pour la fonction: %s",
   "terramath.formula.error.invalid_syntax": "Erreur de syntaxe : %s",
 
-  "terramath.command.formula": "Formule: "
+  "terramath.command.formula": "Formule: ",
+
+  "terramath.formula.error.invalid_reset.title": "TerraMath: Erreur de formule",
+  "terramath.formula.error.invalid_reset.description": "La formule a été réinitialisée en raison d'une erreur de validation"
 }

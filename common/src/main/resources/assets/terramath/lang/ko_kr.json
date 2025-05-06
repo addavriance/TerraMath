@@ -46,5 +46,8 @@
   "terramath.formula.error.invalid_arguments": "함수에 대한 잘못된 인수: %s",
   "terramath.formula.error.invalid_syntax": "구문 오류: %s",
 
-  "terramath.command.formula": "수식: "
+  "terramath.command.formula": "수식: ",
+
+  "terramath.formula.error.invalid_reset.title": "TerraMath: 수식 오류",
+  "terramath.formula.error.invalid_reset.description": "유효성 검사 오류로 인해 수식이 초기화되었습니다"
 }

@@ -46,5 +46,8 @@
   "terramath.formula.error.invalid_arguments": "関数の引数が無効です: %s",
   "terramath.formula.error.invalid_syntax": "構文エラー：%s",
 
-  "terramath.command.formula": "数式: "
+  "terramath.command.formula": "数式: ",
+
+  "terramath.formula.error.invalid_reset.title": "TerraMath: 数式エラー",
+  "terramath.formula.error.invalid_reset.description": "検証エラーのため数式がリセットされました"
 }

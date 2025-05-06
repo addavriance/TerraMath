@@ -46,5 +46,8 @@
   "terramath.formula.error.invalid_arguments": "Neplatné argumenty pre funkciu: %s",
   "terramath.formula.error.invalid_syntax": "Syntaktická chyba: %s",
 
-  "terramath.command.formula": "Vzorec: "
+  "terramath.command.formula": "Vzorec: ",
+
+  "terramath.formula.error.invalid_reset.title": "TerraMath: Chyba vzorca",
+  "terramath.formula.error.invalid_reset.description": "Vzorec bol resetovaný kvôli chybe validácie"
 }
