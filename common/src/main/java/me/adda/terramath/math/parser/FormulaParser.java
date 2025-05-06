@@ -4,21 +4,15 @@ import me.adda.terramath.exception.ExceptionUtils;
 import me.adda.terramath.exception.FormulaException;
 import me.adda.terramath.math.functions.CompositeNoise;
 import me.adda.terramath.math.formula.FormulaValidator;
+import me.adda.terramath.notification.NotificationManager;
 import me.adda.terramath.world.SeedUtils;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.toasts.SystemToast;
-import net.minecraft.network.chat.Component;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.codehaus.janino.ExpressionEvaluator;
 
 import me.adda.terramath.math.formula.FormulaFormatter;
 
 
 public class FormulaParser extends FormulaValidator {
-    private static final Logger LOGGER = LogManager.getLogger("TerraMath");
-
     public static class CompiledFormula {
         private final String originalExpression;
         private final ExpressionEvaluator evaluator;
@@ -43,37 +37,33 @@ public class FormulaParser extends FormulaValidator {
         }
     }
 
+    private static ExpressionEvaluator createEvaluator() {
+        ExpressionEvaluator evaluator = new ExpressionEvaluator();
+
+        evaluator.setParameters(
+                new String[]{"x", "y", "z", "noise"},
+                new Class[]{double.class, double.class, double.class, CompositeNoise.class}
+        );
+
+        evaluator.setParentClassLoader(FormulaParser.class.getClassLoader());
+        evaluator.setExpressionType(double.class);
+
+        return evaluator;
+    }
 
     public static CompiledFormula parse(String formula) {
-        if (!validateFormula(formula, true).isValid()) {
-            Minecraft minecraft = Minecraft.getInstance();
-
-            LOGGER.warn("Invalid formula detected and reset to 0: {}", formula);
-
-            SystemToast.addOrUpdate(
-                    minecraft.getToasts(),
-                    SystemToast.SystemToastIds.WORLD_ACCESS_FAILURE,
-                    Component.translatable("terramath.formula.error.invalid_reset.title"),
-                    Component.translatable("terramath.formula.error.invalid_reset.description")
-            );
-
-            formula = "0";
-        }
-
-        long seed = SeedUtils.getSeed();
-
         String javaExpression = FormulaFormatter.convertToJavaExpression(formula);
 
+        long seed = SeedUtils.getSeed();
+        CompositeNoise noise = new CompositeNoise(seed);
+
+        ExpressionEvaluator evaluator = createEvaluator();
+
         try {
-            ExpressionEvaluator evaluator = new ExpressionEvaluator();
 
-            evaluator.setParameters(
-                    new String[]{"x", "y", "z", "noise"},
-                    new Class[]{double.class, double.class, double.class, CompositeNoise.class}
-            );
-
-            evaluator.setParentClassLoader(FormulaParser.class.getClassLoader());
-            evaluator.setExpressionType(double.class);
+            if (!FormulaValidator.validateFormula(formula).isValid()) {
+                throw new Exception("Invalid formula");
+            }
 
             String fullExpression = String.format(
                     "import me.adda.terramath.math.functions.MathExtensions; " +
@@ -81,13 +71,17 @@ public class FormulaParser extends FormulaValidator {
                     javaExpression
             );
 
-            CompositeNoise noise = new CompositeNoise(seed);
-
             evaluator.cook(fullExpression);
             return new CompiledFormula(formula, evaluator, noise);
         } catch (Exception e) {
             Throwable cause = ExceptionUtils.getRootCause(e);
             String message = cause.getMessage();
+
+            if (Minecraft.getInstance().level != null) {
+                NotificationManager.showFormulaError(formula);
+
+                return new CompiledFormula(formula, evaluator, noise);
+            }
 
             if (cause instanceof IllegalArgumentException ||
                     message != null && message.contains("No applicable constructor")) {
