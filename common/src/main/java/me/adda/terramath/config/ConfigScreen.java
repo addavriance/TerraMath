@@ -137,7 +137,6 @@ public class ConfigScreen extends Screen {
 
     @Override
     protected void repositionElements() {
-        layout.arrangeElements();
         if (configList != null) {
             configList.updateSize(
                     width,
@@ -149,6 +148,7 @@ public class ConfigScreen extends Screen {
 
             configList.refreshEntries();
         }
+        layout.arrangeElements();
     }
 
     private void saveSettings() {
