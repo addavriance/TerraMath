@@ -7,14 +7,14 @@ import me.adda.terramath.config.ModConfig;
 import me.adda.terramath.world.TerrainData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.storage.LevelResource;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class TerraMathEvents {
-    private static final Logger LOGGER = LogManager.getLogger("TerraMath");
+    private static final Logger LOGGER = LoggerFactory.getLogger("TerraMath/TerraMathEvents");
 
     public static void onLevelLoad(ServerLevel level) {
         TerrainData data = level.getDataStorage().computeIfAbsent(
