@@ -9,6 +9,7 @@ import me.adda.terramath.gui.TerrainSettingsSlider;
 import me.adda.terramath.math.parser.FormulaParser;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
@@ -26,6 +27,7 @@ import net.minecraft.network.chat.MutableComponent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static me.adda.terramath.math.formula.FormulaGenerator.generateRandomFormula;
 
