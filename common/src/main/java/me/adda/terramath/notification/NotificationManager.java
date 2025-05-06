@@ -15,7 +15,7 @@ public class NotificationManager {
 
         SystemToast.addOrUpdate(
                 minecraft.getToasts(),
-                SystemToast.SystemToastId.WORLD_ACCESS_FAILURE,
+                SystemToast.SystemToastIds.WORLD_ACCESS_FAILURE,
                 Component.translatable("terramath.formula.error.invalid_reset.title"),
                 Component.translatable("terramath.formula.error.invalid_reset.description")
         );
