@@ -111,7 +111,7 @@ public class FormulaGenerator {
         for (String function : functions) {
             switch (function) {
                 case "rand" -> noArgFunctions.add(function);
-                case "pow", "max", "min", "beta", "mod", "randnormal", "randrange", "gcd", "lcm", "modi", "simplex", "atan2" -> twoArgFunctions.add(function);
+                case "pow", "max", "min", "beta", "mod", "randnormal", "randrange", "gcd", "lcm", "modi", "simplex", "atan2", "root" -> twoArgFunctions.add(function);
                 case "clamp", "perlin", "blended", "normal" -> threeArgFunctions.add(function);
                 case "octaved" -> {}
                 default -> singleArgFunctions.add(function);
