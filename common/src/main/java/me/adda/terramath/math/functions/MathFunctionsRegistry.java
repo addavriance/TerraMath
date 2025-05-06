@@ -68,6 +68,7 @@ public class MathFunctionsRegistry {
         FUNCTION_MAPPINGS.put("gcd", "MathExtensions.gcd");
         FUNCTION_MAPPINGS.put("lcm", "MathExtensions.lcm");
         FUNCTION_MAPPINGS.put("modi", "MathExtensions.modInverse");
+        FUNCTION_MAPPINGS.put("root", "MathExtensions.root");
 
         // Random number generators
         FUNCTION_MAPPINGS.put("rand", "MathExtensions.rand");
