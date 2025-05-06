@@ -46,5 +46,8 @@
   "terramath.formula.error.invalid_arguments": "Невалидни аргументи за функция: %s",
   "terramath.formula.error.invalid_syntax": "Синтактична грешка: %s",
 
-  "terramath.command.formula": "Формула: "
+  "terramath.command.formula": "Формула: ",
+
+  "terramath.formula.error.invalid_reset.title": "TerraMath: Грешка във формулата",
+  "terramath.formula.error.invalid_reset.description": "Формулата беше нулирана поради грешка при валидацията"
 }
