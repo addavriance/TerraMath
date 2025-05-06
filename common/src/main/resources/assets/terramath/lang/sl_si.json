@@ -3,7 +3,7 @@
   "terramath.config.terrain_settings": "Nastavitve terena",
   "terramath.config.terrain_settings_label": "Nastavitve terena trenutnega sveta",
 
-  "terramath.config.formula": "Matematična funkcija za generator sveta",
+  "terramath.config.formula": "Matematična formula za generator sveta",
   "terramath.config.formula.hint": "Pustite prazno za privzeto generiranje",
 
   "terramath.config.coordinate_scale": "Merilo",
