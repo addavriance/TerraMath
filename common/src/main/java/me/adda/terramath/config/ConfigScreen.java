@@ -131,10 +131,10 @@ public class ConfigScreen extends Screen {
 
     @Override
     protected void repositionElements() {
-        layout.arrangeElements();
         if (configList != null) {
             configList.updateSize(width, layout);
         }
+        layout.arrangeElements();
     }
 
     private void saveSettings() {
