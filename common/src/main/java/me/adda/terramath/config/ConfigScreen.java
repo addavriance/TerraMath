@@ -539,7 +539,7 @@ public class ConfigScreen extends Screen {
                 return;
             }
 
-            FormulaParser.ValidationResult result = FormulaParser.validateFormula(formula, false);
+            FormulaParser.ValidationResult result = FormulaParser.validateFormula(formula);
             if (!result.isValid()) {
                 saveButton.active = false;
 
