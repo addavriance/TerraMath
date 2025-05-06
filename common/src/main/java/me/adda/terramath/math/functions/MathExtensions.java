@@ -154,4 +154,15 @@ public class MathExtensions {
             return result < 0 ? result + mVal : result;
         }
     }
+
+    public static double root(double number, int degree) {
+        if (degree <= 0) {
+            return 1;
+        }
+        if (number < 0 && degree % 2 == 0) {
+            return 0;
+        }
+
+        return Math.pow(number, 1.0 / degree);
+    }
 }
