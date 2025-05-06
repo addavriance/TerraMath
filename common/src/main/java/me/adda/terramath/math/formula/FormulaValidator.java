@@ -28,7 +28,7 @@ public class FormulaValidator {
     public record ValidationResult(boolean isValid, String errorKey, Object... errorArgs) {
     }
 
-    public static ValidationResult validateFormula(String formula, boolean syntax_only) {
+    public static ValidationResult validateFormula(String formula) {
         if (formula == null) {
             return new ValidationResult(false, ERROR_NULL);
         }
@@ -42,7 +42,7 @@ public class FormulaValidator {
             validateBasicStructure(formula);
             validateFunctionsAndBrackets(formula);
             validateOperators(formula);
-            if (!syntax_only) testFormula(formula);
+            testFormula(formula);
             return new ValidationResult(true, null);
         } catch (FormulaException e) {
             return new ValidationResult(false, e.getMessage(), e.getArgs());
