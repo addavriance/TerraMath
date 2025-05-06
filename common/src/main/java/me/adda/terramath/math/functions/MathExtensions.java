@@ -155,14 +155,7 @@ public class MathExtensions {
         }
     }
 
-    public static double root(double number, int degree) {
-        if (degree <= 0) {
-            return 1;
-        }
-        if (number < 0 && degree % 2 == 0) {
-            return 0;
-        }
-
+    public static double root(double number, double degree) {
         return Math.pow(number, 1.0 / degree);
     }
 }
