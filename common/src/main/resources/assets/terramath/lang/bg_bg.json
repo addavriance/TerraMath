@@ -3,7 +3,7 @@
   "terramath.config.terrain_settings": "Настройки на терена",
   "terramath.config.terrain_settings_label": "Настройки на терена на текущия свят",
 
-  "terramath.config.formula": "Математическа функция за генератора на свят",
+  "terramath.config.formula": "Математическа формула за генератора на свят",
   "terramath.config.formula.hint": "Оставете празно за стандартно генериране",
 
   "terramath.config.coordinate_scale": "Мащаб",

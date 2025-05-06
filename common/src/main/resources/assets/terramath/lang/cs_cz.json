@@ -3,7 +3,7 @@
   "terramath.config.terrain_settings": "Nastavení terénu",
   "terramath.config.terrain_settings_label": "Nastavení terénu aktuálního světa",
 
-  "terramath.config.formula": "Matematická funkce pro generátor světa",
+  "terramath.config.formula": "Matematický vzorec pro generátor světa",
   "terramath.config.formula.hint": "Nechte prázdné pro výchozí generování",
 
   "terramath.config.coordinate_scale": "Měřítko",

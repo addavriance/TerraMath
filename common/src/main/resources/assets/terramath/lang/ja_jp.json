@@ -3,7 +3,7 @@
   "terramath.config.terrain_settings": "地形設定",
   "terramath.config.terrain_settings_label": "現在のワールドの地形設定",
 
-  "terramath.config.formula": "ワールドジェネレーター用の数学関数",
+  "terramath.config.formula": "ワールドジェネレーター用の数式",
   "terramath.config.formula.hint": "デフォルト生成の場合は空欄にしてください",
 
   "terramath.config.coordinate_scale": "スケール",
