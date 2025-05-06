@@ -3,7 +3,7 @@
   "terramath.config.terrain_settings": "지형 설정",
   "terramath.config.terrain_settings_label": "현재 세계 지형 설정",
 
-  "terramath.config.formula": "월드 생성기용 수학 함수",
+  "terramath.config.formula": "월드 생성기를 위한 수학 공식",
   "terramath.config.formula.hint": "기본 생성을 위해 비워 두세요",
 
   "terramath.config.coordinate_scale": "스케일",

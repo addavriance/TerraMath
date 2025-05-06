@@ -3,7 +3,7 @@
   "terramath.config.terrain_settings": "Налады ландшафту",
   "terramath.config.terrain_settings_label": "Налады ландшафту бягучага свету",
 
-  "terramath.config.formula": "Матэматычная функцыя для генератара свету",
+  "terramath.config.formula": "Матэматычная формула для генератара свету",
   "terramath.config.formula.hint": "Пакіньце пустым для стандартнай генерацыі",
 
   "terramath.config.coordinate_scale": "Маштаб",

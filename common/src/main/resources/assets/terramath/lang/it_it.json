@@ -3,7 +3,7 @@
   "terramath.config.terrain_settings": "Impostazioni del terreno",
   "terramath.config.terrain_settings_label": "Impostazioni del terreno del mondo attuale",
 
-  "terramath.config.formula": "Funzione matematica per il generatore di mondi",
+  "terramath.config.formula": "Formula matematica per il generatore di mondo",
   "terramath.config.formula.hint": "Lasciare vuoto per la generazione predefinita",
 
   "terramath.config.coordinate_scale": "Scala",

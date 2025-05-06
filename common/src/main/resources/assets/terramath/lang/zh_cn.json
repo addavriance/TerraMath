@@ -3,7 +3,7 @@
   "terramath.config.terrain_settings": "地形设置",
   "terramath.config.terrain_settings_label": "当前世界地形设置",
 
-  "terramath.config.formula": "世界生成器的数学函数",
+  "terramath.config.formula": "世界生成器的数学公式",
   "terramath.config.formula.hint": "留空使用默认生成",
 
   "terramath.config.coordinate_scale": "比例",
