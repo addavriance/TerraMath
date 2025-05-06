@@ -1,6 +1,7 @@
 package me.adda.terramath.math.functions;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Centralized registry for mathematical functions supported by the application.
@@ -13,7 +14,7 @@ public class MathFunctionsRegistry {
      * Map of function names to their corresponding implementation method names.
      * This allows us to maintain a single source of truth for supported functions.
      */
-    private static final Map<String, String> FUNCTION_MAPPINGS = new HashMap<>();
+    private static final Map<String, String> FUNCTION_MAPPINGS = new ConcurrentHashMap<>();
 
     static {
         // Basic trigonometric functions

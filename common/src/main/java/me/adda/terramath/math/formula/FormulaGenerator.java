@@ -3,6 +3,7 @@ package me.adda.terramath.math.formula;
 import me.adda.terramath.math.functions.MathFunctionsRegistry;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Utility class for generating random mathematical formulas.
@@ -100,7 +101,7 @@ public class FormulaGenerator {
      * Categorizes functions by their expected argument count for better formula generation.
      */
     private static Map<Integer, List<String>> categorizeByArgCount(List<String> functions) {
-        Map<Integer, List<String>> result = new HashMap<>();
+        Map<Integer, List<String>> result = new ConcurrentHashMap<>();
 
         List<String> noArgFunctions = new ArrayList<>();
         List<String> singleArgFunctions = new ArrayList<>();
