@@ -14,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class TerraMathEvents {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger("TerraMath");
 
     public static void onLevelLoad(ServerLevel level) {
         TerrainData data = level.getDataStorage().computeIfAbsent(
