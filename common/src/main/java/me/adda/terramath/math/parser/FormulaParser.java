@@ -61,7 +61,7 @@ public class FormulaParser extends FormulaValidator {
 
         try {
 
-            if (!FormulaValidator.validateFormula(formula).isValid()) {
+            if (!FormulaValidator.validateFormula(formula, true).isValid()) {
                 throw new Exception("Invalid formula");
             }
 
@@ -89,7 +89,7 @@ public class FormulaParser extends FormulaValidator {
             } else if (message != null && (message.contains("Unknown variable") || message.contains("is not an rvalue"))) {
                 throw new FormulaException(ERROR_UNKNOWN_VARIABLE, ExceptionUtils.extractVariableName(message));
             } else {
-                throw new FormulaException(ERROR_INVALID_SYNTAX, message);
+                throw new FormulaException(ERROR_INVALID_SYNTAX, ExceptionUtils.extractSyntaxError(message));
             }
         }
     }
