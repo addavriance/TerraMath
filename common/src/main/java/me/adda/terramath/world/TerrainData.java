@@ -110,10 +110,17 @@ public class TerrainData extends SavedData {
         TerrainSettingsManager manager = TerrainSettingsManager.getInstance();
 
         formula_manager.setFormula(this.formula);
+
         manager.setCoordinateScale(this.coordinateScale);
         manager.setBaseHeight(this.baseHeight);
         manager.setHeightVariation(this.heightVariation);
         manager.setSmoothingFactor(this.smoothingFactor);
         manager.setUseDensityMode(this.useDensityMode);
+
+        manager.setNoiseType(this.noiseType);
+        manager.setNoiseScaleX(this.noiseScaleX);
+        manager.setNoiseScaleY(this.noiseScaleY);
+        manager.setNoiseScaleZ(this.noiseScaleZ);
+        manager.setNoiseHeightScale(this.noiseHeightScale);
     }
 }
