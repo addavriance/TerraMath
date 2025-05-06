@@ -565,6 +565,26 @@ public class ConfigScreen extends Screen {
             formulaField.render(graphics, mouseX, mouseY, partialTick);
             randomButton.render(graphics, mouseX, mouseY, partialTick);
             errorWidget.render(graphics, mouseX, mouseY, partialTick);
+
+            String errorText = errorWidget.getMessage().getString();
+            Font font = Minecraft.getInstance().font;
+
+            int textWidth = font.width(errorText);
+            int widgetWidth = errorWidget.getWidth();
+
+            if (errorWidget.isHovered() && textWidth > widgetWidth) {
+                List<Component> tooltipLines = List.of(
+                        Component.literal("").append(errorWidget.getMessage()).withStyle(ChatFormatting.RED)
+                );
+
+                graphics.renderTooltip(
+                        Minecraft.getInstance().font,
+                        tooltipLines,
+                        Optional.empty(),
+                        mouseX,
+                        mouseY
+                );
+            }
         }
 
         public String getFormula() {
