@@ -529,7 +529,7 @@ public class ConfigScreen extends Screen {
             errorWidget = new StringWidget(Component.empty(), minecraft.font).alignLeft();
             errorWidget.setWidth(FIELD_WIDTH);
             errorWidget.setX(centerX - FIELD_WIDTH / 2);
-            errorWidget.setY(42);
+            errorWidget.setY(38);
 
             children.add(label);
             children.add(formulaField);
@@ -564,7 +564,7 @@ public class ConfigScreen extends Screen {
             label.setY(top + 5);
             formulaField.setY(top + 15);
             randomButton.setY(top + 15);
-            errorWidget.setY(top + 42);
+            errorWidget.setY(top + 38);
 
             label.render(graphics, mouseX, mouseY, partialTick);
             formulaField.render(graphics, mouseX, mouseY, partialTick);
