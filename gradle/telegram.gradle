@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 tasks.register('sendToTelegram') {
     description = 'Sends built JAR files to Telegram'
     group = 'distribution'
@@ -11,7 +13,7 @@ tasks.register('sendToTelegram') {
         }
 
         def date = new Date()
-        def dateFormat = new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm")
+        def dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm")
         def formattedDate = dateFormat.format(date)
 
         def gitInfo = getGitInfo()
@@ -56,7 +58,7 @@ tasks.register('sendToTelegram') {
     }
 }
 
-def getGitInfo() {
+static def getGitInfo() {
     try {
         def hash = "git rev-parse --short HEAD".execute().text.trim()
         def message = "git log -1 --pretty=%B".execute().text.trim()
@@ -65,12 +67,12 @@ def getGitInfo() {
         return "• Git Branch: ${branch}\n" +
                 "• Last commit: ${hash}\n" +
                 "• Message: ${message}"
-    } catch (Exception e) {
+    } catch (Exception ignored) {
         return "• Git info not available"
     }
 }
 
-def formatFileSize(long bytes) {
+static def formatFileSize(long bytes) {
     if (bytes < 1024) return "${bytes} B"
     def kb = bytes / 1024.0
     if (kb < 1024) return String.format("%.1f KB", kb)
