@@ -78,11 +78,33 @@ def formatFileSize(long bytes) {
     return String.format("%.1f MB", mb)
 }
 
+tasks.register('cleanBuildLibs') {
+    description = 'Cleans previously built JAR files'
+    group = 'build'
+    doLast {
+        println "Cleaning build libs directories..."
+        ['fabric', 'forge'].each { modType ->
+            def libsDir = file("${modType}/build/libs")
+            if (libsDir.exists()) {
+                println "🧹 Cleaning ${modType}/build/libs..."
+                libsDir.deleteDir()
+                libsDir.mkdirs()
+                println "✅ Cleaned ${modType}/build/libs"
+            }
+        }
+        println "✨ Done cleaning!"
+    }
+}
+
 tasks.register('buildAndSend') {
     description = 'Builds all projects and sends artifacts to Telegram'
     group = 'distribution'
 
-    dependsOn 'build'
+    dependsOn 'cleanBuildLibs'
+
+    dependsOn ':fabric:build'
+    dependsOn ':forge:build'
+
     finalizedBy 'sendToTelegram'
 }
 
