@@ -134,7 +134,11 @@ public class ConfigScreen extends Screen {
     @Override
     protected void repositionElements() {
         if (configList != null) {
-            configList.updateSize(width, layout);
+            configList.setSize(
+                    width,
+                    height - layout.getHeaderHeight() - layout.getFooterHeight()
+            );
+            configList.refreshEntries();
         }
         layout.arrangeElements();
     }
