@@ -8,16 +8,21 @@ import org.slf4j.LoggerFactory;
 
 public class NotificationManager {
     private static final Logger LOGGER = LoggerFactory.getLogger("TerraMath/NotificationManager");
-    private static final Minecraft minecraft = Minecraft.getInstance();
 
     public static void showFormulaError(String formula) {
-        LOGGER.warn("Invalid formula detected and reset to 0: {}", formula);
+        LOGGER.warn("Invalid formula detected and reset: {}", formula);
 
-        SystemToast.addOrUpdate(
-                minecraft.getToasts(),
-                SystemToast.SystemToastId.WORLD_ACCESS_FAILURE,
-                Component.translatable("terramath.formula.error.invalid_reset.title"),
-                Component.translatable("terramath.formula.error.invalid_reset.description")
-        );
+        try {
+            Minecraft minecraft = Minecraft.getInstance();
+
+            if (minecraft.level != null) {
+                SystemToast.addOrUpdate(
+                        minecraft.getToasts(),
+                        SystemToast.SystemToastId.WORLD_ACCESS_FAILURE,
+                        Component.translatable("terramath.formula.error.invalid_reset.title"),
+                        Component.translatable("terramath.formula.error.invalid_reset.description")
+                );
+            }
+        } catch (Exception ignored) {}
     }
 }
