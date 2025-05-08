@@ -5,6 +5,7 @@ import me.adda.terramath.platform.PlatformHelper;
 import net.minecraft.client.Minecraft;
 
 import java.io.File;
+import java.nio.file.Path;
 
 public class TerraMath {
 	public static final String MOD_ID = "terramath";
@@ -13,9 +14,8 @@ public class TerraMath {
 	public static void init() {
 		PlatformHelper.getEvents().registerEvents();
 
-		File minecraftDir = Minecraft.getInstance().gameDirectory;
+		Path configDir = PlatformHelper.getConfigDir();
 
-		File configDir = new File(minecraftDir, "config");
-		ModConfig.init(configDir.toPath());
+		ModConfig.init(configDir);
 	}
 }

@@ -1,23 +1,35 @@
 package me.adda.terramath.world;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.server.IntegratedServer;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.Level;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class SeedUtils {
+    private static final Logger LOGGER = LoggerFactory.getLogger("TerraMath/SeedUtils");
+
+    private static final long DEFAULT_SEED = 0L;
+
+    private static long currentSeed = DEFAULT_SEED;
+
+    private static boolean worldLoaded = false;
 
     public static long getSeed() {
-        Minecraft minecraft = Minecraft.getInstance();
-        IntegratedServer integratedServer = minecraft.getSingleplayerServer();
+        return currentSeed;
+    }
 
-        if (integratedServer != null) {
-            ServerLevel overworld = integratedServer.getLevel(Level.OVERWORLD);
-            if (overworld != null) {
-                return overworld.getSeed();
-            }
-        }
+    public static void setSeed(long seed) {
+        LOGGER.debug("Setting world seed: {}", seed);
+        currentSeed = seed;
+        worldLoaded = true;
+    }
 
-        return 0;
+    public static void resetSeed() {
+        LOGGER.debug("Resetting world seed");
+        currentSeed = DEFAULT_SEED;
+        worldLoaded = false;
+    }
+
+    public static boolean isWorldLoaded() {
+        return worldLoaded;
     }
 }
