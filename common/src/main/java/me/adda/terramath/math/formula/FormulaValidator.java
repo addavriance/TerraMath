@@ -1,11 +1,13 @@
 package me.adda.terramath.math.formula;
 
 import me.adda.terramath.exception.FormulaException;
+import me.adda.terramath.math.constants.MathConstantsRegistry;
 import me.adda.terramath.math.functions.MathFunctionsRegistry;
 import me.adda.terramath.math.parser.FormulaParser;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class FormulaValidator {
     public static final String TRANSLATION_PREFIX = "terramath.formula.error.";
@@ -52,7 +54,10 @@ public class FormulaValidator {
     }
 
     private static void validateBasicStructure(String formula) {
-        String function_chars = MathFunctionsRegistry.getFunctionNames().stream()
+        String function_chars = Stream.concat(
+                        MathFunctionsRegistry.getFunctionNames().stream(),
+                        MathConstantsRegistry.getConstantNames().stream()
+                )
                 .flatMap(s -> s.chars().mapToObj(c -> (char) c))
                 .collect(Collectors.toSet())
                 .stream()
