@@ -1,4 +1,6 @@
 {
+  "modmenu.descriptionTranslation.terramath": "Ustvarite svoje svetove Minecraft z uporabo matematičnih formul! Ustvarite edinstvene terene od valov do spiral z lastnimi enačbami.",
+
   "terramath.config.title": "Konfiguracija TerraMath",
   "terramath.config.terrain_settings": "Nastavitve terena",
   "terramath.config.terrain_settings_label": "Nastavitve terena trenutnega sveta",

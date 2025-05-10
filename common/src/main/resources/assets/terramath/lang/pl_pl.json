@@ -1,4 +1,6 @@
 {
+  "modmenu.descriptionTranslation.terramath": "Generuj swoje światy Minecraft za pomocą formuł matematycznych! Twórz unikalne tereny od fal po spirale za pomocą niestandardowych równań.",
+
   "terramath.config.title": "Konfiguracja TerraMath",
   "terramath.config.terrain_settings": "Ustawienia terenu",
   "terramath.config.terrain_settings_label": "Ustawienia terenu bieżącego świata",

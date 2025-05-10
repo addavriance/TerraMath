@@ -1,4 +1,6 @@
 {
+  "modmenu.descriptionTranslation.terramath": "¡Genera tus mundos de Minecraft usando fórmulas matemáticas! Crea terrenos únicos desde ondas hasta espirales con ecuaciones personalizadas.",
+
   "terramath.config.title": "Configuración de TerraMath",
   "terramath.config.terrain_settings": "Ajustes del terreno",
   "terramath.config.terrain_settings_label": "Ajustes del terreno del mundo actual",

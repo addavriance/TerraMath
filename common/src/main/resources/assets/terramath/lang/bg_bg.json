@@ -1,4 +1,6 @@
 {
+  "modmenu.descriptionTranslation.terramath": "Генерирайте своите Minecraft светове с помощта на математически формули! Създавайте уникални терени от вълни до спирали с персонализирани уравнения.",
+
   "terramath.config.title": "Конфигурация на TerraMath",
   "terramath.config.terrain_settings": "Настройки на терена",
   "terramath.config.terrain_settings_label": "Настройки на терена на текущия свят",

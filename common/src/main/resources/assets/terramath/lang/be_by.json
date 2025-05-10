@@ -1,4 +1,6 @@
 {
+  "modmenu.descriptionTranslation.terramath": "Генеруйце свае сусветы Minecraft з дапамогай матэматычных формул! Стварайце ўнікальны рэльеф ад хваляў да спіраляў з дапамогай карыстацкіх ураўненняў.",
+  
   "terramath.config.title": "Канфігурацыя TerraMath",
   "terramath.config.terrain_settings": "Налады ландшафту",
   "terramath.config.terrain_settings_label": "Налады ландшафту бягучага свету",

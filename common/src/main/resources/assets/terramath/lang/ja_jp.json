@@ -1,4 +1,6 @@
 {
+  "modmenu.descriptionTranslation.terramath": "数学的な数式を使ってMinecraftの世界を生成しましょう！カスタム方程式で波から螺旋まで、ユニークな地形を作成できます。",
+
   "terramath.config.title": "TerraMath 設定",
   "terramath.config.terrain_settings": "地形設定",
   "terramath.config.terrain_settings_label": "現在のワールドの地形設定",

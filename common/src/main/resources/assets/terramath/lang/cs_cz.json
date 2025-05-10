@@ -1,4 +1,6 @@
 {
+  "modmenu.descriptionTranslation.terramath": "Generujte své světy Minecraft pomocí matematických vzorců! Vytvářejte jedinečné terény od vln po spirály s vlastními rovnicemi.",
+
   "terramath.config.title": "Konfigurace TerraMath",
   "terramath.config.terrain_settings": "Nastavení terénu",
   "terramath.config.terrain_settings_label": "Nastavení terénu aktuálního světa",
