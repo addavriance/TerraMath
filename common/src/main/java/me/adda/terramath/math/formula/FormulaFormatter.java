@@ -1,11 +1,13 @@
 package me.adda.terramath.math.formula;
 
 import me.adda.terramath.api.TerrainSettingsManager;
+import me.adda.terramath.math.constants.MathConstantsRegistry;
 import me.adda.terramath.math.functions.MathFunctionsRegistry;
 import me.adda.terramath.math.parser.FactorialParser;
 import me.adda.terramath.math.parser.PowerParser;
 
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 public class FormulaFormatter {
     public static String convertToJavaExpression(String formula) {
@@ -20,12 +22,18 @@ public class FormulaFormatter {
             );
         }
 
+        for (String constName : MathConstantsRegistry.getSortedConstantNames()) {
+            javaExpr = javaExpr.replaceAll(
+                    "(?<![a-zA-Z0-9_])" + Pattern.quote(constName) + "(?![a-zA-Z0-9_])",
+                    MathConstantsRegistry.getConstantImplementation(constName)
+            );
+        }
+
         javaExpr = replacePowerOperator(javaExpr);
 
         if (javaExpr.contains("!")) {
             javaExpr = handleFactorials(javaExpr);
         }
-
 
         return javaExpr;
     }
