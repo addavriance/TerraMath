@@ -1,4 +1,6 @@
 {
+  "modmenu.descriptionTranslation.terramath": "使用数学公式生成您的Minecraft世界！利用自定义方程创造从波浪到螺旋的独特地形。",
+
   "terramath.config.title": "TerraMath 配置",
   "terramath.config.terrain_settings": "地形设置",
   "terramath.config.terrain_settings_label": "当前世界地形设置",

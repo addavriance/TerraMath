@@ -1,4 +1,6 @@
 {
+  "modmenu.descriptionTranslation.terramath": "수학 공식을 사용하여 마인크래프트 세계를 생성하세요! 사용자 정의 방정식으로 파도부터 나선형까지 독특한 지형을 만들어보세요.",
+
   "terramath.config.title": "TerraMath 구성",
   "terramath.config.terrain_settings": "지형 설정",
   "terramath.config.terrain_settings_label": "현재 세계 지형 설정",

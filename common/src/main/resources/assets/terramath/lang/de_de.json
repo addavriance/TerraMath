@@ -1,4 +1,6 @@
 {
+  "modmenu.descriptionTranslation.terramath": "Generiere deine Minecraft-Welten mit mathematischen Formeln! Erstelle einzigartige Terrains von Wellen bis Spiralen mit benutzerdefinierten Gleichungen.",
+
   "terramath.config.title": "TerraMath-Konfiguration",
   "terramath.config.terrain_settings": "Geländeeinstellungen",
   "terramath.config.terrain_settings_label": "Geländeeinstellungen der aktuellen Welt",

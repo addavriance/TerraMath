@@ -1,4 +1,6 @@
 {
+  "modmenu.descriptionTranslation.terramath": "Генеришите своје Minecraft светове користећи математичке формуле! Створите јединствене терене од таласа до спирала са прилагођеним једначинама.",
+
   "terramath.config.title": "TerraMath конфигурација",
   "terramath.config.terrain_settings": "Подешавања терена",
   "terramath.config.terrain_settings_label": "Подешавања терена тренутног света",
