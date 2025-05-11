@@ -24,14 +24,14 @@ You can also join my [Discord](https://discord.gg/JgKTZEtNkg) to find more formu
 
 ## How to Use on Client
 
-<img width="594" alt="image" src="https://github.com/user-attachments/assets/13f44f0c-4e6e-45d4-8aff-506827f83f98">
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/4b1aabc7-46a3-43c6-8bb1-b7da88c68553"/>
 
 - World generation settings interface
 
 ### Parameter Configuration
 
 1. Go to "World" tab in world creation screen
-2. Open the landscape settings screen
+2. Open the terrain settings screen
 3. Enter your desired formula in the field
 4. Adjust additional parameters (optional):
    - Scale
@@ -54,7 +54,7 @@ You can also join my [Discord](https://discord.gg/JgKTZEtNkg) to find more formu
 
 ### Important Server Notes:
 
-- For the config to apply to a new world, make sure the `useByDefault` parameter in the config is set to `true`
+- For the config to apply to a new world, make sure the `useDefaultFormula` parameter in the config is set to `true`
 - After changing config settings, you'll need to delete the existing world and restart the server for the new terrain formula to take effect
 - Alternatively, you can transfer your entire world folder from a client to the server - the world will continue to generate according to the same formula without requiring config changes
 
