@@ -143,7 +143,7 @@ Noise Functions:
 - simplex(x,y,z) - simplex noise
 - normal(x,y,z) - normal noise
 - blended(x,y,z) - blended noise
-- octaved(x,y,z,octaves,persistence) - octaved noise
+- octaved(x,z,octaves,persistence) - octaved noise
 
 Utility Functions:
 - max(x,y) - maximum of x and y
