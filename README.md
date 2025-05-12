@@ -68,9 +68,9 @@ You can also join my [Discord](https://discord.gg/JgKTZEtNkg) to find more formu
 
 - <details><summary>Some crazy and heavy thing: <code>round(sin(x/15))*10 + round(cos(z/15))*10 + sqrt(abs(sin((x+z)/20)))*15</code></summary><img width="594" alt="image" src="https://github.com/user-attachments/assets/e29e4b4d-3f7b-46a0-ae7e-b31ed41fff85"></details>
 
-- <details><summary>Terraced landscape with plateaus: <code>floor(sin(x/20) * cos(z/20) * 5) * 4 + sqrt(x^2 + z^2)/10</code></summary></details>
+- <details><summary>Terraced landscape with plateaus: <code>floor(sin(x/20) * cos(z/20) * 5) * 4 + sqrt(x^2 + z^2)/10</code></summary><img width="594" alt="image" src="https://github.com/user-attachments/assets/7f6048d9-5ca4-4fb7-81d5-0a9d58ce22f3"/></details>
 
-- <details><summary>Crater-filled terrain: <code>10 * (1 - exp(-((x/30)^2 + (z/30)^2) / 2)) + 5 * perlin(x/50, 0, z/50)</code></summary></details>
+- <details><summary>Crater-filled terrain: <code>10 * (1 - exp(-((x/30)^2 + (z/30)^2) / 2)) + 5 * perlin(x/50, 0, z/50)</code></summary><img width="594" alt="image" src="https://github.com/user-attachments/assets/a4e3d786-7dd9-4bd0-aed3-ba3e043b6b18"/></details>
 
 ### Available Functions and Operators
 
@@ -81,15 +81,30 @@ Trigonometric:
 - sin(x) - sine
 - cos(x) - cosine
 - tan(x) - tangent
-- asin(x) - inverse sine (arcsin)
-- acos(x) - inverse cosine (arccos)
-- atan(x) - inverse tangent (arctan)
+- csc(x) - cosecant
+- sec(x) - secant
+- cot(x) - cotangent
+- asin(x) - inverse sine
+- acos(x) - inverse cosine
+- atan(x) - inverse tangent
 - atan2(x,y) - two-argument inverse tangent
+- acsc(x) - inverse cosecant
+- asec(x) - inverse secant
+- acot(x) - inverse cotangent
 
 Hyperbolic:
 - sinh(x) - hyperbolic sine
 - cosh(x) - hyperbolic cosine
 - tanh(x) - hyperbolic tangent
+- asinh(x) - inverse hyperbolic sine
+- acosh(x) - inverse hyperbolic cosine
+- atanh(x) - inverse hyperbolic tangent
+- csch(x) - hyperbolic cosecant
+- sech(x) - hyperbolic secant
+- coth(x) - hyperbolic cotangent
+- acsch(x) - inverse hyperbolic cosecant
+- asech(x) - inverse hyperbolic secant
+- acoth(x) - inverse hyperbolic cotangent
 
 Root and Power:
 - sqrt(x) - square root
@@ -150,7 +165,7 @@ Variables:
 x, y, z - block coordinates in world
 
 Operators:
-+, -, *, /, ^, ()
++, -, *, /, ^, (), !
 ```
 
 ## Known Issues
