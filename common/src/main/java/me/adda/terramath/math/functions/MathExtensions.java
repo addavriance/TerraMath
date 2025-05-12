@@ -40,8 +40,7 @@ public class MathExtensions {
             t += LANCZOS_COEFFICIENTS[i] / (x + i + 1);
         }
 
-        return Math.sqrt(2 * Math.PI) * Math.pow(x + 7.5, x + 0.5) *
-                Math.exp(-(x + 7.5)) * t;
+        return Math.sqrt(2 * Math.PI) * Math.pow(x + 7.5, x + 0.5) * Math.exp(-(x + 7.5)) * t;
     }
 
     public static double beta(double x, double y) {
@@ -157,5 +156,66 @@ public class MathExtensions {
 
     public static double root(double number, double degree) {
         return Math.pow(number, 1.0 / degree);
+    }
+
+    public static double asinh(double x) {
+        return Math.log(x + Math.sqrt(x * x + 1));
+    }
+
+    public static double acosh(double x) {
+        return Math.log(x + Math.sqrt(x * x - 1));
+    }
+
+    public static double atanh(double x) {
+        return Math.log((1.0 + x) / (1.0 - x)) / 2.0;
+    }
+
+    public static double csc(double x) {
+        return 1.0 / Math.sin(x);
+    }
+
+    public static double sec(double x) {
+        return 1.0 / Math.cos(x);
+    }
+
+    public static double cot(double x) {
+        return 1.0 / Math.tan(x);
+    }
+
+    public static double acsc(double x) {
+        return Math.asin(1.0 / x);
+    }
+
+    public static double asec(double x) {
+        return Math.acos(1.0 / x);
+    }
+
+    public static double acot(double x) {
+        double temp = Math.atan(1.0 / x);
+        return (x >= 0) ? temp : temp + Math.PI;
+    }
+
+    public static double csch(double x) {
+        return 1.0 / Math.sinh(x);
+    }
+
+    public static double sech(double x) {
+        return 1.0 / Math.cosh(x);
+    }
+
+    public static double coth(double x) {
+        return 1.0 / Math.tanh(x);
+    }
+
+    public static double acsch(double x) {
+        return asinh(1.0 / x);
+    }
+
+    public static double asech(double x) {
+        return acosh(1.0 / x);
+    }
+
+    public static double acoth(double x) {
+        return atanh(1.0 / x);
     }
 }

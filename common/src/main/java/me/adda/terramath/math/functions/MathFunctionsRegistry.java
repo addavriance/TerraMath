@@ -22,16 +22,36 @@ public class MathFunctionsRegistry {
         FUNCTION_MAPPINGS.put("cos", "Math.cos");
         FUNCTION_MAPPINGS.put("tan", "Math.tan");
 
+        FUNCTION_MAPPINGS.put("csc", "MathExtensions.csc");
+        FUNCTION_MAPPINGS.put("sec", "MathExtensions.sec");
+        FUNCTION_MAPPINGS.put("cot", "MathExtensions.cot");
+
         // Inverse trigonometric functions
         FUNCTION_MAPPINGS.put("asin", "Math.asin");
         FUNCTION_MAPPINGS.put("acos", "Math.acos");
         FUNCTION_MAPPINGS.put("atan", "Math.atan");
         FUNCTION_MAPPINGS.put("atan2", "Math.atan2");
 
+        FUNCTION_MAPPINGS.put("acsc", "MathExtensions.acsc");
+        FUNCTION_MAPPINGS.put("asec", "MathExtensions.asec");
+        FUNCTION_MAPPINGS.put("acot", "MathExtensions.acot");
+
         // Hyperbolic functions
         FUNCTION_MAPPINGS.put("sinh", "Math.sinh");
         FUNCTION_MAPPINGS.put("cosh", "Math.cosh");
         FUNCTION_MAPPINGS.put("tanh", "Math.tanh");
+
+        FUNCTION_MAPPINGS.put("asinh", "MathExtensions.asinh");
+        FUNCTION_MAPPINGS.put("acosh", "MathExtensions.acosh");
+        FUNCTION_MAPPINGS.put("atanh", "MathExtensions.atanh");
+
+        FUNCTION_MAPPINGS.put("csch", "MathExtensions.csch");
+        FUNCTION_MAPPINGS.put("sech", "MathExtensions.sech");
+        FUNCTION_MAPPINGS.put("coth", "MathExtensions.coth");
+
+        FUNCTION_MAPPINGS.put("acsch", "MathExtensions.acsch");
+        FUNCTION_MAPPINGS.put("asech", "MathExtensions.asech");
+        FUNCTION_MAPPINGS.put("acoth", "MathExtensions.acoth");
 
         // Root functions
         FUNCTION_MAPPINGS.put("sqrt", "Math.sqrt");
