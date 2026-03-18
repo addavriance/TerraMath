@@ -1,0 +1,13 @@
+# SSH connection (Tailscale hostname or IP)
+deploy.host=your-pc-tailscale-hostname
+deploy.user=netia
+deploy.sshKey=/Users/netia/.ssh/id_ed25519
+
+# Minecraft mods folder (the version folder you want to deploy to)
+deploy.modsDir=C:/Users/netia/AppData/Roaming/.minecraft/versions/1.21.8-client/mods
+
+# Path to the .bat file that launches Minecraft (optional — skip launch if not set)
+deploy.launchScript=C:/Users/netia/Desktop/launch-minecraft.bat
+
+# Which platform jar to deploy: fabric / forge / neoforge
+deploy.platform=fabric

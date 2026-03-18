@@ -1,0 +1,69 @@
+tasks.register('deployMod') {
+    description = 'Deploys mod to remote PC via SSH/Tailscale and launches Minecraft'
+    group = 'distribution'
+
+    dependsOn ":${getDeployProp('deploy.platform', 'fabric')}:build"
+
+    doLast {
+        def host       = requireDeployProp('deploy.host')
+        def user       = requireDeployProp('deploy.user')
+        def sshKey     = requireDeployProp('deploy.sshKey')
+        def modsDir    = requireDeployProp('deploy.modsDir')
+        def launchScript = getDeployProp('deploy.launchScript', null)
+        def platform   = getDeployProp('deploy.platform', 'fabric')
+        def modId      = rootProject.archives_base_name
+
+        def jarName = "${modId}-${rootProject.mod_version}-${rootProject.minecraft_version}+${platform}.jar"
+        def jarFile = file("${platform}/build/libs/${jarName}")
+
+        if (!jarFile.exists()) {
+            throw new GradleException("Built jar not found: ${jarFile.absolutePath}")
+        }
+
+        def sshBase = ['ssh', '-i', sshKey, '-o', 'StrictHostKeyChecking=no', '-o', 'BatchMode=yes']
+        def remote  = "${user}@${host}"
+        def modsDirUnix = modsDir.replace('\\', '/')
+
+        println "🗑️  Removing old ${modId} jars from ${modsDir}..."
+        exec {
+            commandLine(*sshBase, remote,
+                "powershell -Command \"Get-ChildItem -Path '${modsDir}' -Filter '*${modId}*' -ErrorAction SilentlyContinue | Remove-Item -Force\"")
+        }
+
+        println "📦 Uploading ${jarName}..."
+        exec {
+            commandLine 'scp', '-i', sshKey, '-o', 'StrictHostKeyChecking=no',
+                jarFile.absolutePath, "${remote}:${modsDirUnix}/"
+        }
+
+        if (launchScript) {
+            println "🚀 Launching Minecraft..."
+            exec {
+                commandLine(*sshBase, remote,
+                    "powershell -Command \"Start-Process -FilePath '${launchScript}'\"")
+            }
+        } else {
+            println "ℹ️  deploy.launchScript not set — skipping launch"
+        }
+
+        println "✅ Done! Deployed to ${host}:${modsDir}"
+    }
+}
+
+private String getDeployProp(String key, String defaultValue) {
+    def props = loadLocalProperties()
+    return props.getProperty(key, defaultValue)
+}
+
+private String requireDeployProp(String key) {
+    def value = getDeployProp(key, null)
+    if (!value) throw new GradleException("'${key}' is not set in local.properties")
+    return value
+}
+
+private Properties loadLocalProperties() {
+    def props = new Properties()
+    def f = rootProject.file('local.properties')
+    if (f.exists()) f.withInputStream { props.load(it) }
+    return props
+}
