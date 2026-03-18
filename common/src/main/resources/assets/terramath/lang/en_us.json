@@ -48,6 +48,14 @@
   "terramath.formula.error.invalid_arguments": "Invalid arguments for function: %s",
   "terramath.formula.error.invalid_syntax": "Syntax error: %s",
 
+  "terramath.formula.error.multiple_equals": "Formula can only contain one = sign",
+  "terramath.config.swap_zy.tooltip": "Swap Y and Z variables in formula",
+  "terramath.config.preview.tooltip": "Preview terrain cross-section",
+
+  "terramath.preview.title": "Formula Preview",
+  "terramath.preview.empty": "No formula entered",
+  "terramath.preview.error": "Formula error",
+
   "terramath.command.formula": "Formula: ",
 
   "terramath.formula.error.invalid_reset.title": "TerraMath: Formula error",
