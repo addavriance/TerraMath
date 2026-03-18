@@ -299,7 +299,7 @@ public class ConfigScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(graphics);
+        renderBackground(graphics, mouseX, mouseY, partialTick);
         super.render(graphics, mouseX, mouseY, partialTick);
         if (previewPanelW > 0) {
             previewPanel.render(graphics, previewPanelX, previewPanelY, previewPanelW, previewPanelH, this.font);
@@ -350,11 +350,9 @@ public class ConfigScreen extends Screen {
         }
 
         @Override
-        public void updateSize(int width, int height, int top, int bottom) {
-            super.updateSize(width, height, top, bottom);
-
-            this.x0 = -ConfigScreen.configHalfShift;
-            this.x1 = width - ConfigScreen.configHalfShift;
+        public void setSize(int width, int height) {
+            super.setSize(width, height);
+            this.setX(-ConfigScreen.configHalfShift);
         }
 
         @Override
