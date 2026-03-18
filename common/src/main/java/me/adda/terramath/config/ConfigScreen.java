@@ -362,12 +362,6 @@ public class ConfigScreen extends Screen {
         }
 
         @Override
-        public void setSize(int width, int height) {
-            super.setSize(width, height);
-            this.setX(-ConfigScreen.configHalfShift);
-        }
-
-        @Override
         public int getRowWidth() {
             return FIELD_WIDTH + 40;
         }
