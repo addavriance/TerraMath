@@ -13,6 +13,13 @@ public class FormulaFormatter {
     public static String convertToJavaExpression(String formula) {
         String javaExpr = formula;
 
+        if (javaExpr.contains("=")) {
+            int eqIdx = javaExpr.indexOf("=");
+            String lhs = javaExpr.substring(0, eqIdx).trim();
+            String rhs = javaExpr.substring(eqIdx + 1).trim();
+            javaExpr = "(" + rhs + ") - (" + lhs + ")";
+        }
+
         javaExpr = wrapWithNoise(javaExpr);
 
         for (String funcName : MathFunctionsRegistry.getSortedFunctionNames()) {
