@@ -362,18 +362,24 @@ public class ConfigScreen extends Screen {
         }
 
         @Override
+        public void setSize(int width, int height) {
+            super.setSize(width, height);
+            this.setX(-ConfigScreen.configHalfShift);
+        }
+
+        @Override
         public int getRowWidth() {
             return FIELD_WIDTH + 40;
         }
 
         @Override
         public int getRowLeft() {
-            return this.width / 2 - ConfigScreen.configHalfShift - getRowWidth() / 2;
+            return this.getX() + this.width / 2 - getRowWidth() / 2;
         }
 
         @Override
         protected int getScrollbarPosition() {
-            return this.width / 2 - ConfigScreen.configHalfShift + FIELD_WIDTH / 2 + 14;
+            return this.getX() + this.width / 2 + FIELD_WIDTH / 2 + 14;
         }
 
         boolean hasEntries() { return formulaEntry != null; }
