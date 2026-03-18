@@ -1,11 +1,10 @@
 package me.adda.terramath.math.functions;
 
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class MathExtensions {
-    private static final Random random = new Random();
 
     private static final double[] LANCZOS_COEFFICIENTS = {
             676.5203681218851,
@@ -87,19 +86,18 @@ public class MathExtensions {
     }
 
     public static double rand() {
-        return random.nextDouble();
+        return ThreadLocalRandom.current().nextDouble();
     }
 
     public static double randrange(Number min, Number max) {
         double minVal = min.doubleValue();
         double maxVal = max.doubleValue();
-        double randomValue = minVal + (random.nextDouble() * (maxVal - minVal));
-
+        double randomValue = minVal + (ThreadLocalRandom.current().nextDouble() * (maxVal - minVal));
         return Math.round(randomValue * 1000.0) / 1000.0;
     }
 
     public static double randnormal(double mean, double stddev) {
-        return mean + stddev * random.nextGaussian();
+        return mean + stddev * ThreadLocalRandom.current().nextGaussian();
     }
 
     public static double gcd(Number a, Number b) {
