@@ -1,5 +1,6 @@
 package me.adda.terramath.math.functions;
 
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -151,5 +152,42 @@ public class MathFunctionsRegistry {
             throw new IllegalArgumentException("Unsupported function: " + functionName);
         }
         return implementation;
+    }
+
+    public static int getArity(String functionName) {
+        String impl;
+        try {
+            impl = getFunctionImplementation(functionName);
+        } catch (IllegalArgumentException e) {
+            return -1;
+        }
+
+        // Strip cast prefix like "(int)" in "(int)Math.floor"
+        impl = impl.replaceAll("^\\([^)]+\\)", "").trim();
+
+        if (impl.startsWith("noise.")) {
+            String methodName = impl.substring("noise.".length());
+            for (Method m : CompositeNoise.class.getMethods()) {
+                if (m.getName().equals(methodName)) return m.getParameterCount();
+            }
+            return -1;
+        }
+
+        int dot = impl.lastIndexOf('.');
+        if (dot < 0) return -1;
+        String className  = impl.substring(0, dot);
+        String methodName = impl.substring(dot + 1);
+
+        Class<?> clazz = switch (className) {
+            case "Math"           -> Math.class;
+            case "MathExtensions" -> MathExtensions.class;
+            default               -> null;
+        };
+        if (clazz == null) return -1;
+
+        for (Method m : clazz.getMethods()) {
+            if (m.getName().equals(methodName)) return m.getParameterCount();
+        }
+        return -1;
     }
 }
