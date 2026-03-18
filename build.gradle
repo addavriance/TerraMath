@@ -8,6 +8,7 @@ architectury {
 }
 
 apply from: 'gradle/telegram.gradle'
+apply from: 'gradle/deploy.gradle'
 
 subprojects {
     apply plugin: "dev.architectury.loom"
