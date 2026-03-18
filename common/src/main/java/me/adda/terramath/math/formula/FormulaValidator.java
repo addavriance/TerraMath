@@ -25,6 +25,7 @@ public class FormulaValidator {
     public static final String ERROR_INVALID_SYNTAX = TRANSLATION_PREFIX + "invalid_syntax";
     public static final String ERROR_INVALID_ARGUMENTS = TRANSLATION_PREFIX + "invalid_arguments";
     public static final String ERROR_OVERFLOW = TRANSLATION_PREFIX + "overflow";
+    public static final String ERROR_MULTIPLE_EQUALS = TRANSLATION_PREFIX + "multiple_equals";
 
 
     public record ValidationResult(boolean isValid, String errorKey, Object... errorArgs) {
@@ -42,6 +43,7 @@ public class FormulaValidator {
 
         try {
             validateBasicStructure(formula);
+            validateEquation(formula);
             validateFunctionsAndBrackets(formula);
             validateOperators(formula);
             if (!syntaxOnly) testFormula(formula);
@@ -64,7 +66,7 @@ public class FormulaValidator {
                 .map(String::valueOf)
                 .collect(Collectors.joining());
 
-        if (!formula.matches("^[\\sxyz\\d+\\-*/(),.!^" + function_chars + "]+$")) {
+        if (!formula.matches("^[\\sxyz\\d+\\-*/(),.!^=" + function_chars + "]+$")) {
             throw new IllegalArgumentException(ERROR_INVALID_CHARS);
         }
 
@@ -111,6 +113,19 @@ public class FormulaValidator {
 
         if (!bracketStack.isEmpty()) {
             throw new FormulaException(ERROR_UNMATCHED_OPENING, bracketStack.peek());
+        }
+    }
+
+    private static void validateEquation(String formula) {
+        long eqCount = formula.chars().filter(c -> c == '=').count();
+        if (eqCount > 1) {
+            throw new IllegalArgumentException(ERROR_MULTIPLE_EQUALS);
+        }
+        if (eqCount == 1) {
+            int eqIdx = formula.indexOf("=");
+            if (eqIdx == 0 || eqIdx == formula.length() - 1) {
+                throw new IllegalArgumentException(ERROR_OPERATOR_START_END);
+            }
         }
     }
 
