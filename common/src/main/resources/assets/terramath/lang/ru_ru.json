@@ -48,6 +48,14 @@
   "terramath.formula.error.invalid_arguments": "Недопустимые аргументы функции: %s",
   "terramath.formula.error.invalid_syntax": "Синтаксическая ошибка: %s",
 
+  "terramath.formula.error.multiple_equals": "Формула может содержать только один знак =",
+  "terramath.config.swap_zy.tooltip": "Поменять местами Y и Z в формуле",
+  "terramath.config.preview.tooltip": "Предпросмотр поперечного сечения ландшафта",
+
+  "terramath.preview.title": "Предпросмотр формулы",
+  "terramath.preview.empty": "Формула не введена",
+  "terramath.preview.error": "Ошибка формулы",
+
   "terramath.command.formula": "Формула: ",
 
   "terramath.formula.error.invalid_reset.title": "TerraMath: Ошибка формулы",
