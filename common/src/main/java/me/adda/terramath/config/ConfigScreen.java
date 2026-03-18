@@ -4,8 +4,10 @@ import me.adda.terramath.api.FormulaCacheHolder;
 import me.adda.terramath.api.TerrainFormulaManager;
 import me.adda.terramath.api.TerrainSettingsManager;
 import me.adda.terramath.api.TerrainSettingsManager.TerrainSettingType;
+import me.adda.terramath.gui.PreviewPanel;
 import me.adda.terramath.gui.ResetButton;
 import me.adda.terramath.gui.TerrainSettingsSlider;
+import me.adda.terramath.math.formula.LatexConverter;
 import me.adda.terramath.math.parser.FormulaParser;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -17,6 +19,8 @@ import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.StringWidget;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.layouts.LinearLayout;
@@ -48,6 +52,45 @@ public class ConfigScreen extends Screen {
     // Original values for restoring on cancel
     private boolean originalDensityMode;
     private boolean originalUseDefault;
+
+    SettingsDraft settingsDraft = null;
+
+    static class SettingsDraft {
+        String   formula;
+        double   coordinateScale;
+        boolean  densityMode;
+        double   baseHeight;
+        double   heightVariation;
+        double   smoothingFactor;
+        NoiseType noiseType;
+        double   noiseScaleX, noiseScaleY, noiseScaleZ;
+        double   noiseHeightScale;
+        Boolean  useDefault; // null in world-creation mode
+    }
+
+    SettingsDraft captureCurrentDraft() {
+        if (configList == null || !configList.hasEntries()) return null;
+        SettingsDraft d = new SettingsDraft();
+        d.formula         = configList.getFormula();
+        d.coordinateScale = configList.getCoordinateScale();
+        d.densityMode     = configList.getUseDensityMode();
+        d.baseHeight      = configList.getBaseHeight();
+        d.heightVariation = configList.getHeightVariation();
+        d.smoothingFactor = configList.getSmoothingFactor();
+        d.noiseType       = configList.getNoiseType();
+        d.noiseScaleX     = configList.getNoiseScaleX();
+        d.noiseScaleY     = configList.getNoiseScaleY();
+        d.noiseScaleZ     = configList.getNoiseScaleZ();
+        d.noiseHeightScale = configList.getNoiseHeightScale();
+        d.useDefault      = isWorldCreation ? null : configList.useDefaultSelected();
+        return d;
+    }
+
+    static int configHalfShift = 0;
+
+    private final PreviewPanel previewPanel = new PreviewPanel();
+
+    private int previewPanelX, previewPanelY, previewPanelW, previewPanelH;
 
     // UI constants
     private static final int FIELD_WIDTH = 300;
@@ -94,6 +137,8 @@ public class ConfigScreen extends Screen {
 
     @Override
     protected void init() {
+        settingsDraft = captureCurrentDraft();
+
         super.init();
 
         // Create layout structure
@@ -127,23 +172,66 @@ public class ConfigScreen extends Screen {
         layout.visitWidgets(this::addRenderableWidget);
 
         // Initialize values and arrange elements
-        configList.refreshEntries();
         repositionElements();
+
+        if (settingsDraft == null) {
+            ModConfig cfg = ModConfig.get();
+            previewPanel.halfWidth = Math.max(50, Math.min(400, cfg.previewHalfWidth));
+            previewPanel.zoom      = Math.max(0.5f, Math.min(4.0f, cfg.previewZoom));
+        }
     }
 
     @Override
     protected void repositionElements() {
         if (configList != null) {
+            SettingsDraft tempDraft = captureCurrentDraft();
+            if (tempDraft != null) settingsDraft = tempDraft;
+
+            computePreviewGeometry();
+
             configList.setSize(
                     width,
                     height - layout.getHeaderHeight() - layout.getFooterHeight()
             );
             configList.refreshEntries();
+            previewPanel.setDisplaySettings(configList.displaySettings);
         }
         layout.arrangeElements();
     }
 
+    private void computePreviewGeometry() {
+        int configFootprintHalf = FIELD_WIDTH / 2 + 26; // = 176
+
+        int shift = width / 4;
+
+        int configRightEdge = (width / 2 - shift) + configFootprintHalf;
+
+        int pX = configRightEdge + 10;
+        int pW = width - pX - 8;
+
+        int configLeftEdge = (width / 2 - shift) - configFootprintHalf;
+        if (configLeftEdge < 8 || pW < 130) {
+            configHalfShift = 0;
+            previewPanelW = 0;
+            return;
+        }
+
+        configHalfShift = shift;
+        previewPanelX = pX;
+        previewPanelW = pW;
+        previewPanelY = layout.getHeaderHeight() + 4;
+        previewPanelH = height - previewPanelY - layout.getFooterHeight() - 4;
+
+        if (previewPanelH < 60) {
+            configHalfShift = 0;
+            previewPanelW = 0;
+        }
+    }
+
     private void saveSettings() {
+        ModConfig.get().previewHalfWidth = previewPanel.halfWidth;
+        ModConfig.get().previewZoom      = previewPanel.zoom;
+
         String formula = configList.getFormula();
         boolean useDensityMode = configList.getUseDensityMode();
         double coordinateScale = configList.getCoordinateScale();
@@ -177,6 +265,7 @@ public class ConfigScreen extends Screen {
             settings.setNoiseHeightScale(noiseHeightScale);
 
             FormulaCacheHolder.resetCache();
+            ModConfig.save();
         } else {
             ModConfig config = ModConfig.get();
 
@@ -208,7 +297,37 @@ public class ConfigScreen extends Screen {
         }
     }
 
-    // The scrollable container that holds all config entries
+    @Override
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        renderBackground(graphics);
+        super.render(graphics, mouseX, mouseY, partialTick);
+        if (previewPanelW > 0) {
+            previewPanel.render(graphics, previewPanelX, previewPanelY, previewPanelW, previewPanelH, this.font);
+        }
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (previewPanelW > 0 && previewPanel.mouseClicked(mouseX, mouseY, previewPanelX, previewPanelY, previewPanelW, previewPanelH, button)) {
+            return true;
+        }
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (previewPanelW > 0 && previewPanel.mouseDragged(mouseX, mouseY)) {
+            return true;
+        }
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        previewPanel.mouseReleased();
+        return super.mouseReleased(mouseX, mouseY, button);
+    }
+
     class ConfigList extends ContainerObjectSelectionList<ConfigEntry> {
         private final TerrainSettingsManager displaySettings = new TerrainSettingsManager();
 
@@ -231,14 +350,29 @@ public class ConfigScreen extends Screen {
         }
 
         @Override
+        public void updateSize(int width, int height, int top, int bottom) {
+            super.updateSize(width, height, top, bottom);
+
+            this.x0 = -ConfigScreen.configHalfShift;
+            this.x1 = width - ConfigScreen.configHalfShift;
+        }
+
+        @Override
         public int getRowWidth() {
             return FIELD_WIDTH + 40;
         }
 
         @Override
-        protected int getScrollbarPosition() {
-            return this.width / 2 + FIELD_WIDTH / 2 + 14;
+        public int getRowLeft() {
+            return this.width / 2 - ConfigScreen.configHalfShift - getRowWidth() / 2;
         }
+
+        @Override
+        protected int getScrollbarPosition() {
+            return this.width / 2 - ConfigScreen.configHalfShift + FIELD_WIDTH / 2 + 14;
+        }
+
+        boolean hasEntries() { return formulaEntry != null; }
 
         public void refreshEntries() {
             this.clearEntries();
@@ -295,48 +429,56 @@ public class ConfigScreen extends Screen {
         }
 
         private void loadValuesForDisplay() {
-            // Determine where to load values from
+            if (settingsDraft != null) {
+                formulaEntry.setFormula(settingsDraft.formula);
+                coordinateScaleEntry.setValue(settingsDraft.coordinateScale);
+                baseHeightEntry.setValue(settingsDraft.baseHeight);
+                heightVarEntry.setValue(settingsDraft.heightVariation);
+                smoothingEntry.setValue(settingsDraft.smoothingFactor);
+                noiseTypeEntry.setValue(settingsDraft.noiseType);
+                noiseScaleXEntry.setValue(settingsDraft.noiseScaleX);
+                noiseScaleYEntry.setValue(settingsDraft.noiseScaleY);
+                noiseScaleZEntry.setValue(settingsDraft.noiseScaleZ);
+                noiseHeightScaleEntry.setValue(settingsDraft.noiseHeightScale);
+                if (densityModeEntry != null) {
+                    densityModeEntry.setValue(settingsDraft.densityMode);
+                    displaySettings.setUseDensityMode(settingsDraft.densityMode);
+                }
+                return;
+            }
+
+            // First load — read from persisted managers / config
             if (isWorldCreation) {
-                // Then get values from managers
                 TerrainSettingsManager settings = TerrainSettingsManager.getInstance();
                 formulaEntry.setFormula(TerrainFormulaManager.getInstance().getFormula());
-
-                // Update sliders by directly setting values to avoid feedback
                 coordinateScaleEntry.setValue(settings.getCoordinateScale());
                 baseHeightEntry.setValue(settings.getBaseHeight());
                 heightVarEntry.setValue(settings.getHeightVariation());
                 smoothingEntry.setValue(settings.getSmoothingFactor());
-
                 noiseTypeEntry.setValue(settings.getNoiseType());
-
                 noiseScaleXEntry.setValue(settings.getNoiseScaleX());
                 noiseScaleYEntry.setValue(settings.getNoiseScaleY());
                 noiseScaleZEntry.setValue(settings.getNoiseScaleZ());
                 noiseHeightScaleEntry.setValue(settings.getNoiseHeightScale());
-
                 if (densityModeEntry != null) {
                     densityModeEntry.setValue(settings.isUseDensityMode());
+                    displaySettings.setUseDensityMode(settings.isUseDensityMode());
                 }
             } else {
-                // From config for mod settings screen
                 ModConfig config = ModConfig.get();
                 formulaEntry.setFormula(config.baseFormula);
-
-                // Update sliders by directly setting values
                 coordinateScaleEntry.setValue(config.coordinateScale);
                 baseHeightEntry.setValue(config.baseHeight);
                 heightVarEntry.setValue(config.heightVariation);
                 smoothingEntry.setValue(config.smoothingFactor);
-
                 noiseTypeEntry.setValue(config.noiseType);
-
                 noiseScaleXEntry.setValue(config.noiseScaleX);
                 noiseScaleYEntry.setValue(config.noiseScaleY);
                 noiseScaleZEntry.setValue(config.noiseScaleZ);
                 noiseHeightScaleEntry.setValue(config.noiseHeightScale);
-
                 if (densityModeEntry != null) {
                     densityModeEntry.setValue(config.useDensityMode);
+                    displaySettings.setUseDensityMode(config.useDensityMode);
                 }
             }
 
@@ -464,34 +606,48 @@ public class ConfigScreen extends Screen {
         private final StringWidget label;
         private final EditBox formulaField;
         private final Button randomButton;
+        private final Button swapButton;
         private final StringWidget errorWidget;
 
         public FormulaEntry() {
-            int centerX = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2;
+            int centerX = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - ConfigScreen.configHalfShift;
 
-            int randomButtonWidth = 20;
-            int randomButtonMargin = 4;
+            int smallButtonWidth = 20;
+            int smallButtonMargin = 4;
             int totalWidth = FIELD_WIDTH;
 
-            int sliderWidth = totalWidth - randomButtonWidth - randomButtonMargin;
+            int fieldWidth = totalWidth - 2 * (smallButtonWidth + smallButtonMargin);
 
-            int sliderX = centerX - totalWidth / 2;
-
-            int buttonX = sliderX + sliderWidth + randomButtonMargin;
+            int fieldX = centerX - totalWidth / 2;
+            int randomButtonX = fieldX + fieldWidth + smallButtonMargin;
+            int swapButtonX = randomButtonX + smallButtonWidth + smallButtonMargin;
 
             label = new StringWidget(FORMULA_LABEL, minecraft.font).alignLeft();
             label.setWidth(FIELD_WIDTH);
             label.setX(centerX - FIELD_WIDTH / 2);
             label.setY(5);
 
-            // Formula input field
             formulaField = new EditBox(
-                    minecraft.font, sliderX, 15,
-                    sliderWidth, 20, Component.empty()
+                    minecraft.font, fieldX, 15,
+                    fieldWidth, 20, Component.empty()
             ) {
                 @Override
                 protected MutableComponent createNarrationMessage() {
                     return super.createNarrationMessage().append(FORMULA_HINT);
+                }
+
+                @Override
+                public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+                    if (Screen.isPaste(keyCode)) {
+                        String clipboard = Minecraft.getInstance().keyboardHandler.getClipboard();
+                        if (clipboard != null && LatexConverter.isLatex(clipboard.trim())) {
+                            String converted = LatexConverter.convert(clipboard.trim());
+                            setValue(converted);
+                            onFormulaChanged(converted);
+                            return true;
+                        }
+                    }
+                    return super.keyPressed(keyCode, scanCode, modifiers);
                 }
             };
 
@@ -508,7 +664,18 @@ public class ConfigScreen extends Screen {
                         formulaField.setValue(generateRandomFormula());
                         onFormulaChanged(formulaField.getValue());
                     }
-            ).pos(buttonX, 15).size(20, 20).build();
+            ).pos(randomButtonX, 15).size(20, 20).build();
+
+            swapButton = Button.builder(
+                    Component.literal("⇄"),
+                    button -> {
+                        String swapped = LatexConverter.swapZAndY(formulaField.getValue());
+                        formulaField.setValue(swapped);
+                        onFormulaChanged(swapped);
+                    }
+            ).pos(swapButtonX, 15).size(20, 20).build();
+            swapButton.setTooltip(Tooltip.create(
+                    Component.translatable("terramath.config.swap_zy.tooltip")));
 
             // Error message widget
             errorWidget = new StringWidget(Component.empty(), minecraft.font).alignLeft();
@@ -519,10 +686,12 @@ public class ConfigScreen extends Screen {
             children.add(label);
             children.add(formulaField);
             children.add(randomButton);
+            children.add(swapButton);
             children.add(errorWidget);
         }
 
         private void onFormulaChanged(String formula) {
+            previewPanel.setFormula(formula != null ? formula : "");
             if (formula == null || formula.trim().isEmpty()) {
                 errorWidget.setMessage(Component.empty());
                 saveButton.active = true;
@@ -549,11 +718,13 @@ public class ConfigScreen extends Screen {
             label.setY(top + 5);
             formulaField.setY(top + 15);
             randomButton.setY(top + 15);
+            swapButton.setY(top + 15);
             errorWidget.setY(top + 38);
 
             label.render(graphics, mouseX, mouseY, partialTick);
             formulaField.render(graphics, mouseX, mouseY, partialTick);
             randomButton.render(graphics, mouseX, mouseY, partialTick);
+            swapButton.render(graphics, mouseX, mouseY, partialTick);
             errorWidget.render(graphics, mouseX, mouseY, partialTick);
 
             String errorText = errorWidget.getMessage().getString();
@@ -593,12 +764,13 @@ public class ConfigScreen extends Screen {
         private CycleButton<Boolean> checkbox;
 
         public DensityModeEntry(boolean initialValue) {
-            int centerX = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2;
+            int centerX = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2  - ConfigScreen.configHalfShift;
 
             checkbox = CycleButton.onOffBuilder(initialValue)
                     .displayOnlyValue()
                     .create(centerX + FIELD_WIDTH / 2 - 45, 5, 45, 20, ADVANCED_LABEL, (button, value) -> {
                         configList.updateAdvancedVisibility(value);
+                        configList.displaySettings.setUseDensityMode(value);
                     });
 
             children.add(checkbox);
@@ -633,7 +805,7 @@ public class ConfigScreen extends Screen {
 
         public SliderEntry(TerrainSettingType settingType, TerrainSettingsManager displaySettings) {
             this.settingType = settingType;
-            int centerX = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2;
+            int centerX = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - ConfigScreen.configHalfShift;
 
             int resetButtonWidth = 20;
             int resetButtonMargin = 4;
@@ -702,7 +874,7 @@ public class ConfigScreen extends Screen {
         private Checkbox checkbox;
 
         public UseDefaultEntry(boolean initialValue) {
-            int centerX = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2;
+            int centerX = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - ConfigScreen.configHalfShift;
 
             checkbox = Checkbox.builder(USE_DEFAULT_LABEL, minecraft.font)
                     .pos(centerX - FIELD_WIDTH / 2, 5)
@@ -730,7 +902,7 @@ public class ConfigScreen extends Screen {
         private final CycleButton<NoiseType> cycleButton;
 
         public NoiseTypeEntry() {
-            int centerX = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2;
+            int centerX = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - ConfigScreen.configHalfShift;
 
             cycleButton = CycleButton.<NoiseType>builder(NoiseType::getDisplayName)
                     .withValues(NoiseType.values())
@@ -739,7 +911,10 @@ public class ConfigScreen extends Screen {
                             centerX - FIELD_WIDTH / 2, 5,
                             FIELD_WIDTH, 20,
                             Component.translatable("terramath.config.noise_type"),
-                            (button, noiseType) -> configList.updateNoiseVisibility(noiseType)
+                            (button, noiseType) -> {
+                                configList.updateNoiseVisibility(noiseType);
+                                configList.displaySettings.setNoiseType(noiseType);
+                            }
                     );
 
             children.add(cycleButton);
@@ -759,6 +934,8 @@ public class ConfigScreen extends Screen {
 
         public void setValue(NoiseType value) {
             cycleButton.setValue(value);
+            configList.displaySettings.setNoiseType(value);
         }
     }
+
 }
