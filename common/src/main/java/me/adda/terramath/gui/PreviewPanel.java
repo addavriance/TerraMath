@@ -3,6 +3,7 @@ package me.adda.terramath.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import me.adda.terramath.api.TerrainSettingsManager;
+import org.joml.Matrix4fStack;
 import me.adda.terramath.config.NoiseType;
 import me.adda.terramath.math.parser.FormulaParser;
 import net.minecraft.client.Minecraft;
@@ -206,8 +207,8 @@ public class PreviewPanel {
         Matrix4f view     = new Matrix4f().lookAt(camX, camY, camZ, 0f, cy, 0f, udx, udy, udz);
         Matrix4f projView = proj.mul(view, new Matrix4f());
 
-        Matrix4f  savedProj = new Matrix4f(RenderSystem.getProjectionMatrix());
-        PoseStack mvs       = RenderSystem.getModelViewStack();
+        Matrix4f      savedProj = new Matrix4f(RenderSystem.getProjectionMatrix());
+        Matrix4fStack mvs       = RenderSystem.getModelViewStack();
 
         try {
             RenderSystem.viewport(vpX, vpY, vpW, vpH);
@@ -217,8 +218,8 @@ public class PreviewPanel {
             RenderSystem.enableCull();
 
             RenderSystem.setProjectionMatrix(projView, RenderSystem.getVertexSorting());
-            mvs.pushPose();
-            mvs.last().pose().identity();
+            mvs.pushMatrix();
+            mvs.identity();
             RenderSystem.applyModelViewMatrix();
 
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
@@ -241,7 +242,7 @@ public class PreviewPanel {
         } finally {
             RenderSystem.disableCull();
             RenderSystem.disableDepthTest();
-            mvs.popPose();
+            mvs.popMatrix();
             RenderSystem.applyModelViewMatrix();
             RenderSystem.setProjectionMatrix(savedProj, RenderSystem.getVertexSorting());
             RenderSystem.viewport(0, 0, mc.getWindow().getWidth(), mc.getWindow().getHeight());

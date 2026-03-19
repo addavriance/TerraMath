@@ -1,6 +1,6 @@
 package me.adda.terramath.forge;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import me.adda.terramath.TerraMath;
 import me.adda.terramath.worldgen.TerraMathDensityFunction;
 import net.minecraft.core.registries.Registries;
@@ -14,11 +14,11 @@ import net.minecraftforge.registries.RegistryObject;
 @Mod(TerraMath.MOD_ID)
 public class TerraMathForge {
 
-    private static final DeferredRegister<Codec<? extends DensityFunction>> DENSITY_FUNCTION_TYPES =
+    private static final DeferredRegister<MapCodec<? extends DensityFunction>> DENSITY_FUNCTION_TYPES =
             DeferredRegister.create(Registries.DENSITY_FUNCTION_TYPE, TerraMath.MOD_ID);
 
     @SuppressWarnings("unused")
-    private static final RegistryObject<Codec<? extends DensityFunction>> TERRAIN_DENSITY_FUNCTION =
+    private static final RegistryObject<MapCodec<? extends DensityFunction>> TERRAIN_DENSITY_FUNCTION =
             DENSITY_FUNCTION_TYPES.register("terrain", TerraMathDensityFunction.CODEC::codec);
 
     public TerraMathForge() {
