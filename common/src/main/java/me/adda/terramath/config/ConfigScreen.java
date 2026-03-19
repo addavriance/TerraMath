@@ -368,7 +368,7 @@ public class ConfigScreen extends Screen {
             super.updateSize(width, height, top, bottom);
 
             this.x0 = -ConfigScreen.configHalfShift;
-            this.x1 = width - ConfigScreen.configHalfShift;
+            this.x1 = width;
         }
 
         @Override
