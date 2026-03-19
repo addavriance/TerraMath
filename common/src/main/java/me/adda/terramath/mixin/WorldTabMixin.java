@@ -66,10 +66,9 @@ public abstract class WorldTabMixin extends GridLayoutTab {
             if (minecraft.screen instanceof CreateWorldScreen createWorldScreen) {
                 createWorldScreen.getUiState().addListener((worldCreationUiState -> {
                     List<WorldCreationUiState.WorldTypeEntry> worldTypeList = worldCreationUiState.getNormalPresetList();
-                    boolean isFirstWorldType = worldTypeList.indexOf(worldCreationUiState.getWorldType()) == 0;
+                    boolean isNoiseWorldType = worldTypeList.contains(worldCreationUiState.getWorldType());
 
-                    // Only enable button for first (basic) world type
-                    this.terrainSettingsButton.active = isFirstWorldType;
+                    this.terrainSettingsButton.active = isNoiseWorldType;
                 }));
             }
         }
