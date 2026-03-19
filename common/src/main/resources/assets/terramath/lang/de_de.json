@@ -51,5 +51,11 @@
   "terramath.command.formula": "Formel: ",
 
   "terramath.formula.error.invalid_reset.title": "TerraMath: Formel-Fehler",
-  "terramath.formula.error.invalid_reset.description": "Die Formel wurde aufgrund eines Validierungsfehlers zurückgesetzt"
+  "terramath.formula.error.invalid_reset.description": "Die Formel wurde aufgrund eines Validierungsfehlers zurückgesetzt",
+  "terramath.formula.error.multiple_equals": "Die Formel darf nur ein =-Zeichen enthalten",
+  "terramath.config.swap_zy.tooltip": "Y und Z in der Formel tauschen",
+  "terramath.config.preview.tooltip": "Geländequerschnitt vorschauen",
+  "terramath.preview.title": "Formel-Vorschau",
+  "terramath.preview.empty": "Keine Formel eingegeben",
+  "terramath.preview.error": "Formelfehler"
 }

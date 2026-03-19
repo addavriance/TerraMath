@@ -51,5 +51,11 @@
   "terramath.command.formula": "Формула: ",
 
   "terramath.formula.error.invalid_reset.title": "TerraMath: Памылка формулы",
-  "terramath.formula.error.invalid_reset.description": "Формула была скінута з-за памылкі валідацыі"
+  "terramath.formula.error.invalid_reset.description": "Формула была скінута з-за памылкі валідацыі",
+  "terramath.formula.error.multiple_equals": "Формула можа ўтрымліваць толькі адзін знак =",
+  "terramath.config.swap_zy.tooltip": "Памяняць Y і Z мясцамі ў формуле",
+  "terramath.config.preview.tooltip": "Папярэдні прагляд папярочнага перарэзу рэльефу",
+  "terramath.preview.title": "Папярэдні прагляд формулы",
+  "terramath.preview.empty": "Формула не ўведзена",
+  "terramath.preview.error": "Памылка формулы"
 }

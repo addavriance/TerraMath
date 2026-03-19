@@ -51,5 +51,11 @@
   "terramath.command.formula": "Vzorec: ",
 
   "terramath.formula.error.invalid_reset.title": "TerraMath: Chyba vzorca",
-  "terramath.formula.error.invalid_reset.description": "Vzorec bol resetovaný kvôli chybe validácie"
+  "terramath.formula.error.invalid_reset.description": "Vzorec bol resetovaný kvôli chybe validácie",
+  "terramath.formula.error.multiple_equals": "Vzorec môže obsahovať iba jeden znak =",
+  "terramath.config.swap_zy.tooltip": "Vymeniť premenné Y a Z vo vzorci",
+  "terramath.config.preview.tooltip": "Ukážka priečneho rezu terénu",
+  "terramath.preview.title": "Ukážka vzorca",
+  "terramath.preview.empty": "Nebol zadaný žiadny vzorec",
+  "terramath.preview.error": "Chyba vzorca"
 }

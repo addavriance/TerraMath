@@ -51,5 +51,11 @@
   "terramath.command.formula": "Formuła: ",
 
   "terramath.formula.error.invalid_reset.title": "TerraMath: Błąd formuły",
-  "terramath.formula.error.invalid_reset.description": "Formuła została zresetowana z powodu błędu walidacji"
+  "terramath.formula.error.invalid_reset.description": "Formuła została zresetowana z powodu błędu walidacji",
+  "terramath.formula.error.multiple_equals": "Formuła może zawierać tylko jeden znak =",
+  "terramath.config.swap_zy.tooltip": "Zamień zmienne Y i Z w formule",
+  "terramath.config.preview.tooltip": "Podgląd przekroju terenu",
+  "terramath.preview.title": "Podgląd formuły",
+  "terramath.preview.empty": "Nie wprowadzono formuły",
+  "terramath.preview.error": "Błąd formuły"
 }

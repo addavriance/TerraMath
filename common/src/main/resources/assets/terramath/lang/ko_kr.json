@@ -51,5 +51,11 @@
   "terramath.command.formula": "수식: ",
 
   "terramath.formula.error.invalid_reset.title": "TerraMath: 수식 오류",
-  "terramath.formula.error.invalid_reset.description": "유효성 검사 오류로 인해 수식이 초기화되었습니다"
+  "terramath.formula.error.invalid_reset.description": "유효성 검사 오류로 인해 수식이 초기화되었습니다",
+  "terramath.formula.error.multiple_equals": "수식에는 = 기호가 하나만 포함될 수 있습니다",
+  "terramath.config.swap_zy.tooltip": "수식에서 Y와 Z 변수 교체",
+  "terramath.config.preview.tooltip": "지형 단면 미리보기",
+  "terramath.preview.title": "수식 미리보기",
+  "terramath.preview.empty": "수식이 입력되지 않았습니다",
+  "terramath.preview.error": "수식 오류"
 }
