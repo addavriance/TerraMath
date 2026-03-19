@@ -1,7 +1,7 @@
 {
   "modmenu.descriptionTranslation.terramath": "Генеруйте свої світи Minecraft за допомогою математичних формул! Створюйте унікальні ландшафти від хвиль до спіралей за допомогою користувацьких рівнянь.",
 
-  "terramath.config.title": "Конфігурація TerraMath",
+  "terramath.config.title": "Налаштування TerraMath",
   "terramath.config.terrain_settings": "Налаштування ландшафту",
   "terramath.config.terrain_settings_label": "Налаштування ландшафту поточного світу",
 
@@ -32,7 +32,7 @@
 
   "terramath.config.noise_height_scale": "Масштаб висоти",
 
-  "terramath.config.use_default_settings": "Використовувати ці налаштування за замовчуванням",
+  "terramath.config.use_default_settings": "Використовувати ці налаштування усталено",
 
   "terramath.formula.error.null": "Формула не може бути порожньою",
   "terramath.formula.error.invalid_chars": "Формула містить недопустимі символи",
@@ -40,8 +40,8 @@
   "terramath.formula.error.unknown_function": "Невідома функція: %s",
   "terramath.formula.error.unknown_variable": "Невідома змінна: %s",
   "terramath.formula.error.function_parentheses": "Неправильне використання функції: після %s мають бути дужки",
-  "terramath.formula.error.unmatched_closing": "Непарна закриваюча дужка в позиції %d",
-  "terramath.formula.error.unmatched_opening": "Непарна відкриваюча дужка в позиції %d",
+  "terramath.formula.error.unmatched_closing": "Непарна закривна дужка в позиції %d",
+  "terramath.formula.error.unmatched_opening": "Непарна відкривна дужка в позиції %d",
   "terramath.formula.error.operator_sequence": "Недопустима послідовність операторів",
   "terramath.formula.error.operator_start_end": "Формула не може починатися з */ або закінчуватися оператором",
   "terramath.formula.error.operator_brackets": "Недопустиме розміщення оператора біля дужок",
