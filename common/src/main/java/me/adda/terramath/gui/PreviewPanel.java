@@ -138,7 +138,7 @@ public class PreviewPanel {
         if (voxelsDirty && !computing)
             startComputeAsync();
 
-        graphics.fill(x, y, x + w, y + viewH, 0xFF222222);
+        graphics.fill(x, y, x + w, y + viewH, 0xBF0F0F0F);
 
         if (errorMessage != null) {
             graphics.drawCenteredString(font, errorMessage,
@@ -150,7 +150,7 @@ public class PreviewPanel {
         }
 
         renderControls(graphics, font, x, y + viewH, w);
-        graphics.renderOutline(x - 1, y - 1, w + 2, h + 2, 0xFF444444);
+        graphics.renderOutline(x - 1, y - 1, w + 2, h + 2, 0x80606060);
     }
 
     public boolean mouseClicked(double mx, double my, int x, int y, int w, int h, int button) {
@@ -660,7 +660,7 @@ public class PreviewPanel {
     }
 
     private void renderControls(GuiGraphics graphics, Font font, int x, int y, int w) {
-        graphics.fill(x, y, x + w, y + CTRL_H, 0xFF222222);
+        graphics.fill(x, y, x + w, y + CTRL_H, 0xBF0F0F0F);
         int half = w / 2;
         String zoomLabel = (zoom == Math.floor(zoom))
                 ? (int)zoom + "x"
