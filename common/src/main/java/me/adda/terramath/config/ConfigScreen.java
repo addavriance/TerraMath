@@ -203,8 +203,9 @@ public class ConfigScreen extends Screen {
             previewPanel.setDisplaySettings(configList.displaySettings);
         }
         layout.arrangeElements();
-        if (configList != null) {
-            configList.setX(configList.getX() - configHalfShift);
+        if (configList != null && configHalfShift > 0) {
+            configList.setSize(width * 3 / 2, height - layout.getHeaderHeight() - layout.getFooterHeight());
+            configList.setX(-width / 2);
         }
     }
 
@@ -371,12 +372,12 @@ public class ConfigScreen extends Screen {
 
         @Override
         public int getRowLeft() {
-            return this.width / 2 - ConfigScreen.configHalfShift - getRowWidth() / 2;
+            return ConfigScreen.this.width / 2 - ConfigScreen.configHalfShift - getRowWidth() / 2;
         }
 
         @Override
         protected int getScrollbarPosition() {
-            return this.width / 2 - ConfigScreen.configHalfShift + FIELD_WIDTH / 2 + 14;
+            return ConfigScreen.this.width / 2 - ConfigScreen.configHalfShift + FIELD_WIDTH / 2 + 14;
         }
 
         boolean hasEntries() { return formulaEntry != null; }
