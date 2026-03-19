@@ -51,5 +51,11 @@
   "terramath.command.formula": "Формула: ",
 
   "terramath.formula.error.invalid_reset.title": "TerraMath: Грешка формуле",
-  "terramath.formula.error.invalid_reset.description": "Формула је ресетована због грешке валидације"
+  "terramath.formula.error.invalid_reset.description": "Формула је ресетована због грешке валидације",
+  "terramath.formula.error.multiple_equals": "Формула може садржати само један знак =",
+  "terramath.config.swap_zy.tooltip": "Замените Y и Z у формули",
+  "terramath.config.preview.tooltip": "Приказ попречног пресека терена",
+  "terramath.preview.title": "Приказ формуле",
+  "terramath.preview.empty": "Формула није унесена",
+  "terramath.preview.error": "Грешка формуле"
 }

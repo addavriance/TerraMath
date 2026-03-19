@@ -51,5 +51,11 @@
   "terramath.command.formula": "Формула: ",
 
   "terramath.formula.error.invalid_reset.title": "TerraMath: Помилка формули",
-  "terramath.formula.error.invalid_reset.description": "Формулу було скинуто через помилку перевірки"
+  "terramath.formula.error.invalid_reset.description": "Формулу було скинуто через помилку перевірки",
+  "terramath.formula.error.multiple_equals": "Формула може містити лише один знак =",
+  "terramath.config.swap_zy.tooltip": "Поміняти місцями Y і Z у формулі",
+  "terramath.config.preview.tooltip": "Попередній перегляд поперечного перерізу рельєфу",
+  "terramath.preview.title": "Попередній перегляд формули",
+  "terramath.preview.empty": "Формула не введена",
+  "terramath.preview.error": "Помилка формули"
 }

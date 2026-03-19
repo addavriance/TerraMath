@@ -51,5 +51,11 @@
   "terramath.command.formula": "Formula: ",
 
   "terramath.formula.error.invalid_reset.title": "TerraMath: Napaka formule",
-  "terramath.formula.error.invalid_reset.description": "Formula je bila ponastavljena zaradi napake pri preverjanju"
+  "terramath.formula.error.invalid_reset.description": "Formula je bila ponastavljena zaradi napake pri preverjanju",
+  "terramath.formula.error.multiple_equals": "Formula lahko vsebuje samo en znak =",
+  "terramath.config.swap_zy.tooltip": "Zamenjaj spremenljivki Y in Z v formuli",
+  "terramath.config.preview.tooltip": "Predogled prečnega prereza terena",
+  "terramath.preview.title": "Predogled formule",
+  "terramath.preview.empty": "Ni vnesene formule",
+  "terramath.preview.error": "Napaka formule"
 }

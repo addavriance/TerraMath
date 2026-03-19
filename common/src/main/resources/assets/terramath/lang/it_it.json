@@ -51,5 +51,11 @@
   "terramath.command.formula": "Formula: ",
 
   "terramath.formula.error.invalid_reset.title": "TerraMath: Errore di formula",
-  "terramath.formula.error.invalid_reset.description": "La formula è stata reimpostata a causa di un errore di convalida"
+  "terramath.formula.error.invalid_reset.description": "La formula è stata reimpostata a causa di un errore di convalida",
+  "terramath.formula.error.multiple_equals": "La formula può contenere solo un segno =",
+  "terramath.config.swap_zy.tooltip": "Scambia le variabili Y e Z nella formula",
+  "terramath.config.preview.tooltip": "Anteprima della sezione trasversale del terreno",
+  "terramath.preview.title": "Anteprima formula",
+  "terramath.preview.empty": "Nessuna formula inserita",
+  "terramath.preview.error": "Errore di formula"
 }
