@@ -51,5 +51,11 @@
   "terramath.command.formula": "数式: ",
 
   "terramath.formula.error.invalid_reset.title": "TerraMath: 数式エラー",
-  "terramath.formula.error.invalid_reset.description": "検証エラーのため数式がリセットされました"
+  "terramath.formula.error.invalid_reset.description": "検証エラーのため数式がリセットされました",
+  "terramath.formula.error.multiple_equals": "数式に含められる = 記号は1つのみです",
+  "terramath.config.swap_zy.tooltip": "数式のYとZを入れ替える",
+  "terramath.config.preview.tooltip": "地形断面のプレビュー",
+  "terramath.preview.title": "数式プレビュー",
+  "terramath.preview.empty": "数式が入力されていません",
+  "terramath.preview.error": "数式エラー"
 }

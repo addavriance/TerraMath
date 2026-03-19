@@ -51,5 +51,11 @@
   "terramath.command.formula": "Formule: ",
 
   "terramath.formula.error.invalid_reset.title": "TerraMath: Erreur de formule",
-  "terramath.formula.error.invalid_reset.description": "La formule a été réinitialisée en raison d'une erreur de validation"
+  "terramath.formula.error.invalid_reset.description": "La formule a été réinitialisée en raison d'une erreur de validation",
+  "terramath.formula.error.multiple_equals": "La formule ne peut contenir qu'un seul signe =",
+  "terramath.config.swap_zy.tooltip": "Échanger les variables Y et Z dans la formule",
+  "terramath.config.preview.tooltip": "Aperçu de la coupe transversale du terrain",
+  "terramath.preview.title": "Aperçu de formule",
+  "terramath.preview.empty": "Aucune formule saisie",
+  "terramath.preview.error": "Erreur de formule"
 }

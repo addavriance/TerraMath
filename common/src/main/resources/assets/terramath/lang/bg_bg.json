@@ -51,5 +51,11 @@
   "terramath.command.formula": "Формула: ",
 
   "terramath.formula.error.invalid_reset.title": "TerraMath: Грешка във формулата",
-  "terramath.formula.error.invalid_reset.description": "Формулата беше нулирана поради грешка при валидацията"
+  "terramath.formula.error.invalid_reset.description": "Формулата беше нулирана поради грешка при валидацията",
+  "terramath.formula.error.multiple_equals": "Формулата може да съдържа само един знак =",
+  "terramath.config.swap_zy.tooltip": "Размяна на Y и Z във формулата",
+  "terramath.config.preview.tooltip": "Преглед на напречния разрез на терена",
+  "terramath.preview.title": "Преглед на формулата",
+  "terramath.preview.empty": "Не е въведена формула",
+  "terramath.preview.error": "Грешка във формулата"
 }
