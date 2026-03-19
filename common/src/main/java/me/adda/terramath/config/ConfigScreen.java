@@ -203,6 +203,9 @@ public class ConfigScreen extends Screen {
             previewPanel.setDisplaySettings(configList.displaySettings);
         }
         layout.arrangeElements();
+        if (configList != null) {
+            configList.setX(configList.getX() - configHalfShift);
+        }
     }
 
     private void computePreviewGeometry() {
