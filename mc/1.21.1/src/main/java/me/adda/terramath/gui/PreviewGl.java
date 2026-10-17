@@ -14,6 +14,7 @@ final class PreviewGl {
     private PreviewGl() {}
 
     static void drawMesh(GuiGraphics graphics, PreviewFrame frame) {
+        graphics.flush();
         Minecraft mc = Minecraft.getInstance();
         Matrix4f projView = frame.projView();
         float[] verts = frame.verts();
