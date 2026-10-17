@@ -3,9 +3,14 @@ plugins {
     id "com.github.johnrengelman.shadow" version "7.1.2" apply false
 }
 
+apply from: 'gradle/telegram.gradle'
+apply from: 'gradle/deploy.gradle'
+
 // Collects every target's release jar into dist/.
 tasks.register('dist') {
     group = 'build'
     description = 'Builds all targets and copies the release jars into dist/'
     dependsOn subprojects.collect { "${it.path}:collectJar" }
 }
+
+tasks.named('dist') { mustRunAfter 'cleanDist' }

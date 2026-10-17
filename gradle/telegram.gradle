@@ -20,38 +20,40 @@ tasks.register('sendToTelegram') {
 
         println "Sending artifacts to Telegram..."
 
-        ['fabric', 'forge'].each { modType ->
-            def jarName = "${archivesBaseName}-${version}+${modType}.jar"
-            def jarFile = file("${modType}/build/libs/${jarName}")
+        def jars = (rootProject.file('dist').listFiles() ?: []).findAll { it.name.endsWith('.jar') }.sort { it.name }
+        if (jars.isEmpty()) {
+            println "⚠️ No jars in dist/"
+        }
 
-            if (jarFile.exists()) {
-                println "📦 Sending ${jarName}..."
+        jars.each { jarFile ->
+            def jarName = jarFile.name
+            def m = jarName =~ /^${mod_id}-(.+)-(.+)\+(.+)\.jar$/
+            def (modVersion, mcVersion, modType) = m.matches() ? [m[0][1], m[0][2], m[0][3]] : [version, '?', '?']
 
-                def caption = "🚀 TerraMath Release\n" +
-                        "• Version: ${version}\n" +
-                        "• Platform: ${modType.capitalize()}\n" +
-                        "• Minecraft: ${minecraft_version}\n" +
-                        "• Build time: ${formattedDate}\n" +
-                        "• Size: ${formatFileSize(jarFile.length())}\n" +
-                        "${gitInfo}"
+            println "📦 Sending ${jarName}..."
 
-                def tempFile = File.createTempFile("caption", ".txt")
-                tempFile.deleteOnExit()
-                tempFile.text = caption
+            def caption = "🚀 TerraMath Release\n" +
+                    "• Version: ${modVersion}\n" +
+                    "• Platform: ${modType.capitalize()}\n" +
+                    "• Minecraft: ${mcVersion}\n" +
+                    "• Build time: ${formattedDate}\n" +
+                    "• Size: ${formatFileSize(jarFile.length())}\n" +
+                    "${gitInfo}"
 
-                exec {
-                    commandLine 'curl', '-sS', '-o', '/dev/null', '-X', 'POST',
-                            '-F', "chat_id=${chatId}",
-                            '-F', "document=@${jarFile.absolutePath}",
-                            '-F', "caption=<${tempFile.absolutePath}",
-                            "https://api.telegram.org/bot${botToken}/sendDocument"
-                    ignoreExitValue true
-                }
+            def tempFile = File.createTempFile("caption", ".txt")
+            tempFile.deleteOnExit()
+            tempFile.text = caption
 
-                println "✅ ${jarName} sent successfully"
-            } else {
-                println "⚠️ File not found: ${jarFile.absolutePath}"
+            exec {
+                commandLine 'curl', '-sS', '-o', '/dev/null', '-X', 'POST',
+                        '-F', "chat_id=${chatId}",
+                        '-F', "document=@${jarFile.absolutePath}",
+                        '-F', "caption=<${tempFile.absolutePath}",
+                        "https://api.telegram.org/bot${botToken}/sendDocument"
+                ignoreExitValue true
             }
+
+            println "✅ ${jarName} sent successfully"
         }
 
         println "✨ Done!"
@@ -80,32 +82,21 @@ static def formatFileSize(long bytes) {
     return String.format("%.1f MB", mb)
 }
 
-tasks.register('cleanBuildLibs') {
-    description = 'Cleans previously built JAR files'
+tasks.register('cleanDist') {
+    description = 'Cleans previously collected JAR files'
     group = 'build'
     doLast {
-        println "Cleaning build libs directories..."
-        ['fabric', 'forge'].each { modType ->
-            def libsDir = file("${modType}/build/libs")
-            if (libsDir.exists()) {
-                println "🧹 Cleaning ${modType}/build/libs..."
-                libsDir.deleteDir()
-                libsDir.mkdirs()
-                println "✅ Cleaned ${modType}/build/libs"
-            }
-        }
-        println "✨ Done cleaning!"
+        delete rootProject.file('dist')
+        println "✨ Done cleaning dist/!"
     }
 }
 
 tasks.register('buildAndSend') {
-    description = 'Builds all projects and sends artifacts to Telegram'
+    description = 'Builds all targets and sends the jars to Telegram'
     group = 'distribution'
 
-    dependsOn 'cleanBuildLibs'
-
-    dependsOn ':fabric:build'
-    dependsOn ':forge:build'
+    dependsOn 'cleanDist'
+    dependsOn 'dist'
 
     finalizedBy 'sendToTelegram'
 }

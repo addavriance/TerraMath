@@ -3,7 +3,10 @@
         description = "Deploys ${platform} mod to remote PC via SSH/Tailscale and launches Minecraft"
         group = 'distribution'
 
-        dependsOn ":${platform}:build"
+        // target: -Ptarget=<minecraft>, defaults to the newest version folder
+        def mcVersion = (findProperty('target') ?: file('versions').listFiles().findAll { it.isDirectory() }.name.sort().last()) as String
+
+        dependsOn ":${mcVersion}-${platform}:collectJar"
 
         doLast {
             def host         = requireDeployProp('deploy.host')
@@ -11,10 +14,10 @@
             def sshKey       = requireDeployProp('deploy.sshKey')
             def modsDir      = requireDeployProp('deploy.modsDir')
             def launchScript = getDeployProp('deploy.launchScript', null)
-            def modId        = rootProject.archives_base_name
+            def modId        = rootProject.mod_id
 
-            def jarName = "${modId}-${rootProject.mod_version}-${rootProject.minecraft_version}+${platform}.jar"
-            def jarFile = file("${platform}/build/libs/${jarName}")
+            def jarName = "${modId}-${rootProject.mod_version}-${mcVersion}+${platform}.jar"
+            def jarFile = rootProject.file("dist/${jarName}")
 
             if (!jarFile.exists()) {
                 throw new GradleException("Built jar not found: ${jarFile.absolutePath}")
