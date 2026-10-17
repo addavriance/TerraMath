@@ -873,7 +873,7 @@ public class ConfigScreen extends Screen {
         }
 
         public void setValue(double value) {
-            slider.setValue(value);
+            slider.setRealValue(value);
         }
 
         public TerrainSettingType getSettingType() {

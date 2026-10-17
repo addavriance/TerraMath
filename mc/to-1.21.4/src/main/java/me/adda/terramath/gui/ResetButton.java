@@ -16,7 +16,7 @@ public class ResetButton extends Button {
 
     public ResetButton(int x, int y, TerrainSettingsSlider slider) {
         super(x, y, BUTTON_SIZE, BUTTON_SIZE, Component.empty(), button -> {
-            slider.setValue(slider.getDefaultValue());
+            slider.setRealValue(slider.getDefaultValue());
         }, Button.DEFAULT_NARRATION);
         this.associatedSlider = slider;
     }

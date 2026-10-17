@@ -38,8 +38,8 @@ public class PreviewRenderer extends PictureInPictureRenderer<PreviewRenderState
     protected void renderToTexture(PreviewRenderState state, PoseStack poseStack) {
         float guiScale = (float) Minecraft.getInstance().getWindow().getGuiScale();
 
-        poseStack.translate(0f, (state.y1() - state.y0()) / 2f, 0f);
-        poseStack.scale(state.zoom(), state.zoom(), DEPTH_RANGE / (guiScale * state.scale()));
+        poseStack.translate(0f, -(state.y1() - state.y0()) / 2f, 0f);
+        poseStack.scale(state.zoom(), -state.zoom(), -DEPTH_RANGE / (guiScale * state.scale()));
         poseStack.mulPose(state.modelView());
 
         Matrix4f pose = poseStack.last().pose();
