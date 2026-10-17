@@ -1,0 +1,93 @@
+// Shared setup for every target project (versions/<minecraft>/<loader>).
+// Reads versions/<minecraft>/version.properties into `vp` and wires the shared source folders.
+
+apply plugin: 'java'
+apply plugin: 'dev.architectury.loom'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+def mcDir = projectDir.parentFile
+def loader = projectDir.name
+def props = new Properties()
+new File(mcDir, 'version.properties').withInputStream { props.load(it) }
+ext.vp = props
+ext.vpLoader = loader
+
+version = "${mod_version}-${props.minecraft_version}+${loader}"
+group = maven_group
+
+base {
+    archivesName = mod_id
+}
+
+// "src" lists extra source roots (relative to the repo root) shared by every loader of this
+// Minecraft version, "<loader>_src" the ones for a single loader.
+def roots = ['core'] + props.getProperty('src', '').tokenize(',') + props.getProperty("${loader}_src", '').tokenize(',')
+roots = roots.collect { it.trim() }.findAll { it }
+
+sourceSets {
+    main {
+        java {
+            roots.each { srcDir rootProject.file("${it}/src/main/java") }
+        }
+        resources {
+            roots.each { srcDir rootProject.file("${it}/src/main/resources") }
+        }
+    }
+}
+
+int javaVersion = (props.java_version ?: '17') as int
+java {
+    sourceCompatibility = JavaVersion.toVersion(javaVersion)
+    targetCompatibility = JavaVersion.toVersion(javaVersion)
+    withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = javaVersion
+    options.encoding = 'UTF-8'
+}
+
+loom {
+    silentMojangMappingsLicense()
+    runs {
+        configureEach {
+            runDir = 'run'
+        }
+    }
+}
+
+configurations {
+    shade
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${props.minecraft_version}"
+    mappings loom.officialMojangMappings()
+
+    // runtime formula compiler, bundled into the jar
+    shade "org.codehaus.janino:janino:${janino_version}"
+    implementation "org.codehaus.janino:janino:${janino_version}"
+}
+
+shadowJar {
+    configurations = [project.configurations.shade]
+    archiveClassifier = 'dev-shadow'
+}
+
+remapJar {
+    inputFile.set(shadowJar.archiveFile)
+    dependsOn shadowJar
+    archiveClassifier = null
+}
+
+jar {
+    archiveClassifier = 'dev'
+}
+
+// Copies the release jar into <root>/dist.
+tasks.register('collectJar', Copy) {
+    group = 'build'
+    dependsOn remapJar
+    from remapJar.archiveFile
+    into rootProject.file('dist')
+}

@@ -1,0 +1,24 @@
+// Fabric target: applied from versions/<minecraft>/fabric/build.gradle.
+apply from: rootProject.file('gradle/common.gradle')
+
+repositories {
+    maven { url = uri("https://maven.terraformersmc.com/releases/") }
+}
+
+dependencies {
+    modImplementation "net.fabricmc:fabric-loader:${vp.fabric_loader_version}"
+    modApi "net.fabricmc.fabric-api:fabric-api:${vp.fabric_api_version}"
+    modApi "com.terraformersmc:modmenu:${vp.modmenu_version}"
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+remapJar {
+    injectAccessWidener = true
+}

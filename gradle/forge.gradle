@@ -1,0 +1,26 @@
+// Forge target: applied from versions/<minecraft>/forge/build.gradle (needs loom.platform=forge in that folder's gradle.properties).
+apply from: rootProject.file('gradle/common.gradle')
+
+loom {
+    forge {
+        mixinConfig "terramath-common.mixins.json"
+        mixinConfig "terramath.mixins.json"
+    }
+}
+
+dependencies {
+    forge "net.minecraftforge:forge:${vp.forge_version}"
+    forgeRuntimeLibrary "org.codehaus.janino:janino:${janino_version}"
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("META-INF/mods.toml") {
+        expand "version": project.version
+    }
+}
+
+shadowJar {
+    exclude "fabric.mod.json"
+}

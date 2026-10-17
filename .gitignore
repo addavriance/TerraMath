@@ -118,3 +118,4 @@ run/
 !gradle-wrapper.jar
 gradle/gradle-daemon-jvm.properties
 local.properties
+dist/

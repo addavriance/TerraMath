@@ -7,6 +7,21 @@ pluginManagement {
     }
 }
 
-include("common")
-include("fabric")
-include("forge")
+rootProject.name = 'terramath'
+
+// Every target is versions/<minecraft>/<loader>; its settings live in versions/<minecraft>/version.properties.
+def requested = (settings.providers.gradleProperty('targets').getOrElse('') ?: '')
+    .split(',').collect { it.trim() }.findAll { it }
+
+file('versions').eachDir { mcDir ->
+    mcDir.eachDir { loaderDir ->
+        if (!new File(loaderDir, 'build.gradle').exists()) {
+            return
+        }
+        String name = "${mcDir.name}-${loaderDir.name}"
+        if (requested.isEmpty() || requested.contains(name)) {
+            include(name)
+            project(":${name}").projectDir = loaderDir
+        }
+    }
+}
