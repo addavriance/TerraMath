@@ -37,8 +37,9 @@ sourceSets {
 
 int javaVersion = (props.java_version ?: '17') as int
 java {
-    sourceCompatibility = JavaVersion.toVersion(javaVersion)
-    targetCompatibility = JavaVersion.toVersion(javaVersion)
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(javaVersion)
+    }
     withSourcesJar()
 }
 

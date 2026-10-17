@@ -7,6 +7,10 @@ pluginManagement {
     }
 }
 
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+}
+
 rootProject.name = 'terramath'
 
 // Every target is versions/<minecraft>/<loader>; its settings live in versions/<minecraft>/version.properties.
@@ -18,6 +22,11 @@ file('versions').eachDir { mcDir ->
         if (!new File(loaderDir, 'build.gradle').exists()) {
             return
         }
+        def versionProps = new Properties()
+        new File(mcDir, 'version.properties').withInputStream { versionProps.load(it) }
+        if (versionProps.getProperty('build') == 'modern') {
+            return
+        }
         String name = "${mcDir.name}-${loaderDir.name}"
         if (requested.isEmpty() || requested.contains(name)) {
             include(name)
@@ -25,3 +34,5 @@ file('versions').eachDir { mcDir ->
         }
     }
 }
+
+includeBuild('modern')

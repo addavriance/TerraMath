@@ -1,0 +1,82 @@
+apply plugin: 'java'
+apply plugin: 'net.fabricmc.fabric-loom'
+
+def mcDir = projectDir.parentFile
+def rootDir = rootProject.projectDir.parentFile
+def props = new Properties()
+new File(mcDir, 'version.properties').withInputStream { props.load(it) }
+def shared = new Properties()
+new File(rootDir, 'gradle.properties').withInputStream { shared.load(it) }
+ext.vp = props
+
+version = "${shared.mod_version}-${props.minecraft_version}+fabric"
+group = shared.maven_group
+
+base {
+    archivesName = shared.mod_id
+}
+
+def roots = ['core'] + props.getProperty('src', '').tokenize(',') + props.getProperty('fabric_src', '').tokenize(',')
+roots = roots.collect { it.trim() }.findAll { it }
+
+sourceSets {
+    main {
+        java {
+            roots.each { srcDir new File(rootDir, "${it}/src/main/java") }
+        }
+        resources {
+            roots.each { srcDir new File(rootDir, "${it}/src/main/resources") }
+        }
+    }
+}
+
+int javaVersion = (props.java_version ?: '25') as int
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(javaVersion)
+    }
+    withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = javaVersion
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    maven { url = uri("https://maven.terraformersmc.com/releases/") }
+}
+
+loom {
+    runs {
+        configureEach {
+            runDir = 'run'
+        }
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${props.minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${props.fabric_loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${props.fabric_api_version}"
+    compileOnly("com.terraformersmc:modmenu:${props.modmenu_version}") { transitive = false }
+
+    implementation "org.codehaus.janino:janino:${shared.janino_version}"
+    include "org.codehaus.janino:janino:${shared.janino_version}"
+    include "org.codehaus.janino:commons-compiler:${shared.janino_version}"
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+tasks.register('collectJar', Copy) {
+    group = 'build'
+    dependsOn jar
+    from jar.archiveFile
+    into new File(rootDir, 'dist')
+}

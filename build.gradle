@@ -13,4 +13,7 @@ tasks.register('dist') {
     dependsOn subprojects.collect { "${it.path}:collectJar" }
 }
 
-tasks.named('dist') { mustRunAfter 'cleanDist' }
+tasks.named('dist') {
+    dependsOn gradle.includedBuild('modern').task(':dist')
+    mustRunAfter 'cleanDist'
+}

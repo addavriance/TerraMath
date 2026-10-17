@@ -307,7 +307,6 @@ public class ConfigScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(graphics, mouseX, mouseY, partialTick);
         super.render(graphics, mouseX, mouseY, partialTick);
         if (previewPanelW > 0) {
             previewPanel.render(new GuiCanvas(graphics), previewPanelX, previewPanelY, previewPanelW, previewPanelH, this.font);

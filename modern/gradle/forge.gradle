@@ -1,0 +1,98 @@
+apply plugin: 'java'
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'com.gradleup.shadow'
+
+def mcDir = projectDir.parentFile
+def rootDir = rootProject.projectDir.parentFile
+def props = new Properties()
+new File(mcDir, 'version.properties').withInputStream { props.load(it) }
+def shared = new Properties()
+new File(rootDir, 'gradle.properties').withInputStream { shared.load(it) }
+ext.vp = props
+
+version = "${shared.mod_version}-${props.minecraft_version}+forge"
+group = shared.maven_group
+
+base {
+    archivesName = shared.mod_id
+}
+
+def roots = ['core'] + props.getProperty('src', '').tokenize(',') + props.getProperty('forge_src', '').tokenize(',')
+roots = roots.collect { it.trim() }.findAll { it }
+
+sourceSets {
+    main {
+        java {
+            roots.each { srcDir new File(rootDir, "${it}/src/main/java") }
+        }
+        resources {
+            roots.each { srcDir new File(rootDir, "${it}/src/main/resources") }
+        }
+    }
+}
+
+int javaVersion = (props.java_version ?: '25') as int
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(javaVersion)
+    }
+    withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+minecraft {
+    runs {
+        configureEach {
+            workingDir = layout.projectDirectory.dir('run')
+        }
+
+        register('client')
+    }
+}
+
+configurations {
+    shade
+}
+
+repositories {
+    minecraft.mavenizer(it)
+    maven fg.forgeMaven
+    maven fg.minecraftLibsMaven
+    mavenCentral()
+}
+
+dependencies {
+    implementation minecraft.dependency("net.minecraftforge:forge:${props.forge_version}")
+    annotationProcessor 'net.minecraftforge:eventbus-validator:7.0.5'
+
+    implementation "org.codehaus.janino:janino:${shared.janino_version}"
+    shade "org.codehaus.janino:janino:${shared.janino_version}"
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("META-INF/mods.toml") {
+        expand "version": project.version
+    }
+}
+
+shadowJar {
+    configurations = [project.configurations.shade]
+    archiveClassifier = null
+    exclude "fabric.mod.json"
+}
+
+jar {
+    archiveClassifier = 'dev'
+}
+
+tasks.register('collectJar', Copy) {
+    group = 'build'
+    dependsOn shadowJar
+    from shadowJar.archiveFile
+    into new File(rootDir, 'dist')
+}

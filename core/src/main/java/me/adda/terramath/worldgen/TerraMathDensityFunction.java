@@ -100,6 +100,10 @@ public class TerraMathDensityFunction implements DensityFunction {
         return visitor.apply(this);
     }
 
+    public DensityFunction mapChildren(Visitor visitor) {
+        return this;
+    }
+
     @Override
     public double minValue() {
         return -1.0;

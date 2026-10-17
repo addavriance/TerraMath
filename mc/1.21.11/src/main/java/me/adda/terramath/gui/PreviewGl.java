@@ -9,7 +9,7 @@ final class PreviewGl {
     private PreviewGl() {}
 
     static void drawMesh(GuiGraphics graphics, PreviewFrame frame) {
-        ScreenRectangle scissor = ((GuiGraphicsAccessor) graphics).terramath$scissorStack().peek();
+        ScreenRectangle scissor = null;
         int x1 = frame.x() + frame.w();
         int y1 = frame.y() + frame.h();
         ((GuiGraphicsAccessor) graphics).terramath$guiRenderState().submitPicturesInPictureState(new PreviewRenderState(

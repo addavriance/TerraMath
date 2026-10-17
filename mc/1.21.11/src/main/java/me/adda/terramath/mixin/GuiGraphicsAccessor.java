@@ -10,6 +10,4 @@ public interface GuiGraphicsAccessor {
     @Accessor("guiRenderState")
     GuiRenderState terramath$guiRenderState();
 
-    @Accessor("scissorStack")
-    GuiGraphics.ScissorStack terramath$scissorStack();
 }

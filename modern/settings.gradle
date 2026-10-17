@@ -1,0 +1,35 @@
+pluginManagement {
+    repositories {
+        maven { url "https://maven.fabricmc.net/" }
+        maven { url "https://maven.minecraftforge.net/" }
+        gradlePluginPortal()
+    }
+}
+
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+}
+
+rootProject.name = 'terramath-modern'
+
+def requested = (settings.providers.gradleProperty('targets').getOrElse('') ?: '')
+    .split(',').collect { it.trim() }.findAll { it }
+
+file('../versions').eachDir { mcDir ->
+    def versionFile = new File(mcDir, 'version.properties')
+    def props = new Properties()
+    versionFile.withInputStream { props.load(it) }
+    if (props.getProperty('build') != 'modern') {
+        return
+    }
+    mcDir.eachDir { loaderDir ->
+        if (!new File(loaderDir, 'build.gradle').exists()) {
+            return
+        }
+        String name = "${mcDir.name}-${loaderDir.name}"
+        if (requested.isEmpty() || requested.contains(name)) {
+            include(name)
+            project(":${name}").projectDir = loaderDir
+        }
+    }
+}
