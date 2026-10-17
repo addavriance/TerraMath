@@ -4,6 +4,7 @@ import me.adda.terramath.api.FormulaCacheHolder;
 import me.adda.terramath.api.TerrainFormulaManager;
 import me.adda.terramath.api.TerrainSettingsManager;
 import me.adda.terramath.api.TerrainSettingsManager.TerrainSettingType;
+import me.adda.terramath.gui.GuiCanvas;
 import me.adda.terramath.gui.PreviewPanel;
 import me.adda.terramath.gui.ResetButton;
 import me.adda.terramath.gui.TerrainSettingsSlider;
@@ -307,7 +308,7 @@ public class ConfigScreen extends Screen {
         renderBackground(graphics, mouseX, mouseY, partialTick);
         super.render(graphics, mouseX, mouseY, partialTick);
         if (previewPanelW > 0) {
-            previewPanel.render(graphics, previewPanelX, previewPanelY, previewPanelW, previewPanelH, this.font);
+            previewPanel.render(new GuiCanvas(graphics), previewPanelX, previewPanelY, previewPanelW, previewPanelH, this.font);
         } else if (configList != null) {
             graphics.drawCenteredString(this.font, PREVIEW_HIDDEN_LABEL, width / 2, layout.getHeaderHeight() - 10, 0xFFAA00);
         }

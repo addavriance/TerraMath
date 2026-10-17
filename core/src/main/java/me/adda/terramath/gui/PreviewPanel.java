@@ -6,7 +6,6 @@ import me.adda.terramath.gui.preview.GreedyMesher;
 import me.adda.terramath.gui.preview.VoxelField;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
 import org.joml.Matrix4f;
 
 import java.util.concurrent.ExecutorService;
@@ -55,7 +54,7 @@ public class PreviewPanel {
         formulaText = formula == null ? "" : formula.trim();
     }
 
-    public void render(GuiGraphics graphics, int x, int y, int w, int h, Font font) {
+    public void render(PreviewCanvas canvas, int x, int y, int w, int h, Font font) {
         int viewH = h - CTRL_H;
 
         Built ready = pending;
@@ -71,18 +70,18 @@ public class PreviewPanel {
                 startCompute(params);
         }
 
-        graphics.fill(x, y, x + w, y + viewH, 0xBF0F0F0F);
+        canvas.fill(x, y, x + w, y + viewH, 0xBF0F0F0F);
 
         if (field != null && field.error != null) {
-            graphics.drawCenteredString(font, field.error,
+            canvas.centeredText(font, field.error,
                     x + w / 2, y + viewH / 2 - 4, 0xFFFF5555);
         } else if (field != null && field.gx > 0) {
-            if (mesh.floatCount() > 0) renderMesh3D(graphics, x, y, w, viewH);
-            drawOverlays(graphics, font, x, y, w, viewH);
+            if (mesh.floatCount() > 0) renderMesh3D(canvas, x, y, w, viewH);
+            drawOverlays(canvas, font, x, y, w, viewH);
         }
 
-        renderControls(graphics, font, x, y + viewH, w);
-        graphics.renderOutline(x - 1, y - 1, w + 2, h + 2, 0x80606060);
+        renderControls(canvas, font, x, y + viewH, w);
+        canvas.outline(x - 1, y - 1, w + 2, h + 2, 0x80606060);
     }
 
     public boolean mouseClicked(double mx, double my, int x, int y, int w, int h, int button) {
@@ -132,7 +131,7 @@ public class PreviewPanel {
         });
     }
 
-    private void renderMesh3D(GuiGraphics graphics, int x, int y, int w, int h) {
+    private void renderMesh3D(PreviewCanvas canvas, int x, int y, int w, int h) {
         Minecraft mc = Minecraft.getInstance();
         double scale = mc.getWindow().getGuiScale();
         int screenH = mc.getWindow().getHeight();
@@ -165,36 +164,36 @@ public class PreviewPanel {
         Matrix4f view = new Matrix4f().lookAt(camX, camY, camZ, 0f, cy, 0f, udx, udy, udz);
         Matrix4f projView = proj.mul(view, new Matrix4f());
         Matrix4f modelView = new Matrix4f().translate(0f, 0f, (float) CAM_DIST).mul(view);
-        PreviewGl.drawMesh(graphics, new PreviewFrame(mesh.verts(), mesh.floatCount(), projView, modelView, zoom,
+        canvas.mesh(new PreviewFrame(mesh.verts(), mesh.floatCount(), projView, modelView, zoom,
                 x, y, w, h, vpX, vpY, vpW, vpH));
     }
 
-    private void drawOverlays(GuiGraphics graphics, Font font, int x, int y, int w, int h) {
+    private void drawOverlays(PreviewCanvas canvas, Font font, int x, int y, int w, int h) {
         if (computing)
-            graphics.drawString(font, "/", x + w - 16, y + 3, 0x88FFFFFF, false);
-        graphics.drawString(font, " drag to rotate", x + 3, y + h - 10, 0x88FFFFFF, false);
+            canvas.text(font, "/", x + w - 16, y + 3, 0x88FFFFFF, false);
+        canvas.text(font, " drag to rotate", x + 3, y + h - 10, 0x88FFFFFF, false);
         String bounds = String.format("XZ:±%d  Y:%.0f-%.0f",
                 field.halfWidth, (double) WY_MIN, (double) WY_MAX);
-        graphics.drawString(font, bounds, x + 3, y + h - 20, 0x66FFFFFF, false);
+        canvas.text(font, bounds, x + 3, y + h - 20, 0x66FFFFFF, false);
     }
 
-    private void renderControls(GuiGraphics graphics, Font font, int x, int y, int w) {
-        graphics.fill(x, y, x + w, y + CTRL_H, 0xBF0F0F0F);
+    private void renderControls(PreviewCanvas canvas, Font font, int x, int y, int w) {
+        canvas.fill(x, y, x + w, y + CTRL_H, 0xBF0F0F0F);
         int half = w / 2;
         String zoomLabel = (zoom == Math.floor(zoom))
                 ? (int)zoom + "x"
                 : String.format("%.2fx", zoom).replaceAll("0+$","").replaceAll("\\.$","");
-        renderControl(graphics, font, x, y, half, "Zoom", zoomLabel, zoom>0.5f, zoom<7.0f);
-        renderControl(graphics, font, x + half, y, w - half, "Width", halfWidth+" blk", halfWidth>50, halfWidth<200);
+        renderControl(canvas, font, x, y, half, "Zoom", zoomLabel, zoom>0.5f, zoom<7.0f);
+        renderControl(canvas, font, x + half, y, w - half, "Width", halfWidth+" blk", halfWidth>50, halfWidth<200);
     }
 
-    private void renderControl(GuiGraphics graphics, Font font,
+    private void renderControl(PreviewCanvas canvas, Font font,
                                int x, int y, int w, String label, String value,
                                boolean canDec, boolean canInc) {
         int cy = y + CTRL_H/2 - 4, cx = x + w/2;
-        graphics.drawString(font, "◀", x + 3, cy, canDec ? 0xFFCCCCCC : 0xFF555555, false);
-        graphics.drawCenteredString(font, label+": "+value, cx, cy, 0xFFFFFFFF);
-        graphics.drawString(font, "▶", x + w - font.width("▶") - 3, cy,
+        canvas.text(font, "◀", x + 3, cy, canDec ? 0xFFCCCCCC : 0xFF555555, false);
+        canvas.centeredText(font, label+": "+value, cx, cy, 0xFFFFFFFF);
+        canvas.text(font, "▶", x + w - font.width("▶") - 3, cy,
                 canInc ? 0xFFCCCCCC : 0xFF555555, false);
     }
 
