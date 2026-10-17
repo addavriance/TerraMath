@@ -33,12 +33,3 @@ side="BOTH"
 
 [modproperties.terramath]
 catalogueItemIcon="minecraft:repeating_command_block"
-
-[[mixins]]
-config="terramath-common.mixins.json"
-
-[[mixins]]
-config="terramath.mixins.json"
-
-[[mixins]]
-config="terramath-26.1.mixins.json"

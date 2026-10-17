@@ -86,8 +86,16 @@ shadowJar {
     exclude "fabric.mod.json"
 }
 
+def mixinConfigs = roots.collectMany { root ->
+    def resources = new File(rootDir, "${root}/src/main/resources")
+    resources.exists() ? resources.listFiles().findAll { it.name.endsWith('.mixins.json') }.collect { it.name } : []
+}.unique().sort()
+
 jar {
     archiveClassifier = 'dev'
+    manifest {
+        attributes('MixinConfigs': mixinConfigs.join(','))
+    }
 }
 
 tasks.register('collectJar', Copy) {
