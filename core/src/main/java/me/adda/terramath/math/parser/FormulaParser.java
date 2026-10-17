@@ -13,12 +13,16 @@ import me.adda.terramath.math.formula.FormulaFormatter;
 
 
 public class FormulaParser extends FormulaValidator {
+    public interface Evaluator {
+        double eval(double x, double y, double z, CompositeNoise noise);
+    }
+
     public static class CompiledFormula {
         private final String originalExpression;
-        private final ExpressionEvaluator evaluator;
+        private final Evaluator evaluator;
         private final CompositeNoise noise;
 
-        private CompiledFormula(String expression, ExpressionEvaluator evaluator, CompositeNoise noise) {
+        private CompiledFormula(String expression, Evaluator evaluator, CompositeNoise noise) {
             this.originalExpression = expression;
             this.evaluator = evaluator;
             this.noise = noise;
@@ -26,8 +30,10 @@ public class FormulaParser extends FormulaValidator {
 
         public double evaluate(double x, double y, double z) {
             try {
-                return (double) evaluator.evaluate(new Object[]{x, y, z, this.noise});
-            } catch (Exception e) {
+                return evaluator.eval(x, y, z, this.noise);
+            } catch (FormulaException e) {
+                throw e;
+            } catch (RuntimeException e) {
                 throw new FormulaException(ERROR_INVALID_SYNTAX, e.getMessage());
             }
         }
@@ -37,17 +43,14 @@ public class FormulaParser extends FormulaValidator {
         }
     }
 
+    private static final Evaluator NOT_COMPILED = (x, y, z, noise) -> {
+        throw new FormulaException(ERROR_INVALID_SYNTAX, "Formula is not compiled");
+    };
+
     private static ExpressionEvaluator createEvaluator() {
         ExpressionEvaluator evaluator = new ExpressionEvaluator();
-
-        evaluator.setParameters(
-                new String[]{"x", "y", "z", "noise"},
-                new Class[]{double.class, double.class, double.class, CompositeNoise.class}
-        );
-
+        evaluator.setDefaultImports("me.adda.terramath.math.functions.MathExtensions");
         evaluator.setParentClassLoader(FormulaParser.class.getClassLoader());
-        evaluator.setExpressionType(double.class);
-
         return evaluator;
     }
 
@@ -65,14 +68,12 @@ public class FormulaParser extends FormulaValidator {
                 throw new Exception("Invalid formula");
             }
 
-            String fullExpression = String.format(
-                    "import me.adda.terramath.math.functions.MathExtensions; " +
-                    "(%s)",
-                    javaExpression
+            Evaluator compiled = (Evaluator) evaluator.createFastEvaluator(
+                    "(" + javaExpression + ")",
+                    Evaluator.class,
+                    new String[]{"x", "y", "z", "noise"}
             );
-
-            evaluator.cook(fullExpression);
-            return new CompiledFormula(formula, evaluator, noise);
+            return new CompiledFormula(formula, compiled, noise);
         } catch (Exception e) {
             Throwable cause = ExceptionUtils.getRootCause(e);
             String message = cause.getMessage();
@@ -80,7 +81,7 @@ public class FormulaParser extends FormulaValidator {
             if (Minecraft.getInstance().level != null) {
                 NotificationManager.showFormulaError(formula);
 
-                return new CompiledFormula(formula, evaluator, noise);
+                return new CompiledFormula(formula, NOT_COMPILED, noise);
             }
 
             if (cause instanceof IllegalArgumentException ||
