@@ -1,56 +1,106 @@
 package me.adda.terramath.math.formula;
 
 import me.adda.terramath.api.TerrainSettingsManager;
+import me.adda.terramath.math.formula.FormulaFit.Profile;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
 import java.util.Random;
+import java.util.function.Function;
 
 import static me.adda.terramath.math.formula.FormulaFit.num;
 
 public class FormulaGenerator {
     private static final String FALLBACK = "perlin(x / 12, 0, z / 12) * 8";
-    private static final int MAX_LENGTH = 170;
+    private static final int MAX_LENGTH = 220;
+    private static final int RECENT = 5;
+    private static final int PERLIN_FREQUENCY = 16;
 
-    private static final String[] WAVES = {
-            "sin($u) * cos($v)", "sin($u + $v)", "(sin($u) + sin($v)) / 2", "sin($u + 2 * sin($v))",
-            "abs(sin($u)) - abs(cos($v))", "tanh(2 * sin($u) + 2 * cos($v))", "sin(($u)^2 + ($v)^2)",
-            "cos($u + sin($v * 1.7)) * sin($v)", "erf(2 * sin($u) + sin($v + $u))",
-            "sin($u) * abs(cos($v))", "1 - 2 * abs(sin($u + $v))"
-    };
+    private static final Deque<String> recent = new ArrayDeque<>();
 
-    private static final String[] NOISES = {
-            "perlin($u, 0, $v)", "simplex($u, $v)", "octaved($u, $v, 4, 0.5)", "octaved($u, $v, 2, 0.6)",
-            "1 - 2 * abs(perlin($u, 0, $v))", "2 * abs(simplex($u, $v)) - 1", "tanh(3 * perlin($u, 0, $v))",
-            "perlin($u + perlin($v, 3, $u) * 1.5, 0, $v)", "octaved($u, $v, 5, 0.45)"
-    };
+    private record Kind(String name, int weight, Function<FormulaGenerator, String> make) {}
+
+    private static final List<Kind> HEIGHT = List.of(
+            new Kind("islands", 10, g -> g.islands()),
+            new Kind("canyons", 10, g -> g.canyons()),
+            new Kind("mesas", 10, g -> g.mesas()),
+            new Kind("spires", 8, g -> g.spires()),
+            new Kind("craters", 9, g -> g.craters()),
+            new Kind("dunes", 8, g -> g.dunes()),
+            new Kind("rivers", 9, g -> g.rivers()),
+            new Kind("cliffs", 9, g -> g.cliffs()),
+            new Kind("domes", 8, g -> g.domes()),
+            new Kind("mosaic", 6, g -> g.mosaic()),
+            new Kind("ridges", 9, g -> g.ridges()),
+            new Kind("moire", 4, g -> g.moire()),
+            new Kind("spiral", 2, g -> g.spiral())
+    );
+
+    private static final List<Kind> VOLUME = List.of(
+            new Kind("floating", 7, g -> g.floating()),
+            new Kind("caves", 8, g -> g.caves()),
+            new Kind("overhangs", 6, g -> g.overhangs()),
+            new Kind("columns", 5, g -> g.columns()),
+            new Kind("torus", 3, g -> g.torus()),
+            new Kind("vortex", 2, g -> g.vortex()),
+            new Kind("sponge", 2, g -> g.sponge())
+    );
 
     private final Random rng;
     private final double cs;
+    private double fillMin = 0.15, fillMax = 0.4;
+    private Profile profile = Profile.of(30, 70, 90, 150);
 
     private FormulaGenerator(Random rng, double cs) {
         this.rng = rng;
         this.cs = cs;
     }
 
+    public record Generated(String formula, String kind) {}
+
     public static String generateRandomFormula() {
+        return generate().formula();
+    }
+
+    public static Generated generate() {
         TerrainSettingsManager settings = TerrainSettingsManager.getInstance();
         FormulaGenerator gen = new FormulaGenerator(new Random(), Math.max(settings.getCoordinateScale(), 0.5));
-        boolean equation = gen.rng.nextInt(4) == 0;
-        for (int i = 0; i < 60; i++) {
-            boolean useEquation = equation == (i < 40);
-            String formula = useEquation
-                    ? FormulaFit.equation(gen.volume(), gen.rng, settings)
-                    : FormulaFit.heightmap(gen.surface(), gen.rng, settings);
-            if (formula != null && formula.length() <= MAX_LENGTH) return formula;
+        boolean volume = gen.rng.nextInt(4) == 0;
+        for (int round = 0; round < 6; round++) {
+            Kind kind = gen.pick(volume ? VOLUME : HEIGHT, round < 3);
+            for (int attempt = 0; attempt < 30; attempt++) {
+                String expr = kind.make().apply(gen);
+                String formula = volume
+                        ? FormulaFit.equation(expr, gen.fillMin, gen.fillMax, gen.rng, settings)
+                        : FormulaFit.heightmap(expr, gen.profile, gen.rng, settings);
+                if (formula != null && formula.length() <= MAX_LENGTH) {
+                    remember(kind.name());
+                    return new Generated(formula, kind.name());
+                }
+            }
         }
-        return FALLBACK;
+        return new Generated(FALLBACK, "fallback");
     }
 
-    private double between(double lo, double hi) {
-        return lo * Math.pow(hi / lo, rng.nextDouble());
+    private static synchronized void remember(String name) {
+        recent.addLast(name);
+        while (recent.size() > RECENT) recent.removeFirst();
     }
 
-    private static String round(double v, int digits) {
-        return num(Math.round(v * Math.pow(10, digits)) / Math.pow(10, digits));
+    private Kind pick(List<Kind> kinds, boolean avoidRecent) {
+        List<Kind> pool = new ArrayList<>();
+        synchronized (FormulaGenerator.class) {
+            for (Kind k : kinds) if (!avoidRecent || !recent.contains(k.name())) pool.add(k);
+        }
+        if (pool.isEmpty()) pool = kinds;
+        int roll = rng.nextInt(pool.stream().mapToInt(Kind::weight).sum());
+        for (Kind k : pool) {
+            roll -= k.weight();
+            if (roll < 0) return k;
+        }
+        return pool.get(0);
     }
 
     static String wrap(String expr) {
@@ -68,112 +118,237 @@ public class FormulaGenerator {
         return "(" + expr + ")";
     }
 
-    private static String scaled(String coeff, String expr) {
-        return coeff.equals("1") ? expr : coeff + " * " + expr;
+    private static String nest(String fn, List<String> args) {
+        String result = args.get(args.size() - 1);
+        for (int i = args.size() - 2; i >= 0; i--) result = fn + "(" + args.get(i) + ", " + result + ")";
+        return result;
     }
 
-    private String waveDiv() {
-        return round(between(70, 320) / (2 * Math.PI * cs), 1);
+    private double between(double lo, double hi) {
+        return lo * Math.pow(hi / lo, rng.nextDouble());
     }
 
-    private String noiseDiv() {
-        return round(between(70, 320) / cs, 0);
+    private static String round(double v, int digits) {
+        return num(Math.round(v * Math.pow(10, digits)) / Math.pow(10, digits));
     }
 
-    private String shifted(String var) {
-        double offset = (rng.nextDouble() - 0.5) * 120 / cs;
-        String amount = round(Math.abs(offset), 0);
-        return amount.equals("0") ? var : "(" + var + (offset < 0 ? " - " : " + ") + amount + ")";
+    private String noiseDiv(double minBlocks, double maxBlocks) {
+        return round(between(minBlocks, maxBlocks) / cs, 0);
     }
 
-    private String[] plane(boolean wave) {
-        String d1 = wave ? waveDiv() : noiseDiv();
-        String d2 = rng.nextInt(3) == 0 ? (wave ? waveDiv() : noiseDiv()) : d1;
-        String[] uv;
-        switch (rng.nextInt(5)) {
-            case 0, 1 -> uv = new String[]{"x / " + d1, "z / " + d2};
-            case 2, 3 -> {
-                double angle = (0.35 + rng.nextDouble() * 0.85) * (rng.nextBoolean() ? 1 : -1);
-                String c = round(Math.cos(angle), 2), s = round(Math.sin(angle), 2);
-                uv = new String[]{"(x * " + c + " + z * " + s + ") / " + d1, "(z * " + c + " - x * " + s + ") / " + d2};
-            }
-            default -> {
-                String ox = shifted("x"), oz = shifted("z");
-                int arms = 1 + rng.nextInt(5);
-                uv = new String[]{"sqrt(" + ox + "^2 + " + oz + "^2) / " + d1,
-                        "atan2(" + oz + ", " + ox + ")" + (arms > 1 ? " * " + arms : "")};
-            }
-        }
-        if (rng.nextInt(3) == 0) {
-            uv[0] = "(" + uv[0] + " + " + scaled(round(0.3 + rng.nextDouble() * 1.7, 1), "sin(" + uv[1] + ")") + ")";
-        }
-        return uv;
+    private String perlinDiv(double minBlocks, double maxBlocks) {
+        return round(between(minBlocks, maxBlocks) * PERLIN_FREQUENCY / cs, 0);
     }
 
-    private String layer() {
-        boolean wave = rng.nextInt(5) < 2;
-        String[] uv = plane(wave);
-        String[] pool = wave ? WAVES : NOISES;
-        return wrap(pool[rng.nextInt(pool.length)].replace("$u", uv[0]).replace("$v", uv[1]));
+    private String waveDiv(double minBlocks, double maxBlocks) {
+        return round(between(minBlocks, maxBlocks) / (2 * Math.PI * cs), 1);
     }
 
-    private String surface() {
-        String acc = layer();
-        int layers = rng.nextInt(5) == 0 ? 0 : 1;
-        for (int i = 0; i < layers; i++) {
-            String next = layer();
-            String w = round(0.2 + rng.nextDouble() * 0.7, 1);
-            acc = switch (rng.nextInt(5)) {
-                case 0, 1 -> wrap(acc + " + " + scaled(w, next));
-                case 2 -> "max(" + acc + ", " + next + ")";
-                case 3 -> "min(" + acc + ", " + next + ")";
-                default -> acc + " * (1 + " + scaled(w, next) + ")";
-            };
-        }
-        return shape(acc);
-    }
-
-    private String shape(String g) {
-        int k = 2 + rng.nextInt(3);
-        return switch (rng.nextInt(10)) {
-            case 0 -> "floor(" + g + " * " + k + ") * " + round(1.0 / k, 2);
-            case 2 -> "tanh(" + g + " * " + round(1.5 + rng.nextDouble() * 2.5, 1) + ")";
-            case 3 -> rng.nextBoolean() ? "cbrt(" + g + ")" : "(" + g + ")^3";
-            case 4 -> "abs(" + g + ")";
-            case 5 -> "clamp(" + g + " * " + round(1.5 + rng.nextDouble() * 1.5, 1) + ", -1, 1)";
-            default -> g;
+    private String field(double minBlocks, double maxBlocks) {
+        String d = perlinDiv(minBlocks, maxBlocks);
+        return switch (rng.nextInt(4)) {
+            case 0 -> "simplex(x / " + noiseDiv(minBlocks, maxBlocks) + ", z / " + noiseDiv(minBlocks, maxBlocks) + ")";
+            case 1 -> "perlin(x / " + d + ", 0, z / " + d + ")";
+            default -> "octaved(x / " + d + ", z / " + d + ", " + (2 + rng.nextInt(3)) + ", 0.5)";
         };
     }
 
-    private String volume() {
-        String a = "x / " + waveDiv(), b = "y / " + waveDiv(), c = "z / " + waveDiv();
-        String noise3 = "perlin(x / " + noiseDiv() + ", y / " + noiseDiv() + ", z / " + noiseDiv() + ")";
-        if (rng.nextInt(3) == 0) {
-            a = "(" + a + " + " + round(0.5 + rng.nextDouble(), 1) + " * " + noise3 + ")";
+    private String warped(double minBlocks, double maxBlocks) {
+        String d = perlinDiv(minBlocks, maxBlocks);
+        if (rng.nextBoolean()) return field(minBlocks, maxBlocks);
+        return "octaved(x / " + d + " + " + round((0.5 + rng.nextDouble() * 1.5) / PERLIN_FREQUENCY, 2) + " * sin(z / " + waveDiv(60, 200)
+                + "), z / " + d + ", 3, 0.5)";
+    }
+
+    private String at(String var, double spanBlocks) {
+        long offset = Math.round((rng.nextDouble() - 0.5) * spanBlocks / cs);
+        return offset == 0 ? var : "(" + var + (offset < 0 ? " - " : " + ") + Math.abs(offset) + ")";
+    }
+
+    private String dist2(double spanBlocks) {
+        return at("x", spanBlocks) + "^2 + " + at("z", spanBlocks) + "^2";
+    }
+
+    private String[] rotated() {
+        double angle = rng.nextDouble() * Math.PI;
+        String c = round(Math.cos(angle), 2), s = round(Math.sin(angle), 2);
+        return new String[]{"(x * " + c + " + z * " + s + ")", "(z * " + c + " - x * " + s + ")"};
+    }
+
+    private void heights(double lowMin, double lowMax, double highMin, double highMax) {
+        profile = Profile.of(lowMin, lowMax, highMin, highMax);
+    }
+
+    private String islands() {
+        heights(20, 50, 90, 150);
+        profile = profile.spread(0, 0.7);
+        int n = 3 + rng.nextInt(2);
+        List<String> bumps = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            double radius = between(40, 110) / cs;
+            bumps.add("exp(-(" + dist2(170) + ") / " + round(radius * radius, 0) + ")");
         }
-        double y0 = between(30, 150) / cs;
-        String ground = "(y - " + round(y0, 0) + ") / " + round(between(40, 200) / cs, 0);
-        String radial = "sqrt(" + shifted("x") + "^2 + " + shifted("z") + "^2)";
-        return switch (rng.nextInt(10)) {
-            case 0 -> "sin(" + a + ") * cos(" + b + ") + sin(" + b + ") * cos(" + c + ") + sin(" + c + ") * cos(" + a + ")";
-            case 1 -> "cos(" + a + ") + cos(" + b + ") + cos(" + c + ")";
-            case 2 -> noise3 + " + " + ground;
-            case 3 -> blob() + " + " + round(0.2 + rng.nextDouble() * 0.5, 1) + " * " + noise3;
-            case 4 -> "min(" + blob() + ", " + blob() + ")";
-            case 5 -> ground + " - " + round(0.5 + rng.nextDouble() * 1.5, 1) + " * " + surface() + " + "
-                    + round(0.1 + rng.nextDouble() * 0.4, 1) + " * cos(" + b + ")";
-            case 6 -> "(" + radial + " - " + round(between(30, 90) / cs, 0) + ")^2 + (y - " + round(y0, 0) + ")^2 * "
-                    + round(0.5 + rng.nextDouble() * 2, 1);
-            case 7 -> "abs(sin(" + a + ")) + abs(sin(" + c + ")) + " + round(0.3 + rng.nextDouble(), 1) + " * " + ground;
-            case 8 -> radial + " / " + round(between(30, 100) / cs, 0) + " + " + round(0.3 + rng.nextDouble() * 0.7, 1)
-                    + " * sin(" + b + " + " + round(0.5 + rng.nextDouble() * 2, 1) + " * " + noise3 + ")";
-            default -> "cos(" + a + ") * cos(" + c + ") + ((y - " + round(y0, 0) + ") / " + round(between(30, 120) / cs, 0) + ")^2";
-        };
+        return nest("max", bumps) + " + 0.2 * " + field(40, 120);
+    }
+
+    private String canyons() {
+        heights(20, 60, 100, 170);
+        profile = profile.spread(0.02, 0.55);
+        return "sqrt(abs(" + warped(70, 250) + "))";
+    }
+
+    private String mesas() {
+        heights(30, 60, 90, 150);
+        profile = profile.spread(0.05, 0.55);
+        int steps = 3 + rng.nextInt(4);
+        return "floor(" + warped(100, 300) + " * " + steps + ") * " + round(1.0 / steps, 2) + " + 0.15 * " + field(60, 200);
+    }
+
+    private String spires() {
+        heights(40, 70, 110, 190);
+        profile = profile.spread(0.02, 0.6);
+        return "exp(" + round(2 + rng.nextDouble() * 1.5, 1) + " * " + field(70, 200) + ")";
+    }
+
+    private String craters() {
+        heights(60, 100, 100, 160);
+        profile = profile.spread(0.03, 0.55);
+        StringBuilder sb = new StringBuilder(round(0.3 + rng.nextDouble() * 0.4, 1) + " * " + field(60, 200));
+        for (int i = 0; i < 3; i++) {
+            double radius = between(25, 60) / cs;
+            sb.append(" - ").append(round(0.6 + rng.nextDouble() * 0.6, 1)).append(" * exp(-(").append(dist2(160))
+                    .append(") / ").append(round(radius * radius, 0)).append(")");
+        }
+        return sb.toString();
+    }
+
+    private String dunes() {
+        double low = 55 + rng.nextDouble() * 25;
+        profile = Profile.of(low, low + 5, low + 30, low + 65).spread(0.05, 0.7);
+        String[] pq = rotated();
+        return "(1 - abs(sin(" + pq[0] + " / " + waveDiv(60, 200) + " + " + round(0.5 + rng.nextDouble() * 1.2, 1) + " * sin("
+                + pq[1] + " / " + waveDiv(120, 400) + "))))^2 * (0.6 + 0.4 * " + field(80, 250) + ")";
+    }
+
+    private String rivers() {
+        heights(52, 62, 85, 150);
+        profile = profile.spread(0.0, 0.6);
+        String[] pq = rotated();
+        double width = between(8, 30) / cs;
+        String bed = "tanh(abs(" + pq[1] + " - " + round(between(15, 50) / cs, 0) + " * sin(" + pq[0] + " / " + waveDiv(150, 450)
+                + ")) / " + round(width, 1) + ")";
+        String second = rng.nextBoolean() ? "" : ", tanh(abs(" + pq[0] + " + " + round(between(10, 40) / cs, 0) + " * sin(" + pq[1]
+                + " / " + waveDiv(150, 450) + ")) / " + round(width * 1.4, 1) + ")";
+        String channels = second.isEmpty() ? bed : "min(" + bed + second + ")";
+        return channels + " + 0.3 * " + field(40, 140);
+    }
+
+    private String cliffs() {
+        heights(35, 70, 100, 150);
+        profile = profile.spread(0.05, 0.7);
+        return "tanh(" + round(3 + rng.nextDouble() * 4, 1) + " * " + warped(80, 260) + ") + 0.15 * " + field(30, 90);
+    }
+
+    private String domes() {
+        heights(20, 50, 90, 150);
+        profile = profile.spread(0, 0.7);
+        int n = 4 + rng.nextInt(2);
+        List<String> cones = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            double radius = between(50, 130) / cs;
+            cones.add("1 - (" + dist2(190) + ") / " + round(radius * radius, 0));
+        }
+        return nest("max", cones);
+    }
+
+    private String mosaic() {
+        heights(30, 60, 90, 150);
+        profile = profile.spread(0.03, 0.5);
+        String cell = round(between(10, 40) / cs, 0);
+        String k = round(0.25 + rng.nextDouble() * 0.65, 2);
+        return "perlin(floor(x / " + cell + ") * " + k + ", 0, floor(z / " + cell + ") * " + k + ")";
+    }
+
+    private String ridges() {
+        heights(30, 60, 110, 190);
+        profile = profile.spread(0.03, 0.55);
+        String d = perlinDiv(100, 350);
+        String warp = rng.nextBoolean() ? "" : " + " + round((0.5 + rng.nextDouble() * 1.2) / PERLIN_FREQUENCY, 2) + " * simplex(z / " + noiseDiv(60, 180) + ", x / " + noiseDiv(60, 180) + ")";
+        return "1 - abs(2 * perlin(x / " + d + warp + ", 0, z / " + d + "))";
+    }
+
+    private String moire() {
+        heights(45, 75, 95, 140);
+        String expr = "";
+        int n = 2 + rng.nextInt(2);
+        for (int i = 0; i < n; i++) {
+            String[] pq = rotated();
+            expr += (i > 0 ? " + " : "") + (i == 2 ? "0.5 * " : "") + "sin(" + pq[0] + " / " + waveDiv(80, 300) + ")";
+        }
+        return expr;
+    }
+
+    private String spiral() {
+        heights(45, 75, 95, 140);
+        String ox = at("x", 80), oz = at("z", 80);
+        return "sin(atan2(" + oz + ", " + ox + ") * " + (2 + rng.nextInt(3)) + " + sqrt(" + ox + "^2 + " + oz + "^2) / " + waveDiv(60, 160) + ")";
+    }
+
+    private String perlin3(double min, double max) {
+        return "perlin(x / " + perlinDiv(min, max) + ", y / " + perlinDiv(min, max) + ", z / " + perlinDiv(min, max) + ")";
+    }
+
+    private String ground(double heightBlocks) {
+        return "(y - " + round(heightBlocks / cs, 0) + ") / " + round(between(40, 200) / cs, 0);
     }
 
     private String blob() {
-        double y0 = between(40, 140) / cs;
-        return "sqrt((" + shifted("x") + " / " + round(between(40, 140) / cs, 0) + ")^2 + ((y - " + round(y0, 0) + ") / "
-                + round(between(40, 140) / cs, 0) + ")^2 + (" + shifted("z") + " / " + round(between(40, 140) / cs, 0) + ")^2)";
+        return "sqrt((" + at("x", 160) + " / " + round(between(40, 120) / cs, 0) + ")^2 + ((y - " + round(between(60, 160) / cs, 0)
+                + ") / " + round(between(30, 90) / cs, 0) + ")^2 + (" + at("z", 160) + " / " + round(between(40, 120) / cs, 0) + ")^2)";
+    }
+
+    private String floating() {
+        fillMin = 0.1; fillMax = 0.28;
+        return "min(" + blob() + ", " + blob() + ") + " + round(0.2 + rng.nextDouble() * 0.5, 1) + " * " + perlin3(40, 120);
+    }
+
+    private String caves() {
+        fillMin = 0.3; fillMax = 0.5;
+        return ground(between(60, 130)) + " - " + round(0.5 + rng.nextDouble() * 1.2, 1) + " * " + field(100, 300)
+                + " + " + round(6 + rng.nextDouble() * 6, 0) + " * max(0, " + round(0.08 + rng.nextDouble() * 0.1, 2) + " - abs(" + perlin3(40, 120) + "))";
+    }
+
+    private String overhangs() {
+        fillMin = 0.25; fillMax = 0.5;
+        return round(2 + rng.nextDouble() * 4, 0) + " * " + perlin3(70, 200) + " + " + ground(between(60, 130));
+    }
+
+    private String columns() {
+        fillMin = 0.12; fillMax = 0.3;
+        List<String> shafts = new ArrayList<>();
+        int n = 2 + rng.nextInt(2);
+        for (int i = 0; i < n; i++) {
+            String r = round(between(15, 50) / cs, 0);
+            shafts.add("sqrt((" + at("x", 160) + " / " + r + ")^2 + (" + at("z", 160) + " / " + r + ")^2)");
+        }
+        return nest("min", shafts) + " + 0.3 * " + perlin3(40, 120);
+    }
+
+    private String torus() {
+        fillMin = 0.1; fillMax = 0.25;
+        return "(sqrt(" + dist2(100) + ") - " + round(between(30, 90) / cs, 0) + ")^2 + (y - " + round(between(60, 140) / cs, 0)
+                + ")^2 * " + round(0.5 + rng.nextDouble() * 2, 1);
+    }
+
+    private String vortex() {
+        fillMin = 0.12; fillMax = 0.3;
+        return "sqrt(" + dist2(100) + ") / " + round(between(30, 100) / cs, 0) + " + " + round(0.3 + rng.nextDouble() * 0.7, 1)
+                + " * sin(y / " + waveDiv(40, 120) + " + " + round(0.5 + rng.nextDouble() * 2, 1) + " * " + perlin3(50, 150) + ")";
+    }
+
+    private String sponge() {
+        fillMin = 0.15; fillMax = 0.35;
+        String a = "x / " + waveDiv(60, 200), b = "y / " + waveDiv(60, 200), c = "z / " + waveDiv(60, 200);
+        return "sin(" + a + ") * cos(" + b + ") + sin(" + b + ") * cos(" + c + ") + sin(" + c + ") * cos(" + a + ")";
     }
 }

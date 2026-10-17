@@ -29,7 +29,18 @@ final class FormulaFit {
         return body + (b < 0 ? " - " : " + ") + num(Math.abs(b));
     }
 
-    static String heightmap(String raw, Random rng, TerrainSettingsManager s) {
+    record Profile(double lowMin, double lowMax, double highMin, double highMax,
+                   double quantile, double plateau) {
+        static Profile of(double lowMin, double lowMax, double highMin, double highMax) {
+            return new Profile(lowMin, lowMax, highMin, highMax, 0.05, 0.45);
+        }
+
+        Profile spread(double quantile, double plateau) {
+            return new Profile(lowMin, lowMax, highMin, highMax, quantile, plateau);
+        }
+    }
+
+    static String heightmap(String raw, Profile profile, Random rng, TerrainSettingsManager s) {
         FormulaParser.CompiledFormula compiled = FormulaParser.tryParse(raw);
         if (compiled == null) return null;
 
@@ -49,26 +60,24 @@ final class FormulaFit {
 
         double[] sorted = r.clone();
         Arrays.sort(sorted);
-        double lo = sorted[(int) (sorted.length * 0.05)];
-        double hi = sorted[(int) (sorted.length * 0.95)];
-        double half = (hi - lo) / 2;
-        double mid = (hi + lo) / 2;
-        if (half < 1e-6) return null;
+        double lo = sorted[(int) Math.min(sorted.length - 1, sorted.length * profile.quantile())];
+        double hi = sorted[(int) Math.min(sorted.length - 1, sorted.length * (1 - profile.quantile()))];
+        if (hi - lo < 1e-6) return null;
 
-        double amp = 20 + rng.nextDouble() * 55;
-        double level = 30 + rng.nextDouble() * 100;
+        double low = profile.lowMin() + rng.nextDouble() * (profile.lowMax() - profile.lowMin());
+        double high = profile.highMin() + rng.nextDouble() * (profile.highMax() - profile.highMin());
         double[] h = new double[r.length];
         for (int i = 0; i < r.length; i++) {
-            h[i] = Math.max(Y_MIN, Math.min(Y_MAX, level + amp * (r[i] - mid) / half));
+            h[i] = Math.max(Y_MIN, Math.min(Y_MAX, low + (high - low) * (r[i] - lo) / (hi - lo)));
         }
-        if (!goodHeights(h)) return null;
+        if (!goodHeights(h, profile.plateau())) return null;
 
-        double a = amp / (k * half);
-        double b = (level - surfaceBase) / k - a * mid;
+        double a = (high - low) / (k * (hi - lo));
+        double b = (low - surfaceBase) / k - a * lo;
         return affine(a, b, FormulaGenerator.wrap(raw));
     }
 
-    private static boolean goodHeights(double[] h) {
+    private static boolean goodHeights(double[] h, double plateau) {
         double mean = Arrays.stream(h).average().orElse(0);
         double fill = (mean - Y_MIN) / (Y_MAX - Y_MIN);
         double var = Arrays.stream(h).map(v -> (v - mean) * (v - mean)).average().orElse(0);
@@ -79,7 +88,7 @@ final class FormulaFit {
         double max = Arrays.stream(h).max().orElse(1);
         if (max - min < 25) return false;
         for (double v : h) bins[Math.min(15, (int) ((v - min) / (max - min) * 16))]++;
-        if (Arrays.stream(bins).max().orElse(0) > h.length * 0.45) return false;
+        if (Arrays.stream(bins).max().orElse(0) > h.length * plateau) return false;
 
         double sx = 0, sz = 0, sxx = 0, szz = 0, sxh = 0, szh = 0;
         for (int i = 0; i < GRID; i++) {
@@ -91,17 +100,18 @@ final class FormulaFit {
         }
         double explained = (sxh * sxh / sxx + szh * szh / szz) / (var * h.length);
 
-        double step = 0;
+        double products = 0;
         for (int i = 0; i < GRID; i++) {
             for (int j = 1; j < GRID; j++) {
-                step += Math.abs(h[i * GRID + j] - h[i * GRID + j - 1]) + Math.abs(h[j * GRID + i] - h[(j - 1) * GRID + i]);
+                products += (h[i * GRID + j] - mean) * (h[i * GRID + j - 1] - mean)
+                        + (h[j * GRID + i] - mean) * (h[(j - 1) * GRID + i] - mean);
             }
         }
-        double roughness = step / (2.0 * GRID * (GRID - 1)) / Math.sqrt(var);
-        return explained < 0.7 && roughness < 0.6;
+        double correlation = products / (2.0 * GRID * (GRID - 1)) / var;
+        return explained < 0.7 && correlation > 0.55;
     }
 
-    static String equation(String lhs, Random rng, TerrainSettingsManager s) {
+    static String equation(String lhs, double fillMin, double fillMax, Random rng, TerrainSettingsManager s) {
         FormulaParser.CompiledFormula compiled = FormulaParser.tryParse(lhs);
         if (compiled == null) return null;
 
@@ -120,15 +130,15 @@ final class FormulaFit {
 
         double[] sorted = v.clone();
         Arrays.sort(sorted);
-        double fill = 0.12 + rng.nextDouble() * 0.3;
+        double fill = fillMin + rng.nextDouble() * (fillMax - fillMin);
         double c = sorted[(int) (sorted.length * fill)];
-        if (!goodVolume(v, c)) return null;
+        if (!goodVolume(v, c, fillMin * 0.5)) return null;
 
         double shift = s.isUseDensityMode() ? (s.getBaseHeight() - 64.0) / cs : 0;
         return lhs + " = " + num(c + shift);
     }
 
-    private static boolean goodVolume(double[] v, double c) {
+    private static boolean goodVolume(double[] v, double c, double minFill) {
         int solid = 0, flipsXZ = 0, flipsY = 0, pairsXZ = 0, pairsY = 0;
         double[] top = new double[EQ_XZ * EQ_XZ];
         Arrays.fill(top, Y_MIN);
@@ -150,7 +160,7 @@ final class FormulaFit {
         double edges = (flipsXZ + flipsY) / (double) (pairsXZ + pairsY);
         double mean = Arrays.stream(top).average().orElse(0);
         double std = Math.sqrt(Arrays.stream(top).map(t -> (t - mean) * (t - mean)).average().orElse(0));
-        return fill > 0.1 && fill < 0.5 && edges > 0.04 && edges < 0.25
+        return fill > minFill && fill < 0.6 && edges > 0.02 && edges < 0.25
                 && flipsXZ / (double) pairsXZ > 0.02 && std > 8;
     }
 
