@@ -14,8 +14,7 @@ public class NoiseRouterMixin {
 
     @Inject(method = "finalDensity", at = @At("HEAD"), cancellable = true)
     private void injectCustomTerrainNoise(CallbackInfoReturnable<DensityFunction> cir) {
-        if (FormulaCacheHolder.getParsedFormula() == null
-                || FormulaCacheHolder.getParsedFormula().getOriginalExpression().trim().isEmpty()) {
+        if (FormulaCacheHolder.snapshot() == null) {
             return;
         }
         cir.setReturnValue(new TerraMathDensityFunction());

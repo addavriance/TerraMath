@@ -7,6 +7,8 @@ import me.adda.terramath.math.parser.FormulaParser;
 import net.minecraft.util.KeyDispatchDataCodec;
 import net.minecraft.world.level.levelgen.DensityFunction;
 
+import java.util.Arrays;
+
 public class TerraMathDensityFunction implements DensityFunction {
 
     public static final KeyDispatchDataCodec<TerraMathDensityFunction> CODEC =
@@ -14,32 +16,76 @@ public class TerraMathDensityFunction implements DensityFunction {
 
     private final TerrainSettingsManager settings = TerrainSettingsManager.getInstance();
 
+    private static final class ColumnCache {
+        final double[] values = new double[256];
+        final long[] keys = new long[256];
+        FormulaParser.CompiledFormula formula;
+        double scale, smoothing;
+
+        ColumnCache() {
+            Arrays.fill(keys, Long.MIN_VALUE);
+        }
+
+        boolean matches(FormulaParser.CompiledFormula formula, double scale, double smoothing) {
+            if (this.formula == formula && this.scale == scale && this.smoothing == smoothing) return true;
+            Arrays.fill(keys, Long.MIN_VALUE);
+            this.formula = formula;
+            this.scale = scale;
+            this.smoothing = smoothing;
+            return false;
+        }
+    }
+
+    private static final ThreadLocal<ColumnCache> COLUMNS = ThreadLocal.withInitial(ColumnCache::new);
+
     @Override
     public double compute(FunctionContext context) {
         try {
-            FormulaParser.CompiledFormula formula = FormulaCacheHolder.getParsedFormula();
-            if (formula == null || formula.getOriginalExpression().trim().isEmpty()) {
+            FormulaCacheHolder.Snapshot snapshot = FormulaCacheHolder.snapshot();
+            if (snapshot == null) {
                 return 0.0;
             }
+            FormulaParser.CompiledFormula formula = snapshot.formula();
 
             double scale = settings.getCoordinateScale();
-            double x = context.blockX() / scale;
-            double y = context.blockY() / scale;
-            double z = context.blockZ() / scale;
-
-            boolean eq = FormulaCacheHolder.isEquationMode();
-            boolean dm = settings.isUseDensityMode();
             double sf = settings.getSmoothingFactor();
+            int blockX = context.blockX(), blockZ = context.blockZ();
+            double x = blockX / scale;
+            double y = context.blockY() / scale;
+            double z = blockZ / scale;
 
-            double fv = sf > 0
-                    ? spatialSmooth(formula, x, y, z, sf, eq)
-                    : formula.evaluate(x, y, z);
+            boolean eq = snapshot.equation();
+            boolean dm = settings.isUseDensityMode();
+
+            double fv;
+            if (snapshot.usesY()) {
+                fv = formulaValue(formula, x, y, z, sf, eq);
+            } else {
+                ColumnCache cache = COLUMNS.get();
+                cache.matches(formula, scale, sf);
+                int slot = ((blockX & 15) << 4) | (blockZ & 15);
+                long key = ((long) blockX << 32) ^ (blockZ & 0xffffffffL);
+                if (cache.keys[slot] == key) {
+                    fv = cache.values[slot];
+                } else {
+                    fv = formulaValue(formula, x, y, z, sf, eq);
+                    cache.keys[slot] = key;
+                    cache.values[slot] = fv;
+                }
+            }
 
             return computeDensity(fv, y, scale, eq, dm,
                     settings.getBaseHeight(), settings.getHeightVariation());
         } catch (Exception ex) {
             return 0.0;
         }
+    }
+
+    private static double formulaValue(FormulaParser.CompiledFormula formula,
+                                       double x, double y, double z, double sf, boolean eq) {
+        return sf > 0
+                ? spatialSmooth(formula, x, y, z, sf, eq)
+                : formula.evaluate(x, y, z);
     }
 
     @Override
