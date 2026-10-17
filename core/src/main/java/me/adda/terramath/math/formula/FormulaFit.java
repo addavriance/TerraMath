@@ -77,6 +77,44 @@ final class FormulaFit {
         return affine(a, b, FormulaGenerator.wrap(raw));
     }
 
+    static boolean checkHeights(String formula, double plateau, TerrainSettingsManager s) {
+        FormulaParser.CompiledFormula compiled = FormulaParser.tryParse(formula);
+        if (compiled == null) return false;
+
+        double cs = s.getCoordinateScale();
+        double surfaceBase = s.isUseDensityMode() ? s.getBaseHeight() : 64.0;
+        double k = s.isUseDensityMode() ? cs * s.getHeightVariation() : cs;
+        double[] h = new double[GRID * GRID];
+        for (int i = 0; i < GRID; i++) {
+            for (int j = 0; j < GRID; j++) {
+                double v = sample(compiled, cell(i, GRID) / cs, 0, cell(j, GRID) / cs);
+                if (!Double.isFinite(v)) return false;
+                h[i * GRID + j] = Math.max(Y_MIN, Math.min(Y_MAX, surfaceBase + k * v));
+            }
+        }
+        return goodHeights(h, plateau);
+    }
+
+    static boolean checkVolume(String formula, TerrainSettingsManager s) {
+        FormulaParser.CompiledFormula compiled = FormulaParser.tryParse(formula);
+        if (compiled == null) return false;
+
+        double cs = s.getCoordinateScale();
+        double shift = s.isUseDensityMode() ? (s.getBaseHeight() - 64.0) / cs : 0;
+        double[] v = new double[EQ_XZ * EQ_Y * EQ_XZ];
+        for (int i = 0; i < EQ_XZ; i++) {
+            for (int j = 0; j < EQ_Y; j++) {
+                for (int l = 0; l < EQ_XZ; l++) {
+                    double value = sample(compiled, cell(i, EQ_XZ) / cs,
+                            (Y_MIN + (j + 0.5) * (Y_MAX - Y_MIN) / EQ_Y) / cs, cell(l, EQ_XZ) / cs);
+                    if (!Double.isFinite(value)) return false;
+                    v[(i * EQ_Y + j) * EQ_XZ + l] = shift - value;
+                }
+            }
+        }
+        return goodVolume(v, 0, 0.05);
+    }
+
     private static boolean goodHeights(double[] h, double plateau) {
         double mean = Arrays.stream(h).average().orElse(0);
         double fill = (mean - Y_MIN) / (Y_MAX - Y_MIN);

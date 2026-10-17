@@ -16,6 +16,8 @@ public class FormulaGenerator {
     private static final String FALLBACK = "perlin(x / 12, 0, z / 12) * 8";
     private static final int MAX_LENGTH = 220;
     private static final int RECENT = 5;
+    private static final int WILD_PERCENT = 30;
+    private static final int WILD_LENGTH = 360;
     private static final int PERLIN_FREQUENCY = 16;
 
     private static final Deque<String> recent = new ArrayDeque<>();
@@ -68,20 +70,103 @@ public class FormulaGenerator {
         TerrainSettingsManager settings = TerrainSettingsManager.getInstance();
         FormulaGenerator gen = new FormulaGenerator(new Random(), Math.max(settings.getCoordinateScale(), 0.5));
         boolean volume = gen.rng.nextInt(4) == 0;
+        if (gen.rng.nextInt(100) < WILD_PERCENT) {
+            for (int i = 0; i < 12; i++) {
+                String wild = volume ? gen.wildVolume(settings) : gen.wildHeight(settings);
+                if (wild != null && wild.length() <= WILD_LENGTH) return new Generated(wild, "wild");
+            }
+        }
         for (int round = 0; round < 6; round++) {
             Kind kind = gen.pick(volume ? VOLUME : HEIGHT, round < 3);
-            for (int attempt = 0; attempt < 30; attempt++) {
-                String expr = kind.make().apply(gen);
-                String formula = volume
-                        ? FormulaFit.equation(expr, gen.fillMin, gen.fillMax, gen.rng, settings)
-                        : FormulaFit.heightmap(expr, gen.profile, gen.rng, settings);
-                if (formula != null && formula.length() <= MAX_LENGTH) {
-                    remember(kind.name());
-                    return new Generated(formula, kind.name());
-                }
+            String formula = gen.fit(kind, volume, settings);
+            if (formula != null) {
+                remember(kind.name());
+                return new Generated(formula, kind.name());
             }
         }
         return new Generated(FALLBACK, "fallback");
+    }
+
+    private String fit(Kind kind, boolean volume, TerrainSettingsManager settings) {
+        for (int attempt = 0; attempt < 30; attempt++) {
+            String expr = kind.make().apply(this);
+            String formula = volume
+                    ? FormulaFit.equation(expr, fillMin, fillMax, rng, settings)
+                    : FormulaFit.heightmap(expr, profile, rng, settings);
+            if (formula != null && formula.length() <= MAX_LENGTH) return formula;
+        }
+        return null;
+    }
+
+    private String wildHeight(TerrainSettingsManager settings) {
+        int mode = rng.nextInt(10);
+        if (mode < 4) {
+            Kind kind = pick(HEIGHT, false);
+            for (int attempt = 0; attempt < 20; attempt++) {
+                String warped = warp(kind.make().apply(this));
+                String formula = warped == null ? null : FormulaFit.heightmap(warped, profile, rng, settings);
+                if (formula != null) return formula;
+            }
+            return null;
+        }
+        String a = fit(pick(HEIGHT, false), false, settings);
+        String b = fit(pick(HEIGHT, false), false, settings);
+        if (a == null || b == null || a.equals(b)) return null;
+        String formula;
+        if (mode < 7) {
+            String mask = "clamp(" + round(1.5 + rng.nextDouble() * 2, 1) + " * simplex(x / " + noiseDiv(100, 300) + ", z / " + noiseDiv(100, 300) + ") + 0.5, 0, 1)";
+            formula = "(" + a + ") * " + mask + " + (" + b + ") * (1 - " + mask + ")";
+        } else {
+            formula = (mode < 9 ? "max" : "min") + "(" + a + ", " + b + ")";
+        }
+        return FormulaFit.checkHeights(formula, 0.65, settings) ? formula : null;
+    }
+
+    private String wildVolume(TerrainSettingsManager settings) {
+        String terrain = fit(pick(HEIGHT, false), false, settings);
+        String shape = fit(pick(VOLUME, false), true, settings);
+        if (terrain == null || shape == null) return null;
+        int split = shape.lastIndexOf(" = ");
+        String lhs = shape.substring(0, split), c = shape.substring(split + 3);
+
+        boolean density = settings.isUseDensityMode();
+        double cs = Math.max(settings.getCoordinateScale(), 0.5);
+        String ground = "y - (" + round((density ? settings.getBaseHeight() : 64.0) / cs, 1) + " + "
+                + (density ? round(settings.getHeightVariation(), 2) + " * (" + terrain + ")" : terrain) + ")";
+        String inside = c.startsWith("-") ? "(" + c + ")" : c;
+        String formula = rng.nextBoolean()
+                ? "min(" + ground + ", " + lhs + " - " + inside + ") = " + round(density ? (settings.getBaseHeight() - 64.0) / cs : 0, 2)
+                : "max(" + ground + ", " + inside + " - (" + lhs + ")) = " + round(density ? (settings.getBaseHeight() - 64.0) / cs : 0, 2);
+        return FormulaFit.checkVolume(formula, settings) ? formula : null;
+    }
+
+    private String warp(String raw) {
+        String marked = raw.replaceAll("\\bx\\b", "\u0001").replaceAll("\\bz\\b", "\u0002");
+        long uses = marked.chars().filter(ch -> ch == 1 || ch == 2).count();
+        if (uses == 0 || uses > 8) return null;
+
+        String amount = round(between(20, 90) / cs, 0);
+        String x, z;
+        switch (rng.nextInt(4)) {
+            case 0 -> {
+                String d = noiseDiv(60, 220);
+                x = "(x + " + amount + " * simplex(z / " + d + ", x / " + d + "))";
+                z = "(z + " + amount + " * simplex(x / " + d + " + 3, z / " + d + "))";
+            }
+            case 1 -> {
+                x = "(x + " + amount + " * sin(z / " + waveDiv(80, 250) + "))";
+                z = "z";
+            }
+            case 2 -> {
+                x = "abs(" + at("x", 60) + ")";
+                z = rng.nextBoolean() ? "abs(" + at("z", 60) + ")" : "z";
+            }
+            default -> {
+                x = "(x + " + amount + " * sin(z / " + waveDiv(80, 250) + "))";
+                z = "(z + " + amount + " * sin(x / " + waveDiv(80, 250) + "))";
+            }
+        }
+        return marked.replace("\u0001", x).replace("\u0002", z);
     }
 
     private static synchronized void remember(String name) {
