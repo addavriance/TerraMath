@@ -1,1 +1,7 @@
 apply from: rootProject.file('gradle/forge.gradle')
+
+loom {
+    forge {
+        mixinConfig "terramath-1.21.11.mixins.json"
+    }
+}

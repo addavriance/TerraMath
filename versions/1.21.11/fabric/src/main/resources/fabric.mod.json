@@ -31,7 +31,8 @@
   },
   "mixins": [
     "terramath.mixins.json",
-    "terramath-common.mixins.json"
+    "terramath-common.mixins.json",
+    "terramath-1.21.11.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.16.9",

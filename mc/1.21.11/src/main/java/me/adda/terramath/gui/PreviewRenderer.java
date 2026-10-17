@@ -16,14 +16,12 @@ import org.joml.Matrix4f;
 public class PreviewRenderer extends PictureInPictureRenderer<PreviewRenderState> {
     private static final float DEPTH_RANGE = 1.5f;
 
-    private static final RenderPipeline PIPELINE = RenderPipelines.register(
-            RenderPipeline.builder(RenderPipelines.DEBUG_FILLED_SNIPPET)
-                    .withLocation("pipeline/terramath_preview")
-                    .withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.TRIANGLES)
-                    .withDepthWrite(true)
-                    .withCull(false)
-                    .build()
-    );
+    private static final RenderPipeline PIPELINE = RenderPipeline.builder(RenderPipelines.DEBUG_FILLED_SNIPPET)
+            .withLocation("pipeline/terramath_preview")
+            .withVertexFormat(DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.TRIANGLES)
+            .withDepthWrite(true)
+            .withCull(false)
+            .build();
 
     private static final RenderType TYPE = RenderType.create("terramath_preview", RenderSetup.builder(PIPELINE).createRenderSetup());
 
