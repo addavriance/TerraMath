@@ -54,6 +54,23 @@ public class FormulaParser extends FormulaValidator {
         return evaluator;
     }
 
+    public static CompiledFormula tryParse(String formula) {
+        try {
+            if (!FormulaValidator.validateFormula(formula, true).isValid()) {
+                return null;
+            }
+            String javaExpression = FormulaFormatter.convertToJavaExpression(formula);
+            Evaluator compiled = (Evaluator) createEvaluator().createFastEvaluator(
+                    "(" + javaExpression + ")",
+                    Evaluator.class,
+                    new String[]{"x", "y", "z", "noise"}
+            );
+            return new CompiledFormula(formula, compiled, new CompositeNoise(SeedUtils.getSeed()));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public static CompiledFormula parse(String formula) {
         String javaExpression = FormulaFormatter.convertToJavaExpression(formula);
 
