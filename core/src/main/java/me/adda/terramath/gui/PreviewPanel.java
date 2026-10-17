@@ -75,9 +75,9 @@ public class PreviewPanel {
 
         if (field != null && field.error != null) {
             graphics.drawCenteredString(font, field.error,
-                    x + w / 2, y + viewH / 2 - 4, 0xFF5555);
+                    x + w / 2, y + viewH / 2 - 4, 0xFFFF5555);
         } else if (field != null && field.gx > 0) {
-            if (mesh.floatCount() > 0) renderMesh3D(x, y, w, viewH);
+            if (mesh.floatCount() > 0) renderMesh3D(graphics, x, y, w, viewH);
             drawOverlays(graphics, font, x, y, w, viewH);
         }
 
@@ -132,7 +132,7 @@ public class PreviewPanel {
         });
     }
 
-    private void renderMesh3D(int x, int y, int w, int h) {
+    private void renderMesh3D(GuiGraphics graphics, int x, int y, int w, int h) {
         Minecraft mc = Minecraft.getInstance();
         double scale = mc.getWindow().getGuiScale();
         int screenH = mc.getWindow().getHeight();
@@ -164,7 +164,9 @@ public class PreviewPanel {
                 -5000f, 5000f);
         Matrix4f view = new Matrix4f().lookAt(camX, camY, camZ, 0f, cy, 0f, udx, udy, udz);
         Matrix4f projView = proj.mul(view, new Matrix4f());
-        PreviewGl.drawMesh(projView, mesh.verts(), mesh.floatCount(), vpX, vpY, vpW, vpH);
+        Matrix4f modelView = new Matrix4f().translate(0f, 0f, (float) CAM_DIST).mul(view);
+        PreviewGl.drawMesh(graphics, new PreviewFrame(mesh.verts(), mesh.floatCount(), projView, modelView, zoom,
+                x, y, w, h, vpX, vpY, vpW, vpH));
     }
 
     private void drawOverlays(GuiGraphics graphics, Font font, int x, int y, int w, int h) {

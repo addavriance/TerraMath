@@ -3,6 +3,7 @@ package me.adda.terramath.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import org.joml.Matrix4f;
 import org.joml.Matrix4fStack;
@@ -12,8 +13,12 @@ import org.lwjgl.opengl.GL11;
 final class PreviewGl {
     private PreviewGl() {}
 
-    static void drawMesh(Matrix4f projView, float[] verts, int floatCount, int vpX, int vpY, int vpW, int vpH) {
+    static void drawMesh(GuiGraphics graphics, PreviewFrame frame) {
         Minecraft mc = Minecraft.getInstance();
+        Matrix4f projView = frame.projView();
+        float[] verts = frame.verts();
+        int floatCount = frame.floatCount();
+        int vpX = frame.vpX(), vpY = frame.vpY(), vpW = frame.vpW(), vpH = frame.vpH();
         Matrix4f savedProj = new Matrix4f(RenderSystem.getProjectionMatrix());
         Matrix4fStack mvs = RenderSystem.getModelViewStack();
 
