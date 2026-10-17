@@ -23,6 +23,8 @@ public class ResetButton extends Button.Plain {
     protected void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         this.active = Math.abs(associatedSlider.getValue() - associatedSlider.getDefaultValue()) > 0.0001;
 
+        renderDefaultSprite(graphics);
+
         int textColor = this.active ? 0xFFFFFFFF : 0xFFA0A0A0;
         float symbolWidth = Minecraft.getInstance().font.width(RESET_SYMBOL);
         float symbolHeight = Minecraft.getInstance().font.lineHeight;
