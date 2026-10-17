@@ -57,5 +57,6 @@
   "terramath.config.preview.tooltip": "Папярэдні прагляд папярочнага перарэзу рэльефу",
   "terramath.preview.title": "Папярэдні прагляд формулы",
   "terramath.preview.empty": "Формула не ўведзена",
+  "terramath.preview.hidden": "Прагляд схаваны: не хапае месца на экране",
   "terramath.preview.error": "Памылка формулы"
 }

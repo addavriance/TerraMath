@@ -57,5 +57,6 @@
   "terramath.config.preview.tooltip": "地形断面のプレビュー",
   "terramath.preview.title": "数式プレビュー",
   "terramath.preview.empty": "数式が入力されていません",
+  "terramath.preview.hidden": "プレビュー非表示：画面の空きスペースが足りません",
   "terramath.preview.error": "数式エラー"
 }

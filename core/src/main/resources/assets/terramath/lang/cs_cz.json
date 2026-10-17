@@ -57,5 +57,6 @@
   "terramath.config.preview.tooltip": "Náhled příčného řezu terénu",
   "terramath.preview.title": "Náhled vzorce",
   "terramath.preview.empty": "Nezadán žádný vzorec",
+  "terramath.preview.hidden": "Náhled je skrytý: na obrazovce není dost místa",
   "terramath.preview.error": "Chyba vzorce"
 }

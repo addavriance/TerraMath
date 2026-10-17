@@ -57,5 +57,6 @@
   "terramath.config.preview.tooltip": "Predogled prečnega prereza terena",
   "terramath.preview.title": "Predogled formule",
   "terramath.preview.empty": "Ni vnesene formule",
+  "terramath.preview.hidden": "Predogled je skrit: na zaslonu ni dovolj prostora",
   "terramath.preview.error": "Napaka formule"
 }

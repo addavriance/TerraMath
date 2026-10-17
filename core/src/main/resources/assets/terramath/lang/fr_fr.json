@@ -57,5 +57,6 @@
   "terramath.config.preview.tooltip": "Aperçu de la coupe transversale du terrain",
   "terramath.preview.title": "Aperçu de formule",
   "terramath.preview.empty": "Aucune formule saisie",
+  "terramath.preview.hidden": "Aperçu masqué : pas assez de place à l'écran",
   "terramath.preview.error": "Erreur de formule"
 }

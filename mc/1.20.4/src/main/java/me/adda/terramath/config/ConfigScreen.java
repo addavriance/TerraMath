@@ -108,6 +108,7 @@ public class ConfigScreen extends Screen {
     private static final Component USE_DEFAULT_LABEL = Component.translatable("terramath.config.use_default_settings");
     private static final Component RANDOM_SYMBOL = Component.literal("\uD83D\uDD00");
     private static final Component NOISE_SETTINGS_LABEL = Component.translatable("terramath.config.noise_settings");
+    private static final Component PREVIEW_HIDDEN_LABEL = Component.translatable("terramath.preview.hidden");
     private static final Component TERRAIN_SETTINGS_LABEL = Component.translatable("terramath.config.terrain_settings");
 
     public ConfigScreen(Screen parent) {
@@ -313,6 +314,8 @@ public class ConfigScreen extends Screen {
         super.render(graphics, mouseX, mouseY, partialTick);
         if (previewPanelW > 0) {
             previewPanel.render(graphics, previewPanelX, previewPanelY, previewPanelW, previewPanelH, this.font);
+        } else if (configList != null) {
+            graphics.drawCenteredString(this.font, PREVIEW_HIDDEN_LABEL, width / 2, layout.getHeaderHeight() - 10, 0xFFAA00);
         }
     }
 

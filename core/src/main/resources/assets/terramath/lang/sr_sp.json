@@ -57,5 +57,6 @@
   "terramath.config.preview.tooltip": "Приказ попречног пресека терена",
   "terramath.preview.title": "Приказ формуле",
   "terramath.preview.empty": "Формула није унесена",
+  "terramath.preview.hidden": "Приказ је сакривен: нема довољно места на екрану",
   "terramath.preview.error": "Грешка формуле"
 }

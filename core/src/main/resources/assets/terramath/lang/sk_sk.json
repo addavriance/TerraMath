@@ -57,5 +57,6 @@
   "terramath.config.preview.tooltip": "Ukážka priečneho rezu terénu",
   "terramath.preview.title": "Ukážka vzorca",
   "terramath.preview.empty": "Nebol zadaný žiadny vzorec",
+  "terramath.preview.hidden": "Ukážka je skrytá: na obrazovke nie je dosť miesta",
   "terramath.preview.error": "Chyba vzorca"
 }

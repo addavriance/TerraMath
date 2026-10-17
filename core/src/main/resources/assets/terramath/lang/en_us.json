@@ -54,6 +54,7 @@
 
   "terramath.preview.title": "Formula Preview",
   "terramath.preview.empty": "No formula entered",
+  "terramath.preview.hidden": "Preview hidden: not enough screen space",
   "terramath.preview.error": "Formula error",
 
   "terramath.command.formula": "Formula: ",

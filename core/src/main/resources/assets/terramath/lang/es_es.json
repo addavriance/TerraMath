@@ -57,5 +57,6 @@
   "terramath.config.preview.tooltip": "Vista previa del corte transversal del terreno",
   "terramath.preview.title": "Vista previa de fórmula",
   "terramath.preview.empty": "No se ingresó ninguna fórmula",
+  "terramath.preview.hidden": "Vista previa oculta: no hay suficiente espacio en pantalla",
   "terramath.preview.error": "Error de fórmula"
 }

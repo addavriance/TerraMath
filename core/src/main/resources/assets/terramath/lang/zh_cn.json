@@ -57,5 +57,6 @@
   "terramath.config.preview.tooltip": "预览地形横截面",
   "terramath.preview.title": "公式预览",
   "terramath.preview.empty": "未输入公式",
+  "terramath.preview.hidden": "预览已隐藏：屏幕空间不足",
   "terramath.preview.error": "公式错误"
 }

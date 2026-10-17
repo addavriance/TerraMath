@@ -57,5 +57,6 @@
   "terramath.config.preview.tooltip": "Anteprima della sezione trasversale del terreno",
   "terramath.preview.title": "Anteprima formula",
   "terramath.preview.empty": "Nessuna formula inserita",
+  "terramath.preview.hidden": "Anteprima nascosta: spazio sullo schermo insufficiente",
   "terramath.preview.error": "Errore di formula"
 }

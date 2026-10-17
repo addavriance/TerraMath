@@ -57,5 +57,6 @@
   "terramath.config.preview.tooltip": "Попередній перегляд поперечного перерізу рельєфу",
   "terramath.preview.title": "Попередній перегляд формули",
   "terramath.preview.empty": "Формула не введена",
+  "terramath.preview.hidden": "Попередній перегляд приховано: не вистачає місця на екрані",
   "terramath.preview.error": "Помилка формули"
 }

@@ -57,5 +57,6 @@
   "terramath.config.preview.tooltip": "Преглед на напречния разрез на терена",
   "terramath.preview.title": "Преглед на формулата",
   "terramath.preview.empty": "Не е въведена формула",
+  "terramath.preview.hidden": "Прегледът е скрит: няма достатъчно място на екрана",
   "terramath.preview.error": "Грешка във формулата"
 }

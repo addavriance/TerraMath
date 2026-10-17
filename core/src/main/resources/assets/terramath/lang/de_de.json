@@ -57,5 +57,6 @@
   "terramath.config.preview.tooltip": "Geländequerschnitt vorschauen",
   "terramath.preview.title": "Formel-Vorschau",
   "terramath.preview.empty": "Keine Formel eingegeben",
+  "terramath.preview.hidden": "Vorschau ausgeblendet: nicht genug Platz auf dem Bildschirm",
   "terramath.preview.error": "Formelfehler"
 }

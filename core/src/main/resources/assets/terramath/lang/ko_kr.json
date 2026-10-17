@@ -57,5 +57,6 @@
   "terramath.config.preview.tooltip": "지형 단면 미리보기",
   "terramath.preview.title": "수식 미리보기",
   "terramath.preview.empty": "수식이 입력되지 않았습니다",
+  "terramath.preview.hidden": "미리보기 숨김: 화면 공간이 부족합니다",
   "terramath.preview.error": "수식 오류"
 }
