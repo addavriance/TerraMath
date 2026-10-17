@@ -175,13 +175,13 @@ public class MathFunctionsRegistry {
 
         int dot = impl.lastIndexOf('.');
         if (dot < 0) return -1;
-        String className  = impl.substring(0, dot);
+        String className = impl.substring(0, dot);
         String methodName = impl.substring(dot + 1);
 
         Class<?> clazz = switch (className) {
-            case "Math"           -> Math.class;
+            case "Math" -> Math.class;
             case "MathExtensions" -> MathExtensions.class;
-            default               -> null;
+            default -> null;
         };
         if (clazz == null) return -1;
 

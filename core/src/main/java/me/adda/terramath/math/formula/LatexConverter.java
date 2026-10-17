@@ -13,43 +13,43 @@ public class LatexConverter {
     private static final Map<String, String> GREEK = new LinkedHashMap<>();
     static {
         GREEK.put("\\varepsilon", "ε");
-        GREEK.put("\\vartheta",   "θ");
-        GREEK.put("\\varrho",     "ρ");
-        GREEK.put("\\varphi",     "φ");
-        GREEK.put("\\Upsilon",    "Υ");
-        GREEK.put("\\upsilon",    "υ");
-        GREEK.put("\\epsilon",    "ε");
-        GREEK.put("\\lambda",     "λ");
-        GREEK.put("\\Lambda",     "Λ");
-        GREEK.put("\\Omega",      "Ω");
-        GREEK.put("\\omega",      "ω");
-        GREEK.put("\\Sigma",      "Σ");
-        GREEK.put("\\sigma",      "σ");
-        GREEK.put("\\Theta",      "Θ");
-        GREEK.put("\\theta",      "θ");
-        GREEK.put("\\alpha",      "α");
-        GREEK.put("\\beta",       "β");
-        GREEK.put("\\gamma",      "γ");
-        GREEK.put("\\Gamma",      "Γ");
-        GREEK.put("\\delta",      "δ");
-        GREEK.put("\\Delta",      "Δ");
-        GREEK.put("\\zeta",       "ζ");
-        GREEK.put("\\iota",       "ι");
-        GREEK.put("\\kappa",      "κ");
-        GREEK.put("\\mu",         "μ");
-        GREEK.put("\\nu",         "ν");
-        GREEK.put("\\xi",         "ξ");
-        GREEK.put("\\Xi",         "Ξ");
-        GREEK.put("\\rho",        "ρ");
-        GREEK.put("\\tau",        "τ");
-        GREEK.put("\\chi",        "χ");
-        GREEK.put("\\psi",        "ψ");
-        GREEK.put("\\Psi",        "Ψ");
-        GREEK.put("\\Phi",        "Φ");
-        GREEK.put("\\phi",        "φ");
-        GREEK.put("\\eta",        "η");
-        GREEK.put("\\Pi",         "Π");
-        GREEK.put("\\pi",         "π");
+        GREEK.put("\\vartheta", "θ");
+        GREEK.put("\\varrho", "ρ");
+        GREEK.put("\\varphi", "φ");
+        GREEK.put("\\Upsilon", "Υ");
+        GREEK.put("\\upsilon", "υ");
+        GREEK.put("\\epsilon", "ε");
+        GREEK.put("\\lambda", "λ");
+        GREEK.put("\\Lambda", "Λ");
+        GREEK.put("\\Omega", "Ω");
+        GREEK.put("\\omega", "ω");
+        GREEK.put("\\Sigma", "Σ");
+        GREEK.put("\\sigma", "σ");
+        GREEK.put("\\Theta", "Θ");
+        GREEK.put("\\theta", "θ");
+        GREEK.put("\\alpha", "α");
+        GREEK.put("\\beta", "β");
+        GREEK.put("\\gamma", "γ");
+        GREEK.put("\\Gamma", "Γ");
+        GREEK.put("\\delta", "δ");
+        GREEK.put("\\Delta", "Δ");
+        GREEK.put("\\zeta", "ζ");
+        GREEK.put("\\iota", "ι");
+        GREEK.put("\\kappa", "κ");
+        GREEK.put("\\mu", "μ");
+        GREEK.put("\\nu", "ν");
+        GREEK.put("\\xi", "ξ");
+        GREEK.put("\\Xi", "Ξ");
+        GREEK.put("\\rho", "ρ");
+        GREEK.put("\\tau", "τ");
+        GREEK.put("\\chi", "χ");
+        GREEK.put("\\psi", "ψ");
+        GREEK.put("\\Psi", "Ψ");
+        GREEK.put("\\Phi", "Φ");
+        GREEK.put("\\phi", "φ");
+        GREEK.put("\\eta", "η");
+        GREEK.put("\\Pi", "Π");
+        GREEK.put("\\pi", "π");
     }
 
     // Public API
@@ -131,9 +131,9 @@ public class LatexConverter {
             boolean prevAlNum = i > 0 && Character.isLetterOrDigit(formula.charAt(i - 1));
             boolean nextAlNum = i < formula.length() - 1 && Character.isLetterOrDigit(formula.charAt(i + 1));
             if (!prevAlNum && !nextAlNum) {
-                if      (c == 'y') result.append(ZY_SWAP_PLACEHOLDER);
+                if (c == 'y') result.append(ZY_SWAP_PLACEHOLDER);
                 else if (c == 'z') result.append('y');
-                else               result.append(c);
+                else result.append(c);
             } else {
                 result.append(c);
             }
@@ -142,10 +142,10 @@ public class LatexConverter {
     }
 
     private static String stripMathModeDelimiters(String s) {
-        if      (s.startsWith("\\[") && s.endsWith("\\]"))  s = s.substring(2, s.length() - 2).trim();
-        else if (s.startsWith("$$")  && s.endsWith("$$"))   s = s.substring(2, s.length() - 2).trim();
-        else if (s.startsWith("$")   && s.endsWith("$") && s.length() > 1) s = s.substring(1, s.length() - 1).trim();
-        else if (s.startsWith("\\(") && s.endsWith("\\)"))  s = s.substring(2, s.length() - 2).trim();
+        if (s.startsWith("\\[") && s.endsWith("\\]")) s = s.substring(2, s.length() - 2).trim();
+        else if (s.startsWith("$$") && s.endsWith("$$")) s = s.substring(2, s.length() - 2).trim();
+        else if (s.startsWith("$") && s.endsWith("$") && s.length() > 1) s = s.substring(1, s.length() - 1).trim();
+        else if (s.startsWith("\\(") && s.endsWith("\\)")) s = s.substring(2, s.length() - 2).trim();
         return s;
     }
 
@@ -163,7 +163,7 @@ public class LatexConverter {
     private static String stripSizeModifiers(String s) {
         // Order: longest first
         s = s.replace("\\bigg", "").replace("\\Bigg", "");
-        s = s.replace("\\Big",  "").replace("\\big",  "");
+        s = s.replace("\\Big", "").replace("\\big", "");
         return s;
     }
 
@@ -189,12 +189,12 @@ public class LatexConverter {
         // We keep the full body (stripping begin/end/& markers) and replace \\ with +
         // as a best-effort approximation for a numeric evaluator.
         s = s.replaceAll("\\\\begin\\{cases\\}", "");
-        s = s.replaceAll("\\\\end\\{cases\\}",   "");
+        s = s.replaceAll("\\\\end\\{cases\\}", "");
         // matrix variants -> strip content (can't meaningfully evaluate a matrix)
         s = s.replaceAll("\\\\begin\\{[a-zA-Z]*matrix\\}[^\\\\]*\\\\end\\{[a-zA-Z]*matrix\\}", "0");
         // Generic begin/end
         s = s.replaceAll("\\\\begin\\{[^}]+\\}", "");
-        s = s.replaceAll("\\\\end\\{[^}]+\\}",   "");
+        s = s.replaceAll("\\\\end\\{[^}]+\\}", "");
         // \\ (row separator in cases) -> space (the case expressions are separated)
         s = s.replace("\\\\", " ");
         // & (column separator) -> strip
@@ -215,10 +215,10 @@ public class LatexConverter {
             if (s.charAt(after) == '{') {
                 int[] b = extractBraces(s, after);
                 if (b == null) break;
-                num    = convertFrac(s.substring(b[0] + 1, b[1]));
+                num = convertFrac(s.substring(b[0] + 1, b[1]));
                 numEnd = b[1] + 1;
             } else {
-                num    = String.valueOf(s.charAt(after));
+                num = String.valueOf(s.charAt(after));
                 numEnd = after + 1;
             }
 
@@ -230,10 +230,10 @@ public class LatexConverter {
             if (s.charAt(denStart) == '{') {
                 int[] b = extractBraces(s, denStart);
                 if (b == null) break;
-                den    = convertFrac(s.substring(b[0] + 1, b[1]));
+                den = convertFrac(s.substring(b[0] + 1, b[1]));
                 denEnd = b[1] + 1;
             } else {
-                den    = String.valueOf(s.charAt(denStart));
+                den = String.valueOf(s.charAt(denStart));
                 denEnd = denStart + 1;
             }
 
@@ -269,10 +269,10 @@ public class LatexConverter {
             if (s.charAt(after) == '{') {
                 int[] b = extractBraces(s, after);
                 if (b == null) break;
-                x   = convertSqrt(s.substring(b[0] + 1, b[1]));
+                x = convertSqrt(s.substring(b[0] + 1, b[1]));
                 end = b[1] + 1;
             } else {
-                x   = String.valueOf(s.charAt(after));
+                x = String.valueOf(s.charAt(after));
                 end = after + 1;
             }
             s = s.substring(0, idx) + "sqrt(" + x + ")" + s.substring(end);
@@ -294,18 +294,18 @@ public class LatexConverter {
 
     private static String mapFunctionName(String name) {
         return switch (name.toLowerCase()) {
-            case "arcsin"              -> "asin";
-            case "arccos"              -> "acos";
-            case "arctan"              -> "atan";
-            case "arccsc"              -> "acsc";
-            case "arcsec"              -> "asec";
-            case "arccot"              -> "acot";
-            case "arcsinh", "asinh"    -> "asinh";
-            case "arccosh", "acosh"    -> "acosh";
-            case "arctanh", "atanh"    -> "atanh";
-            case "log"                 -> "lg";
-            case "sgn", "sign"         -> "sign";
-            case "ceiling"             -> "ceil";
+            case "arcsin" -> "asin";
+            case "arccos" -> "acos";
+            case "arctan" -> "atan";
+            case "arccsc" -> "acsc";
+            case "arcsec" -> "asec";
+            case "arccot" -> "acot";
+            case "arcsinh", "asinh" -> "asinh";
+            case "arccosh", "acosh" -> "acosh";
+            case "arctanh", "atanh" -> "atanh";
+            case "log" -> "lg";
+            case "sgn", "sign" -> "sign";
+            case "ceiling" -> "ceil";
             default -> MathFunctionsRegistry.isFunction(name.toLowerCase()) ? name.toLowerCase() : name;
         };
     }
@@ -321,16 +321,16 @@ public class LatexConverter {
         // \left\lceil...\right\rceil -> ceil(...)
         s = convertMatchedLeftRight(s, "\\left\\lceil", "\\right\\rceil", "ceil(", ")");
         // Invisible delimiters (dot): \left. and \right. -> strip
-        s = s.replace("\\left.",  "");
+        s = s.replace("\\left.", "");
         s = s.replace("\\right.", "");
         // Remaining \left/\right with any bracket
-        s = s.replace("\\left(",    "(").replace("\\right)",  ")");
-        s = s.replace("\\left[",    "(").replace("\\right]",  ")");
-        s = s.replace("\\left\\{",  "(").replace("\\right\\}",")" );
-        s = s.replace("\\left<",    "(").replace("\\right>",  ")");
+        s = s.replace("\\left(", "(").replace("\\right)", ")");
+        s = s.replace("\\left[", "(").replace("\\right]", ")");
+        s = s.replace("\\left\\{", "(").replace("\\right\\}", ")");
+        s = s.replace("\\left<", "(").replace("\\right>", ")");
         s = s.replace("\\left\\langle", "(").replace("\\right\\rangle", ")");
         // Catch-all (strips any remaining \left / \right)
-        s = s.replace("\\left",  "").replace("\\right", "");
+        s = s.replace("\\left", "").replace("\\right", "");
         return s;
     }
 
@@ -353,8 +353,8 @@ public class LatexConverter {
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             if (c == '|') {
-                if (!inAbs) { result.append("abs("); inAbs = true;  }
-                else        { result.append(')');     inAbs = false; }
+                if (!inAbs) { result.append("abs("); inAbs = true; }
+                else { result.append(')'); inAbs = false; }
             } else {
                 result.append(c);
             }
@@ -377,12 +377,12 @@ public class LatexConverter {
                 int[] b = extractBraces(s, after);
                 if (b == null) { from = idx + 1; continue; }
                 expr = convertPower(s.substring(b[0] + 1, b[1]));
-                end  = b[1] + 1;
+                end = b[1] + 1;
             } else {
                 expr = String.valueOf(c);
-                end  = after + 1;
+                end = after + 1;
             }
-            s    = s.substring(0, idx) + "^(" + expr + ")" + s.substring(end);
+            s = s.substring(0, idx) + "^(" + expr + ")" + s.substring(end);
             from = idx + expr.length() + 3;
         }
         return s;
@@ -408,7 +408,7 @@ public class LatexConverter {
             }
             // Keep only digit subscripts (x_1 -> x1), drop others (x_n -> x)
             String keep = sub.matches("[0-9]+") ? sub : "";
-            s    = s.substring(0, idx) + keep + s.substring(end);
+            s = s.substring(0, idx) + keep + s.substring(end);
             from = idx + keep.length();
         }
         return s;
@@ -419,35 +419,35 @@ public class LatexConverter {
             s = s.replace(e.getKey(), e.getValue());
         }
         // Arithmetic operators
-        s = s.replace("\\cdot",   "*");
-        s = s.replace("\\times",  "*");
-        s = s.replace("\\div",    "/");
-        s = s.replace("\\pm",     "+");
-        s = s.replace("\\mp",     "-");
+        s = s.replace("\\cdot", "*");
+        s = s.replace("\\times", "*");
+        s = s.replace("\\div", "/");
+        s = s.replace("\\pm", "+");
+        s = s.replace("\\mp", "-");
         // Comparisons
-        s = s.replace("\\leq",    "<=");
-        s = s.replace("\\le",     "<=");
-        s = s.replace("\\geq",    ">=");
-        s = s.replace("\\ge",     ">=");
-        s = s.replace("\\neq",    "!=");
-        s = s.replace("\\ne",     "!=");
+        s = s.replace("\\leq", "<=");
+        s = s.replace("\\le", "<=");
+        s = s.replace("\\geq", ">=");
+        s = s.replace("\\ge", ">=");
+        s = s.replace("\\neq", "!=");
+        s = s.replace("\\ne", "!=");
         // Constants
-        s = s.replace("\\infty",  "1e300");
-        s = s.replace("\\euler",  "e");
+        s = s.replace("\\infty", "1e300");
+        s = s.replace("\\euler", "e");
         // Summation / product / integral — strip limits, leave body
-        s = s.replaceAll("\\\\sum(_\\{[^}]*\\})?(\\^\\{[^}]*\\})?",   "");
-        s = s.replaceAll("\\\\prod(_\\{[^}]*\\})?(\\^\\{[^}]*\\})?",  "");
-        s = s.replaceAll("\\\\int(_\\{[^}]*\\})?(\\^\\{[^}]*\\})?",   "");
-        s = s.replaceAll("\\\\iint(_\\{[^}]*\\})?(\\^\\{[^}]*\\})?",  "");
+        s = s.replaceAll("\\\\sum(_\\{[^}]*\\})?(\\^\\{[^}]*\\})?", "");
+        s = s.replaceAll("\\\\prod(_\\{[^}]*\\})?(\\^\\{[^}]*\\})?", "");
+        s = s.replaceAll("\\\\int(_\\{[^}]*\\})?(\\^\\{[^}]*\\})?", "");
+        s = s.replaceAll("\\\\iint(_\\{[^}]*\\})?(\\^\\{[^}]*\\})?", "");
         s = s.replaceAll("\\\\iiint(_\\{[^}]*\\})?(\\^\\{[^}]*\\})?", "");
-        s = s.replaceAll("\\\\oint(_\\{[^}]*\\})?(\\^\\{[^}]*\\})?",  "");
-        s = s.replaceAll("\\\\lim(_\\{[^}]*\\})?",                     "");
-        s = s.replace("\\nabla",   "");
+        s = s.replaceAll("\\\\oint(_\\{[^}]*\\})?(\\^\\{[^}]*\\})?", "");
+        s = s.replaceAll("\\\\lim(_\\{[^}]*\\})?", "");
+        s = s.replace("\\nabla", "");
         s = s.replace("\\partial", "");
         // Dots
-        s = s.replace("\\cdots",   "");
-        s = s.replace("\\ldots",   "");
-        s = s.replace("\\dots",    "");
+        s = s.replace("\\cdots", "");
+        s = s.replace("\\ldots", "");
+        s = s.replace("\\dots", "");
         return s;
     }
 
@@ -475,31 +475,31 @@ public class LatexConverter {
         s = s.replace("\\tan", "tan"); s = s.replace("\\csc", "csc");
         s = s.replace("\\sec", "sec"); s = s.replace("\\cot", "cot");
         // Log / exp
-        s = s.replace("\\ln",  "ln");
+        s = s.replace("\\ln", "ln");
         s = s.replace("\\log", "lg");
         s = s.replace("\\exp", "exp");
-        s = s.replace("\\lg",  "lg");
+        s = s.replace("\\lg", "lg");
         // Misc
-        s = s.replace("\\abs",   "abs");
-        s = s.replace("\\max",   "max");
-        s = s.replace("\\min",   "min");
-        s = s.replace("\\gcd",   "gcd");
-        s = s.replace("\\lcm",   "lcm");
-        s = s.replace("\\sgn",   "sign");
-        s = s.replace("\\sign",  "sign");
+        s = s.replace("\\abs", "abs");
+        s = s.replace("\\max", "max");
+        s = s.replace("\\min", "min");
+        s = s.replace("\\gcd", "gcd");
+        s = s.replace("\\lcm", "lcm");
+        s = s.replace("\\sgn", "sign");
+        s = s.replace("\\sign", "sign");
         s = s.replace("\\floor", "floor");
-        s = s.replace("\\ceil",  "ceil");
-        s = s.replace("\\mod",   "mod");
-        s = s.replace("\\sqrt",  "sqrt"); // catch-all (bare \sqrt after convertSqrt)
+        s = s.replace("\\ceil", "ceil");
+        s = s.replace("\\mod", "mod");
+        s = s.replace("\\sqrt", "sqrt"); // catch-all (bare \sqrt after convertSqrt)
         return s;
     }
 
     private static String stripSpacingCommands(String s) {
-        s = s.replace("\\ ",    " ");
-        s = s.replace("\\,",    " ");
-        s = s.replace("\\;",    " ");
-        s = s.replace("\\:",    " ");
-        s = s.replace("\\!",    "");
+        s = s.replace("\\ ", " ");
+        s = s.replace("\\,", " ");
+        s = s.replace("\\;", " ");
+        s = s.replace("\\:", " ");
+        s = s.replace("\\!", "");
         s = s.replace("\\quad", " ");
         s = s.replace("\\qquad"," ");
         return s;
@@ -571,13 +571,13 @@ public class LatexConverter {
             }
 
             if (insert) { sb.insert(i, '*'); i += 2; }
-            else          i++;
+            else i++;
         }
         return sb.toString();
     }
 
     private static boolean precedesFunction(StringBuilder sb, int openParenPos) {
-        int end   = openParenPos;
+        int end = openParenPos;
         int start = openParenPos - 1;
         while (start > 0 && Character.isLetter(sb.charAt(start - 1))) start--;
         if (start >= end) return false;
@@ -589,7 +589,7 @@ public class LatexConverter {
         int depth = 0;
         for (int i = start; i < s.length(); i++) {
             char c = s.charAt(i);
-            if      (c == '{') depth++;
+            if (c == '{') depth++;
             else if (c == '}' && --depth == 0) return new int[]{start, i};
         }
         return null;

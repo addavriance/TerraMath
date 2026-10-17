@@ -56,33 +56,33 @@ public class ConfigScreen extends Screen {
     SettingsDraft settingsDraft = null;
 
     static class SettingsDraft {
-        String   formula;
-        double   coordinateScale;
-        boolean  densityMode;
-        double   baseHeight;
-        double   heightVariation;
-        double   smoothingFactor;
+        String formula;
+        double coordinateScale;
+        boolean densityMode;
+        double baseHeight;
+        double heightVariation;
+        double smoothingFactor;
         NoiseType noiseType;
-        double   noiseScaleX, noiseScaleY, noiseScaleZ;
-        double   noiseHeightScale;
-        Boolean  useDefault; // null in world-creation mode
+        double noiseScaleX, noiseScaleY, noiseScaleZ;
+        double noiseHeightScale;
+        Boolean useDefault; // null in world-creation mode
     }
 
     SettingsDraft captureCurrentDraft() {
         if (configList == null || !configList.hasEntries()) return null;
         SettingsDraft d = new SettingsDraft();
-        d.formula         = configList.getFormula();
+        d.formula = configList.getFormula();
         d.coordinateScale = configList.getCoordinateScale();
-        d.densityMode     = configList.getUseDensityMode();
-        d.baseHeight      = configList.getBaseHeight();
+        d.densityMode = configList.getUseDensityMode();
+        d.baseHeight = configList.getBaseHeight();
         d.heightVariation = configList.getHeightVariation();
         d.smoothingFactor = configList.getSmoothingFactor();
-        d.noiseType       = configList.getNoiseType();
-        d.noiseScaleX     = configList.getNoiseScaleX();
-        d.noiseScaleY     = configList.getNoiseScaleY();
-        d.noiseScaleZ     = configList.getNoiseScaleZ();
+        d.noiseType = configList.getNoiseType();
+        d.noiseScaleX = configList.getNoiseScaleX();
+        d.noiseScaleY = configList.getNoiseScaleY();
+        d.noiseScaleZ = configList.getNoiseScaleZ();
         d.noiseHeightScale = configList.getNoiseHeightScale();
-        d.useDefault      = isWorldCreation ? null : configList.useDefaultSelected();
+        d.useDefault = isWorldCreation ? null : configList.useDefaultSelected();
         return d;
     }
 
@@ -184,7 +184,7 @@ public class ConfigScreen extends Screen {
         if (settingsDraft == null) {
             ModConfig cfg = ModConfig.get();
             previewPanel.halfWidth = Math.max(50, Math.min(400, cfg.previewHalfWidth));
-            previewPanel.zoom      = Math.max(0.5f, Math.min(4.0f, cfg.previewZoom));
+            previewPanel.zoom = Math.max(0.5f, Math.min(4.0f, cfg.previewZoom));
         }
     }
 
@@ -241,7 +241,7 @@ public class ConfigScreen extends Screen {
 
     private void saveSettings() {
         ModConfig.get().previewHalfWidth = previewPanel.halfWidth;
-        ModConfig.get().previewZoom      = previewPanel.zoom;
+        ModConfig.get().previewZoom = previewPanel.zoom;
 
         String formula = configList.getFormula();
         boolean useDensityMode = configList.getUseDensityMode();
@@ -775,7 +775,7 @@ public class ConfigScreen extends Screen {
         private CycleButton<Boolean> checkbox;
 
         public DensityModeEntry(boolean initialValue) {
-            int centerX = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2  - ConfigScreen.configHalfShift;
+            int centerX = Minecraft.getInstance().getWindow().getGuiScaledWidth() / 2 - ConfigScreen.configHalfShift;
 
             checkbox = CycleButton.onOffBuilder(initialValue)
                     .displayOnlyValue()

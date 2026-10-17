@@ -73,19 +73,19 @@ public class TerraMathDensityFunction implements DensityFunction {
                                         double x, double y, double z,
                                         double sf, boolean eq) {
         if (eq) {
-            return (formula.evaluate(x,      y,      z     )
-                  + formula.evaluate(x + sf, y,      z     )
-                  + formula.evaluate(x - sf, y,      z     )
-                  + formula.evaluate(x,      y + sf, z     )
-                  + formula.evaluate(x,      y - sf, z     )
-                  + formula.evaluate(x,      y,      z + sf)
-                  + formula.evaluate(x,      y,      z - sf)) / 7.0;
+            return (formula.evaluate(x, y, z)
+                  + formula.evaluate(x + sf, y, z)
+                  + formula.evaluate(x - sf, y, z)
+                  + formula.evaluate(x, y + sf, z)
+                  + formula.evaluate(x, y - sf, z)
+                  + formula.evaluate(x, y, z + sf)
+                  + formula.evaluate(x, y, z - sf)) / 7.0;
         } else {
-            return (formula.evaluate(x,      y, z     )
-                  + formula.evaluate(x + sf, y, z     )
-                  + formula.evaluate(x - sf, y, z     )
-                  + formula.evaluate(x,      y, z + sf)
-                  + formula.evaluate(x,      y, z - sf)) / 5.0;
+            return (formula.evaluate(x, y, z)
+                  + formula.evaluate(x + sf, y, z)
+                  + formula.evaluate(x - sf, y, z)
+                  + formula.evaluate(x, y, z + sf)
+                  + formula.evaluate(x, y, z - sf)) / 5.0;
         }
     }
 

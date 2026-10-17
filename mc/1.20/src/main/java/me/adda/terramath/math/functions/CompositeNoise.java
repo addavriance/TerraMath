@@ -62,11 +62,11 @@ public class CompositeNoise {
     public double getBlendedNoise(double x, double y, double z) {
         if (blendedNoise == null) {
             blendedNoise = BlendedNoise.createUnseeded(
-                    0.25,  // xzScale
+                    0.25, // xzScale
                     0.125, // yScale
-                    80.0,  // xzFactor
-                    160,   // yFactor
-                    8.0    // smearScaleMultiplier
+                    80.0, // xzFactor
+                    160, // yFactor
+                    8.0 // smearScaleMultiplier
             ).withNewRandom(randomSource);
         }
         return blendedNoise.compute(new DensityFunction.FunctionContext() {

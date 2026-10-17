@@ -37,8 +37,8 @@ public class ModConfig {
     public double noiseScaleZ = TerrainSettingsManager.getDefaultByType(TerrainSettingType.NOISE_SCALE_Z);
     public double noiseHeightScale = TerrainSettingsManager.getDefaultByType(TerrainSettingType.NOISE_HEIGHT_SCALE);
 
-    public int   previewHalfWidth = 100;
-    public float previewZoom      = 1.5f;
+    public int previewHalfWidth = 100;
+    public float previewZoom = 1.5f;
 
     private static Consumer<ModConfig> saveCallback = null;
 

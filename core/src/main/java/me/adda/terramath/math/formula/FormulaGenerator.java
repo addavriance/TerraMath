@@ -138,9 +138,9 @@ public class FormulaGenerator {
     private static final List<String> CONST_NAMES;
 
     static {
-        FNS_1ARG    = new ArrayList<>();
-        FNS_2ARG    = new ArrayList<>();
-        NOISE_FNS   = new ArrayList<>();
+        FNS_1ARG = new ArrayList<>();
+        FNS_2ARG = new ArrayList<>();
+        NOISE_FNS = new ArrayList<>();
         CONST_NAMES = new ArrayList<>();
 
         for (String c : MathConstantsRegistry.getConstantNames()) {
@@ -204,7 +204,7 @@ public class FormulaGenerator {
             // fn with constant as multiplier in arg
             case 7 -> {
                 String fn = FNS_1ARG.get(rng.nextInt(FNS_1ARG.size()));
-                String c  = CONST_NAMES.get(rng.nextInt(CONST_NAMES.size()));
+                String c = CONST_NAMES.get(rng.nextInt(CONST_NAMES.size()));
                 int s = 1 + rng.nextInt(8);
                 String v = rng.nextBoolean() ? "x" : "z";
                 return fn + "(" + v + " * " + c + " / " + (s * 10) + ")";
@@ -226,9 +226,9 @@ public class FormulaGenerator {
 
     private static String randomArg(Random rng, int depth) {
         if (depth <= 0) return simpleArg(rng);
-        int s  = 2 + rng.nextInt(9);
+        int s = 2 + rng.nextInt(9);
         int s2 = 2 + rng.nextInt(9);
-        int k  = 1 + rng.nextInt(4);
+        int k = 1 + rng.nextInt(4);
         String v1 = rng.nextBoolean() ? "x" : "z";
         String v2 = v1.equals("x") ? "z" : "x";
         return switch (rng.nextInt(9)) {
@@ -251,10 +251,10 @@ public class FormulaGenerator {
         String fn = NOISE_FNS.get(rng.nextInt(NOISE_FNS.size()));
         int s = 2 + rng.nextInt(8);
         return switch (fn) {
-            case "simplex"  -> "simplex(x / " + s + ", z / " + s + ")";
-            case "octaved"  -> "octaved(x / " + s + ", z / " + s
+            case "simplex" -> "simplex(x / " + s + ", z / " + s + ")";
+            case "octaved" -> "octaved(x / " + s + ", z / " + s
                                + ", " + (2 + rng.nextInt(4)) + ", 0.5)";
-            default         -> fn + "(x / " + s + ", 0, z / " + s + ")";
+            default -> fn + "(x / " + s + ", 0, z / " + s + ")";
         };
     }
 
@@ -277,15 +277,15 @@ public class FormulaGenerator {
         String result = template;
 
         // Amplitudes: [5, 24]
-        result = result.replace("{A}",  String.valueOf(5 + rng.nextInt(20)));
-        result = result.replace("{B}",  String.valueOf(5 + rng.nextInt(20)));
-        result = result.replace("{C}",  String.valueOf(5 + rng.nextInt(20)));
+        result = result.replace("{A}", String.valueOf(5 + rng.nextInt(20)));
+        result = result.replace("{B}", String.valueOf(5 + rng.nextInt(20)));
+        result = result.replace("{C}", String.valueOf(5 + rng.nextInt(20)));
 
         // Small integer [2, 5] - spiral arms, terrace steps, warp magnitude
         result = result.replace("{A2}", String.valueOf(2 + rng.nextInt(4)));
 
         // Primary scale [2, 8]
-        result = result.replace("{S}",  String.valueOf(2 + rng.nextInt(7)));
+        result = result.replace("{S}", String.valueOf(2 + rng.nextInt(7)));
 
         // Secondary scale [4, 12]
         result = result.replace("{S2}", String.valueOf(4 + rng.nextInt(9)));
@@ -294,7 +294,7 @@ public class FormulaGenerator {
         result = result.replace("{S3}", String.valueOf(6 + rng.nextInt(13)));
 
         // Cylinder / diamond N: [500, 3000]
-        result = result.replace("{N}",  String.valueOf(500 + rng.nextInt(2501)));
+        result = result.replace("{N}", String.valueOf(500 + rng.nextInt(2501)));
 
         // Sphere N: [500, 2000]
         result = result.replace("{N2}", String.valueOf(500 + rng.nextInt(1501)));
@@ -303,10 +303,10 @@ public class FormulaGenerator {
         result = result.replace("{N3}", String.valueOf(200 + rng.nextInt(601)));
 
         // Torus major radius: [20, 35]
-        result = result.replace("{R}",  String.valueOf(20 + rng.nextInt(16)));
+        result = result.replace("{R}", String.valueOf(20 + rng.nextInt(16)));
 
         // Torus tube radius: [5, 12]
-        result = result.replace("{r}",  String.valueOf(5 + rng.nextInt(8)));
+        result = result.replace("{r}", String.valueOf(5 + rng.nextInt(8)));
 
         return result;
     }
