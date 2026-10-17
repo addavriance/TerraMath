@@ -12,10 +12,10 @@ public class CompositeNoise {
     private final long seed;
     private final RandomSource randomSource;
 
-    private PerlinNoise perlinNoise;
-    private SimplexNoise simplexNoise;
-    private NormalNoise normalNoise;
-    private BlendedNoise blendedNoise;
+    private volatile PerlinNoise perlinNoise;
+    private volatile SimplexNoise simplexNoise;
+    private volatile NormalNoise normalNoise;
+    private volatile BlendedNoise blendedNoise;
 
     public CompositeNoise(long seed) {
         this.seed = seed;
@@ -27,7 +27,11 @@ public class CompositeNoise {
      */
     public double getPerlinNoise(double x, double y, double z) {
         if (perlinNoise == null) {
-            perlinNoise = PerlinNoise.create(randomSource, 4, 0.25);
+            synchronized (this) {
+                if (perlinNoise == null) {
+                    perlinNoise = PerlinNoise.create(randomSource, 4, 0.25);
+                }
+            }
         }
         return perlinNoise.getValue(x, y, z);
     }
@@ -37,7 +41,11 @@ public class CompositeNoise {
      */
     public double getSimplexNoise(double x, double z) {
         if (simplexNoise == null) {
-            simplexNoise = new SimplexNoise(randomSource);
+            synchronized (this) {
+                if (simplexNoise == null) {
+                    simplexNoise = new SimplexNoise(randomSource);
+                }
+            }
         }
         return simplexNoise.getValue(x, z);
     }
@@ -47,11 +55,15 @@ public class CompositeNoise {
      */
     public double getNormalNoise(double x, double y, double z) {
         if (normalNoise == null) {
-            normalNoise = NormalNoise.create(
-                    RandomSource.create(seed),
-                    4,
-                    0.25
-            );
+            synchronized (this) {
+                if (normalNoise == null) {
+                    normalNoise = NormalNoise.create(
+                            RandomSource.create(seed),
+                            4,
+                            0.25
+                    );
+                }
+            }
         }
         return normalNoise.getValue(x, y, z);
     }
@@ -61,14 +73,18 @@ public class CompositeNoise {
      */
     public double getBlendedNoise(double x, double y, double z) {
         if (blendedNoise == null) {
-            blendedNoise = new BlendedNoise(
-                    randomSource,
-                    0.25, // xzScale
-                    0.25, // yScale
-                    1.0, // xzFactor
-                    1.0, // yFactor
-                    1.0 // smearScaleMultiplier
-            );
+            synchronized (this) {
+                if (blendedNoise == null) {
+                    blendedNoise = new BlendedNoise(
+                            randomSource,
+                            0.25, // xzScale
+                            0.25, // yScale
+                            1.0, // xzFactor
+                            1.0, // yFactor
+                            1.0 // smearScaleMultiplier
+                    );
+                }
+            }
         }
         return blendedNoise.compute(new DensityFunction.FunctionContext() {
             @Override

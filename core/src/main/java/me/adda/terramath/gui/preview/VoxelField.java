@@ -19,7 +19,7 @@ public final class VoxelField {
     public static final float WY_MAX = 320f;
 
     // Outer compute runs on its own thread and waits on the pool, so the pool needs a spare thread
-    private static final ExecutorService POOL = Executors.newFixedThreadPool(
+    static final ExecutorService POOL = Executors.newFixedThreadPool(
             Math.max(2, Runtime.getRuntime().availableProcessors()), runnable -> {
                 Thread thread = new Thread(runnable, "TerraMath-Preview");
                 thread.setDaemon(true);
@@ -46,13 +46,19 @@ public final class VoxelField {
     public final int gx, gz;
     public final int halfWidth;
     public final String error;
+    /** Time spent in evaluate, blur and classify, for profiling. */
+    public final long evalNanos, blurNanos, classifyNanos;
 
-    private VoxelField(long[] bits, int gx, int gz, int halfWidth, String error) {
+    private VoxelField(long[] bits, int gx, int gz, int halfWidth, String error,
+                       long evalNanos, long blurNanos, long classifyNanos) {
         this.bits = bits;
         this.gx = gx;
         this.gz = gz;
         this.halfWidth = halfWidth;
         this.error = error;
+        this.evalNanos = evalNanos;
+        this.blurNanos = blurNanos;
+        this.classifyNanos = classifyNanos;
     }
 
     private static int gridSize(int halfWidth) {
@@ -61,7 +67,7 @@ public final class VoxelField {
 
     private static VoxelField failed(Params p, String error) {
         int gx = gridSize(p.halfWidth());
-        return new VoxelField(new long[bitsetSize(gx * GY * gx)], gx, gx, p.halfWidth(), error);
+        return new VoxelField(new long[bitsetSize(gx * GY * gx)], gx, gx, p.halfWidth(), error, 0, 0, 0);
     }
 
     /** Размер bitset в long[] для n бит */
@@ -102,22 +108,16 @@ public final class VoxelField {
         int total = gx * GY * gz;
         float[] raw = new float[total];
 
-        // evaluate однопоточно (PerlinNoise не thread-safe)
-        for (int ix = 0; ix < gx; ix++) {
-            double wx = -hw + (ix + 0.5) * vsx;
-            double fx = wx / cs;
-            for (int iz = 0; iz < gz; iz++) {
-                double wz = -hw + (iz + 0.5) * vsz;
-                double fz = wz / cs;
-                for (int iy = 0; iy < GY; iy++) {
-                    double wy = WY_MIN + (iy + 0.5) * vsy;
-                    float v;
-                    try { v = (float) compiled.evaluate(fx, wy / cs, fz); }
-                    catch (Exception e) { v = 0f; }
-                    raw[ix * sX + iy * sY + iz] = v;
-                }
-            }
-        }
+        long t0 = System.nanoTime();
+
+        final int nThreads = Runtime.getRuntime().availableProcessors();
+
+        // Шумы создаются лениво при первом вызове, поэтому одну колонку считаем в одном потоке:
+        // порядок создания шумов тот же, что при обычном (однопоточном) вычислении формулы
+        evaluateColumn(compiled, raw, 0, gz, cs, hw, vsx, vsy, vsz, sX, sY);
+        runParallel(nThreads, gx, ix -> evaluateColumn(compiled, raw, ix, gz, cs, hw, vsx, vsy, vsz, sX, sY));
+
+        long t1 = System.nanoTime();
 
         // blur параллельно (только float[], thread-safe)
         float[] processed = raw;
@@ -127,10 +127,11 @@ public final class VoxelField {
             processed = separableBoxBlur(raw, gx, GY, gz, sX, sY, rXZ, rY);
         }
 
+        long t2 = System.nanoTime();
+
         // classify -> bitset (параллельно)
         final float[] finalRaw = processed;
         long[] result = new long[bitsetSize(total)];
-        int nThreads = Runtime.getRuntime().availableProcessors();
         runParallel(nThreads, gx, ix -> {
             for (int iz = 0; iz < gz; iz++) {
                 for (int iy = 0; iy < GY; iy++) {
@@ -148,7 +149,23 @@ public final class VoxelField {
             }
         });
 
-        return new VoxelField(result, gx, gz, hw, null);
+        return new VoxelField(result, gx, gz, hw, null, t1 - t0, t2 - t1, System.nanoTime() - t2);
+    }
+
+    /** Evaluate формулы для всех (iz, iy) при фиксированном ix. */
+    private static void evaluateColumn(FormulaParser.CompiledFormula compiled, float[] raw, int ix, int gz,
+                                       double cs, int hw, double vsx, double vsy, double vsz, int sX, int sY) {
+        double fx = (-hw + (ix + 0.5) * vsx) / cs;
+        for (int iz = 0; iz < gz; iz++) {
+            double fz = (-hw + (iz + 0.5) * vsz) / cs;
+            for (int iy = 0; iy < GY; iy++) {
+                double wy = WY_MIN + (iy + 0.5) * vsy;
+                float v;
+                try { v = (float) compiled.evaluate(fx, wy / cs, fz); }
+                catch (Exception e) { v = 0f; }
+                raw[ix * sX + iy * sY + iz] = v;
+            }
+        }
     }
 
     private static FormulaParser.CompiledFormula parseFormulaWithSettings(Params p) throws Exception {

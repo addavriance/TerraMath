@@ -1,5 +1,6 @@
 package me.adda.terramath.gui;
 
+import me.adda.terramath.TerraMath;
 import me.adda.terramath.api.TerrainSettingsManager;
 import me.adda.terramath.gui.preview.GreedyMesher;
 import me.adda.terramath.gui.preview.VoxelField;
@@ -29,13 +30,14 @@ public class PreviewPanel {
     private String formulaText = "";
     private TerrainSettingsManager displaySettings = null;
 
+    private record Built(VoxelField field, GreedyMesher.Mesh mesh) {}
+
     private VoxelField field = null;
     private GreedyMesher.Mesh mesh = GreedyMesher.Mesh.EMPTY;
-    private boolean meshDirty = true;
 
     private VoxelField.Params lastParams = null;
     private volatile boolean computing = false;
-    private volatile VoxelField pending = null;
+    private volatile Built pending = null;
 
     private float yaw = 45f;
     private float pitch = 28f;
@@ -56,11 +58,11 @@ public class PreviewPanel {
     public void render(GuiGraphics graphics, int x, int y, int w, int h, Font font) {
         int viewH = h - CTRL_H;
 
-        VoxelField ready = pending;
+        Built ready = pending;
         if (ready != null) {
             pending = null;
-            field = ready;
-            meshDirty = true;
+            field = ready.field();
+            mesh = ready.mesh();
         }
 
         if (!computing) {
@@ -75,10 +77,6 @@ public class PreviewPanel {
             graphics.drawCenteredString(font, field.error,
                     x + w / 2, y + viewH / 2 - 4, 0xFF5555);
         } else if (field != null && field.gx > 0) {
-            if (meshDirty) {
-                mesh = GreedyMesher.build(field);
-                meshDirty = false;
-            }
             if (mesh.floatCount() > 0) renderMesh3D(x, y, w, viewH);
             drawOverlays(graphics, font, x, y, w, viewH);
         }
@@ -119,7 +117,15 @@ public class PreviewPanel {
         computing = true;
         COMPUTE.submit(() -> {
             try {
-                pending = VoxelField.compute(params);
+                long start = System.nanoTime();
+                VoxelField computed = VoxelField.compute(params);
+                long meshStart = System.nanoTime();
+                GreedyMesher.Mesh built = computed.error == null ? GreedyMesher.build(computed) : GreedyMesher.Mesh.EMPTY;
+                long end = System.nanoTime();
+                TerraMath.LOGGER.debug("Preview {}: eval {} ms, blur {} ms, classify {} ms, mesh {} ms, total {} ms",
+                        params.halfWidth(), computed.evalNanos / 1_000_000, computed.blurNanos / 1_000_000,
+                        computed.classifyNanos / 1_000_000, (end - meshStart) / 1_000_000, (end - start) / 1_000_000);
+                pending = new Built(computed, built);
             } finally {
                 computing = false;
             }
