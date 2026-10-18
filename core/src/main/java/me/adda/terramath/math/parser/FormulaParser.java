@@ -18,6 +18,8 @@ public class FormulaParser extends FormulaValidator {
     }
 
     public static class CompiledFormula {
+        private static final ThreadLocal<CompositeNoise> THREAD_VIEW = new ThreadLocal<>();
+
         private final String originalExpression;
         private final Evaluator evaluator;
         private final CompositeNoise noise;
@@ -30,7 +32,12 @@ public class FormulaParser extends FormulaValidator {
 
         public double evaluate(double x, double y, double z) {
             try {
-                return evaluator.eval(x, y, z, this.noise);
+                CompositeNoise view = THREAD_VIEW.get();
+                if (view == null || !view.isViewOf(noise)) {
+                    view = noise.threadView();
+                    THREAD_VIEW.set(view);
+                }
+                return evaluator.eval(x, y, z, view);
             } catch (FormulaException e) {
                 throw e;
             } catch (RuntimeException e) {
