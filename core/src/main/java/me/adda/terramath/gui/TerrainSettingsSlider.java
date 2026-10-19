@@ -34,7 +34,7 @@ public class TerrainSettingsSlider extends AbstractSliderButton {
                 this.setRealValue(settings.getHeightVariation());
             }
             case SMOOTHING_FACTOR -> {
-                this.minValue = 0.1;
+                this.minValue = 0.0;
                 this.maxValue = 1.0;
                 this.translationKey = "terramath.config.smoothing";
                 this.setRealValue(settings.getSmoothingFactor());

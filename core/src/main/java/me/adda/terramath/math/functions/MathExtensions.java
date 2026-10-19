@@ -73,6 +73,10 @@ public class MathExtensions {
         return x >= 0 ? 1.0 - tau : tau - 1.0;
     }
 
+    public static double round(double x) {
+        return Math.floor(x + 0.5);
+    }
+
     public static double mod(double a, double b) {
         return a % b;
     }

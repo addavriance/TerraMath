@@ -41,7 +41,7 @@ public class FormulaParser extends FormulaValidator {
             } catch (FormulaException e) {
                 throw e;
             } catch (RuntimeException e) {
-                throw new FormulaException(ERROR_INVALID_SYNTAX, e.getMessage());
+                throw new FormulaException(ERROR_INVALID_SYNTAX, e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName());
             }
         }
 

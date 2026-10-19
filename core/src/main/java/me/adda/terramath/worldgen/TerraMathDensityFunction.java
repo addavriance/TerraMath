@@ -48,14 +48,14 @@ public class TerraMathDensityFunction implements DensityFunction {
             FormulaParser.CompiledFormula formula = snapshot.formula();
 
             double scale = settings.getCoordinateScale();
-            double sf = settings.getSmoothingFactor();
+            boolean dm = settings.isUseDensityMode();
+            double sf = dm ? settings.getSmoothingFactor() : 0.0;
             int blockX = context.blockX(), blockZ = context.blockZ();
             double x = blockX / scale;
             double y = context.blockY() / scale;
             double z = blockZ / scale;
 
             boolean eq = snapshot.equation();
-            boolean dm = settings.isUseDensityMode();
 
             double fv;
             if (snapshot.usesY()) {
@@ -142,6 +142,9 @@ public class TerraMathDensityFunction implements DensityFunction {
     private static double computeDensity(double fv, double y, double scale,
                                          boolean eq, boolean dm,
                                          double baseHeight, double heightVariation) {
+        if (!Double.isFinite(fv)) {
+            return -1.0;
+        }
         final double d;
         if (eq) {
             d = dm ? (fv - (baseHeight - 64.0) / scale) / Math.max(1e-6, heightVariation) : fv;

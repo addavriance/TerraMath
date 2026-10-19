@@ -67,9 +67,9 @@ public class MathFunctionsRegistry {
         FUNCTION_MAPPINGS.put("pow", "Math.pow");
 
         // Rounding functions
-        FUNCTION_MAPPINGS.put("floor", "(int)Math.floor");
+        FUNCTION_MAPPINGS.put("floor", "Math.floor");
         FUNCTION_MAPPINGS.put("ceil", "Math.ceil");
-        FUNCTION_MAPPINGS.put("round", "Math.round");
+        FUNCTION_MAPPINGS.put("round", "MathExtensions.round");
 
         // Miscellaneous functions
         FUNCTION_MAPPINGS.put("abs", "Math.abs");

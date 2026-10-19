@@ -85,7 +85,7 @@ public final class VoxelField {
         final boolean dm = p.densityMode();
         final double bh = p.baseHeight();
         final double hv = p.heightVariation();
-        final double sf = p.smoothing();
+        final double sf = dm ? p.smoothing() : 0.0;
         final int hw = p.halfWidth();
         final int gx = gridSize(hw);
         final int gz = gx;
@@ -252,6 +252,9 @@ public final class VoxelField {
     private static double toDensity(double fv, double fy, double scale,
                                     boolean dm, boolean eq,
                                     double baseHeight, double heightVariation) {
+        if (!Double.isFinite(fv)) {
+            return -1.0;
+        }
         if (eq) {
             double d = dm ? (fv - (baseHeight-64.0)/scale) / Math.max(1e-6, heightVariation) : fv;
             return d >= 0 ? 1.0 : -1.0;
