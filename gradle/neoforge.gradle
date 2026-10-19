@@ -1,0 +1,22 @@
+// NeoForge target: applied from versions/<minecraft>/neoforge/build.gradle (needs loom.platform=neoforge in that folder's gradle.properties).
+apply from: rootProject.file('gradle/common.gradle')
+
+repositories {
+    maven { url "https://maven.neoforged.net/releases" }
+}
+
+dependencies {
+    neoForge "net.neoforged:neoforge:${vp.neoforge_version}"
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching(["META-INF/neoforge.mods.toml", "META-INF/mods.toml"]) {
+        expand "version": project.version
+    }
+}
+
+shadowJar {
+    exclude "fabric.mod.json"
+}
