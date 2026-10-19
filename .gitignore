@@ -119,3 +119,5 @@ run/
 gradle/gradle-daemon-jvm.properties
 local.properties
 dist/
+
+.env

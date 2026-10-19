@@ -5,6 +5,7 @@ plugins {
 
 apply from: 'gradle/telegram.gradle'
 apply from: 'gradle/deploy.gradle'
+apply from: 'gradle/publish.gradle'
 
 // Collects every target's release jar into dist/.
 tasks.register('dist') {
