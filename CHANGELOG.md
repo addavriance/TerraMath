@@ -7,7 +7,8 @@
 - **Equation mode.** A formula with a single `=` (for example `y = 64 + 8 * sin(x / 10)`) is treated as an implicit surface: the world is solid where the left side is not greater than the right side. Formulas may now use `y`, which makes caves, floating islands and arbitrary 3D shapes possible
 - **Live 3D preview** inside the settings screen. A rotatable voxel preview is rebuilt in the background while you type, and a notice is shown when there is not enough screen space for it
 - Terrain settings are now available for all noise-based world types
-- Builds for 1.21.4, 1.21.11, 26.1.2 and 26.2 on both Fabric and Forge. One codebase now produces 16 jars: 1.20, 1.20.4, 1.20.6, 1.21.1, 1.21.4, 1.21.11, 26.1.2 and 26.2, each for Fabric and Forge
+- **NeoForge support** for 1.20.4, 1.20.6, 1.21.1, 1.21.4, 1.21.11, 26.1.2 and 26.2
+- Builds for 1.21.4, 1.21.11, 26.1.2 and 26.2 on Fabric and Forge. One codebase now produces 23 jars: 1.20, 1.20.4, 1.20.6, 1.21.1, 1.21.4, 1.21.11, 26.1.2 and 26.2 for Fabric and Forge, plus every version from 1.20.4 on for NeoForge
 
 ### Performance
 

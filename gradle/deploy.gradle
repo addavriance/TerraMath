@@ -1,4 +1,4 @@
-['fabric', 'forge'].each { platform ->
+['fabric', 'forge', 'neoforge'].each { platform ->
     tasks.register("deployMod${platform.capitalize()}") {
         description = "Deploys ${platform} mod to remote PC via SSH/Tailscale and launches Minecraft"
         group = 'distribution'

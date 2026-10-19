@@ -1,4 +1,4 @@
-# TerraMath [Fabric/Forge] 1.20 - 26.2
+# TerraMath [Fabric/Forge/NeoForge] 1.20 - 26.2
 
 ![TerraMath_preview](https://github.com/user-attachments/assets/cfb099e5-1aa8-4940-9129-b8d0654072d0)
 
@@ -55,16 +55,16 @@ Join the [Discord](https://discord.gg/JgKTZEtNkg) to share formulas or find new 
 
 ## Supported Versions
 
-| Minecraft | Fabric | Forge |
-|-----------|:------:|:-----:|
-| 1.20 | yes | yes |
-| 1.20.4 | yes | yes |
-| 1.20.6 | yes | yes |
-| 1.21.1 | yes | yes |
-| 1.21.4 | yes | yes |
-| 1.21.11 | yes | yes |
-| 26.1.2 | yes | yes |
-| 26.2 | yes | yes |
+| Minecraft | Fabric | Forge | NeoForge |
+|-----------|:------:|:-----:|:--------:|
+| 1.20 | yes | yes | no |
+| 1.20.4 | yes | yes | yes |
+| 1.20.6 | yes | yes | yes |
+| 1.21.1 | yes | yes | yes |
+| 1.21.4 | yes | yes | yes |
+| 1.21.11 | yes | yes | yes |
+| 26.1.2 | yes | yes | yes |
+| 26.2 | yes | yes | yes |
 
 See the [changelog](CHANGELOG.md) for what changed between releases.
 
