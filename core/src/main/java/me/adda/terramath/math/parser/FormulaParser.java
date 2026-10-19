@@ -1,5 +1,6 @@
 package me.adda.terramath.math.parser;
 
+import me.adda.terramath.TerraMath;
 import me.adda.terramath.exception.ExceptionUtils;
 import me.adda.terramath.exception.FormulaException;
 import me.adda.terramath.math.functions.CompositeNoise;
@@ -61,6 +62,22 @@ public class FormulaParser extends FormulaValidator {
         return evaluator;
     }
 
+    private static boolean isRuntime() {
+        try {
+            return Minecraft.getInstance().level != null;
+        } catch (Throwable t) {
+            return true;
+        }
+    }
+
+    private static void reportBrokenFormula(String formula) {
+        try {
+            NotificationManager.showFormulaError(formula);
+        } catch (Throwable t) {
+            TerraMath.LOGGER.error("Terrain formula could not be compiled: {}", formula);
+        }
+    }
+
     public static CompiledFormula tryParse(String formula) {
         try {
             if (!FormulaValidator.validateFormula(formula, true).isValid()) {
@@ -102,8 +119,8 @@ public class FormulaParser extends FormulaValidator {
             Throwable cause = ExceptionUtils.getRootCause(e);
             String message = cause.getMessage();
 
-            if (Minecraft.getInstance().level != null) {
-                NotificationManager.showFormulaError(formula);
+            if (isRuntime()) {
+                reportBrokenFormula(formula);
 
                 return new CompiledFormula(formula, NOT_COMPILED, noise);
             }

@@ -29,6 +29,7 @@
 - The formula was applied only around spawn on some 1.20.1 worlds. It now covers every newly generated chunk and survives re-entering the world (#22)
 - `floor` and `round` now return real numbers, so `1/floor(...)` gives infinity instead of failing with an integer division by zero, and `floor(5)/2` is `2.5`. Errors without a message no longer show up as `Syntax error: null` (#21)
 - Points where a formula is not finite (`Infinity`, `NaN`) are treated as empty space instead of filling the world up to the build limit (#21)
+- A formula that fails to compile no longer hangs a dedicated server: it is logged and the world generates empty instead of crashing on a client-only class
 
 ### Known issues
 
